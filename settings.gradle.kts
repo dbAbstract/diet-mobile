@@ -32,6 +32,5 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
-include(":shared")
 include(":libs:auth")
 include(":libs")
