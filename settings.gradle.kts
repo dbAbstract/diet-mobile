@@ -32,5 +32,7 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
-include(":libs:auth")
 include(":libs")
+include(":libs:auth")
+include(":libs:auth:api")
+include(":libs:auth:impl")

@@ -1,5 +1,3 @@
-
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidKotlinMultiplatformLibrary)
@@ -12,9 +10,9 @@ kotlin {
     // which platforms this KMP module supports.
     // See: https://kotlinlang.org/docs/multiplatform-discover-project.html#targets
     androidLibrary {
-        namespace = "jp.co.diet"
-        compileSdk = 36
-        minSdk = 24
+        namespace = "jp.co.diet.auth"
+        minSdk = libs.versions.android.minSdk.get().toInt()
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
 
         withHostTestBuilder {
         }
@@ -62,7 +60,8 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-                // Add KMP dependencies here
+                api(projects.libs.auth.api)
+                implementation(projects.libs.auth.impl)
             }
         }
 
