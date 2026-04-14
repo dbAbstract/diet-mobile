@@ -21,7 +21,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
             implementation(libs.koin.compose)
-            implementation(libs.androidx.startup.runtime)
+            implementation(projects.libs.di)
         }
         commonMain.dependencies {
             implementation(libs.koin.core)

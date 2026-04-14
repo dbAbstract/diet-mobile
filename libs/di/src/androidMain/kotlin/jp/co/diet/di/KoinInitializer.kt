@@ -1,4 +1,4 @@
-package jp.co.diet
+package jp.co.diet.di
 
 import android.content.Context
 import androidx.startup.Initializer
@@ -10,7 +10,7 @@ class KoinInitializer : Initializer<KoinApplication> {
     override fun create(context: Context): KoinApplication {
         return startKoin {
             androidContext(context)
-            modules(emptyList()) // Add modules here
+            modules(appModules) // Add modules here
         }
     }
 
