@@ -23,6 +23,7 @@ kotlin {
                 implementation(projects.libs.auth.api)
                 implementation(projects.libs.coroutines)
                 implementation(libs.firebase.auth)
+                implementation(libs.koin.core)
             }
         }
 

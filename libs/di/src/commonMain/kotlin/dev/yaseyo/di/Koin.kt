@@ -1,8 +1,9 @@
 package dev.yaseyo.di
 
+import dev.yaseyo.auth.di.authModule
 import dev.yaseyo.coroutines.coroutinesModule
-import org.koin.core.module.Module
 
-internal val appModules = listOf<Module>(
+internal val appModules = listOf(
     coroutinesModule,
+    authModule,
 )
