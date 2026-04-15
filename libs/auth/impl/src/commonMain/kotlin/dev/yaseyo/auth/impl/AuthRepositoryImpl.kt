@@ -18,13 +18,14 @@ internal class AuthRepositoryImpl(
     private val scope = CoroutineScope(dispatcherProvider.io)
 
     override val authState: StateFlow<AuthState> =
-        firebaseAuth.authStateChanged.map { firebaseUser ->
-            resolveFirebaseUserToAuthState(firebaseUser = firebaseUser)
-        }.stateIn(
-            scope = scope,
-            started = SharingStarted.Eagerly,
-            initialValue = resolveFirebaseUserToAuthState(firebaseUser = firebaseAuth.currentUser),
-        )
+        firebaseAuth.authStateChanged
+            .map { firebaseUser ->
+                resolveFirebaseUserToAuthState(firebaseUser = firebaseUser)
+            }.stateIn(
+                scope = scope,
+                started = SharingStarted.Eagerly,
+                initialValue = resolveFirebaseUserToAuthState(firebaseUser = firebaseAuth.currentUser),
+            )
 
     override suspend fun getIdToken(): String? {
         val currentFirebaseUser = firebaseAuth.currentUser
@@ -40,23 +41,23 @@ internal class AuthRepositoryImpl(
 
     override suspend fun signInWithEmailAndPassword(
         email: String,
-        password: String
-    ): Result<Unit> = runCatching {
-        firebaseAuth.signInWithEmailAndPassword(
-            email = email,
-            password = password,
-        )
-    }
+        password: String,
+    ): Result<Unit> =
+        runCatching {
+            firebaseAuth.signInWithEmailAndPassword(
+                email = email,
+                password = password,
+            )
+        }
 
     override suspend fun signOut() {
         firebaseAuth.signOut()
     }
 
-    private fun resolveFirebaseUserToAuthState(firebaseUser: FirebaseUser?): AuthState {
-        return if (firebaseUser == null) {
+    private fun resolveFirebaseUserToAuthState(firebaseUser: FirebaseUser?): AuthState =
+        if (firebaseUser == null) {
             AuthState.SignedOut
         } else {
             AuthState.SignedIn(userId = firebaseUser.uid)
         }
-    }
 }

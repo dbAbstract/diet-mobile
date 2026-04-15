@@ -16,5 +16,7 @@ description: This skill is to instruct you how to go about implementing a new fe
 - `:feature:someFeature:ui` will, however, live in the native codebases since that's where it's implemented
 - The feature's data and ui child modules, will depend on domain
 - When developing, ensure that you get my approval before each step. I need to be architecturally involved to ensure best quality
+- Once a feature/functionality or tech stack is implemented, I want you to update the README for the
+  project to keep it up to date with our architecture and tech stack choice.
 
 ## Examples

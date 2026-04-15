@@ -23,6 +23,8 @@ runner = "1.7.0"
 core = "1.7.0"
 skie = "0.10.11"
 kotlinx-coroutines = "1.10.2"
+spotless = "7.0.2"
+ktlint = "1.5.0"
 ktor = "3.4.2"
 kotlinx-serialization = "1.11.0"
 
@@ -76,3 +78,4 @@ androidKotlinMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.lib
 androidLint = { id = "com.android.lint", version.ref = "agp" }
 skie = { id = "co.touchlab.skie", version.ref = "skie" }
 kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

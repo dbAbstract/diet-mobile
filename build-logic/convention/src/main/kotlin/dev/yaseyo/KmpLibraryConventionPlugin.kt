@@ -24,27 +24,29 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
             }
         }
 
-        val extension = target
-            .extensions
-            .create("kmpLibrary", KmpLibraryExtension::class.java)
+        val extension =
+            target
+                .extensions
+                .create("kmpLibrary", KmpLibraryExtension::class.java)
 
         extension.enableSkie.convention(false)
         extension.enableSerialization.convention(false)
 
         val kotlin = target.extensions.getByType(KotlinMultiplatformExtension::class.java)
 
-        val iosTargets = with(kotlin) {
-            listOf(
-                iosArm64(),
-                iosSimulatorArm64()
-            ).also { targetList ->
-                targetList.forEach { iosTarget ->
-                    iosTarget.binaries.framework {
-                        isStatic = true
+        val iosTargets =
+            with(kotlin) {
+                listOf(
+                    iosArm64(),
+                    iosSimulatorArm64(),
+                ).also { targetList ->
+                    targetList.forEach { iosTarget ->
+                        iosTarget.binaries.framework {
+                            isStatic = true
+                        }
                     }
                 }
             }
-        }
 
         target.afterEvaluate {
             val frameworkName = extension.iosFrameworkName.orNull
@@ -68,16 +70,28 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
             }
         }
 
-        val libs = target
-            .extensions
-            .getByType(VersionCatalogsExtension::class.java)
-            .named("libs")
+        val libs =
+            target
+                .extensions
+                .getByType(VersionCatalogsExtension::class.java)
+                .named("libs")
 
-        val androidLibrary = kotlin.extensions.getByName("androidLibrary")
+        val androidLibrary =
+            kotlin.extensions.getByName("androidLibrary")
                 as KotlinMultiplatformAndroidLibraryTarget
         androidLibrary.apply {
-            minSdk = libs.findVersion("android-minSdk").get().requiredVersion.toInt()
-            compileSdk = libs.findVersion("android-compileSdk").get().requiredVersion.toInt()
+            minSdk =
+                libs
+                    .findVersion("android-minSdk")
+                    .get()
+                    .requiredVersion
+                    .toInt()
+            compileSdk =
+                libs
+                    .findVersion("android-compileSdk")
+                    .get()
+                    .requiredVersion
+                    .toInt()
         }
     }
 }

@@ -15,33 +15,36 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.dsl.module
 
-val networkModule = module {
-    single {
-        val config = get<NetworkConfig>()
-        val authRepository = get<AuthRepository>()
+val networkModule =
+    module {
+        single {
+            val config = get<NetworkConfig>()
+            val authRepository = get<AuthRepository>()
 
-        HttpClient(createHttpClientEngine()) {
-            install(Auth) {
-                bearer {
-                    loadTokens {
-                        val token = authRepository.getIdToken()
-                        token?.let { BearerTokens(accessToken = it, refreshToken = "") }
+            HttpClient(createHttpClientEngine()) {
+                install(Auth) {
+                    bearer {
+                        loadTokens {
+                            val token = authRepository.getIdToken()
+                            token?.let { BearerTokens(accessToken = it, refreshToken = "") }
+                        }
                     }
                 }
-            }
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                    isLenient = true
-                })
-            }
-            install(Logging) {
-                level = LogLevel.ALL
-            }
-            defaultRequest {
-                url(config.baseUrl)
-                contentType(ContentType.Application.Json)
+                install(ContentNegotiation) {
+                    json(
+                        Json {
+                            ignoreUnknownKeys = true
+                            isLenient = true
+                        },
+                    )
+                }
+                install(Logging) {
+                    level = LogLevel.ALL
+                }
+                defaultRequest {
+                    url(config.baseUrl)
+                    contentType(ContentType.Application.Json)
+                }
             }
         }
     }
-}
