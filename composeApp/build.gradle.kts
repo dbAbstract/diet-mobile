@@ -41,11 +41,11 @@ kotlin {
 }
 
 android {
-    namespace = "jp.co.diet"
+    namespace = "dev.yaseyo"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "jp.co.diet"
+        applicationId = "dev.yaseyo"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1

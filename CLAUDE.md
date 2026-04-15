@@ -1,4 +1,4 @@
-## Diet Mobile App
+## Diet Mobile App - AKA Yaseyo (痩せよ)
 This is a diet app aiming to help users drop fat. For now, the 
 app is just for me and maybe some friends and family. I intend to use this app
 as a case study into how KMP works with native views.

@@ -9,7 +9,7 @@
             android:exported="false"
             tools:node="merge">
             <meta-data
-                android:name="jp.co.diet.di.KoinInitializer"
+                android:name="dev.yaseyo.di.KoinInitializer"
                 android:value="androidx.startup" />
         </provider>
     </application>

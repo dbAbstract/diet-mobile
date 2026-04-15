@@ -2,7 +2,7 @@ plugins {
     `kotlin-dsl`
 }
 
-group = "jp.co.diet.buildlogic"
+group = "dev.yaseyo.buildlogic"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -17,7 +17,7 @@ dependencies {
 gradlePlugin {
     plugins {
         register("kmpLibrary") {
-            id = "diet.kmp.library"
+            id = "yaseyo.kmp.library"
             implementationClass = "KmpLibraryConventionPlugin"
         }
     }

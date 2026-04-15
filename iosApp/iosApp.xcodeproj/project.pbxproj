@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		73FE88ECE63518767BA769DD /* Diet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Diet.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		73FE88ECE63518767BA769DD /* Yaseyo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Yaseyo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,7 +50,7 @@
 		2D9C14574B1B8B5B611462DF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				73FE88ECE63518767BA769DD /* Diet.app */,
+				73FE88ECE63518767BA769DD /* Yaseyo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 			packageProductDependencies = (
 			);
 			productName = iosApp;
-			productReference = 73FE88ECE63518767BA769DD /* Diet.app */;
+			productReference = 73FE88ECE63518767BA769DD /* Yaseyo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
