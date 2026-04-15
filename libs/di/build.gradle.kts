@@ -21,6 +21,7 @@ kotlin {
                 // Libs
                 implementation(projects.libs.coroutines)
                 implementation(projects.libs.auth)
+                implementation(projects.libs.network)
             }
         }
 
