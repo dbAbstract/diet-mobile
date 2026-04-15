@@ -28,6 +28,7 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 implementation(projects.libs.auth.api)
+                implementation(libs.firebase.auth)
             }
         }
 
