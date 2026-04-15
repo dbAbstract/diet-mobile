@@ -20,6 +20,7 @@ koin = "4.2.1"
 androidx-startup = "1.2.0"
 runner = "1.7.0"
 core = "1.7.0"
+skie = "0.10.11"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -59,3 +60,4 @@ kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref =
 googleServices = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 androidKotlinMultiplatformLibrary = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 androidLint = { id = "com.android.lint", version.ref = "agp" }
+skie = { id = "co.touchlab.skie", version.ref = "skie" }

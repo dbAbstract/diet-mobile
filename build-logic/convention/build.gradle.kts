@@ -18,7 +18,7 @@ gradlePlugin {
     plugins {
         register("kmpLibrary") {
             id = "yaseyo.kmp.library"
-            implementationClass = "KmpLibraryConventionPlugin"
+            implementationClass = "dev.yaseyo.KmpLibraryConventionPlugin"
         }
     }
 }

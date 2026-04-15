@@ -1,14 +1,15 @@
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidKotlinMultiplatformLibrary)
-    alias(libs.plugins.androidLint)
+    id("yaseyo.kmp.library")
+}
+
+kmpLibrary {
+    iosFrameworkName = "Auth"
+    enableSkie = true
 }
 
 kotlin {
     androidLibrary {
         namespace = "dev.yaseyo.auth.api"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        compileSdk = libs.versions.android.compileSdk.get().toInt()
 
         withHostTestBuilder {
         }
@@ -17,16 +18,6 @@ kotlin {
             sourceSetTreeName = "test"
         }.configure {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
-    }
-
-    listOf(
-        iosArm64(),
-        iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "Auth"
-            isStatic = true
         }
     }
 
