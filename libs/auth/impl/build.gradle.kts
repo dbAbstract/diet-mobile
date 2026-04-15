@@ -1,14 +1,10 @@
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidKotlinMultiplatformLibrary)
-    alias(libs.plugins.androidLint)
+    id("yaseyo.kmp.library")
 }
 
 kotlin {
     androidLibrary {
         namespace = "dev.yaseyo.auth.impl"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        compileSdk = libs.versions.android.compileSdk.get().toInt()
 
         withHostTestBuilder {
         }
@@ -19,9 +15,6 @@ kotlin {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
     }
-
-    iosArm64()
-    iosSimulatorArm64()
 
     sourceSets {
         commonMain {

@@ -45,11 +45,13 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
         }
 
         target.afterEvaluate {
-            val frameworkName = extension.iosFrameworkName.get()
+            val frameworkName = extension.iosFrameworkName.orNull
 
-            iosTargets.forEach { iosTarget ->
-                iosTarget.binaries.withType(Framework::class.java).configureEach {
-                    baseName = frameworkName
+            if (frameworkName != null) {
+                iosTargets.forEach { iosTarget ->
+                    iosTarget.binaries.withType(Framework::class.java).configureEach {
+                        baseName = frameworkName
+                    }
                 }
             }
 
