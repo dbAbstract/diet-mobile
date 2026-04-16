@@ -3,13 +3,12 @@ plugins {
 }
 
 kmpLibrary {
-    iosFrameworkName = "UserApi"
-    enableSkie = true
+    iosFrameworkName = "User"
 }
 
 kotlin {
     androidLibrary {
-        namespace = "dev.yaseyo.user.api"
+        namespace = "dev.yaseyo.user"
 
         withHostTestBuilder {
         }
@@ -25,8 +24,9 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-                api(libs.kotlinx.coroutines.core)
-                api(libs.kotlinx.datetime)
+                implementation(libs.koin.core)
+                api(projects.libs.user.api)
+                implementation(projects.libs.user.impl)
             }
         }
 

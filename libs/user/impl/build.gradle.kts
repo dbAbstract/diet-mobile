@@ -3,13 +3,12 @@ plugins {
 }
 
 kmpLibrary {
-    iosFrameworkName = "UserApi"
-    enableSkie = true
+    enableSerialization = true
 }
 
 kotlin {
     androidLibrary {
-        namespace = "dev.yaseyo.user.api"
+        namespace = "dev.yaseyo.user.impl"
 
         withHostTestBuilder {
         }
@@ -25,8 +24,11 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-                api(libs.kotlinx.coroutines.core)
-                api(libs.kotlinx.datetime)
+                implementation(projects.libs.user.api)
+                implementation(libs.ktor.client.core)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.koin.core)
             }
         }
 

@@ -1,9 +1,11 @@
-package dev.yaseyo.user.api
+package dev.yaseyo.user.impl.network
 
+import dev.yaseyo.user.api.ActivityLevel
+import dev.yaseyo.user.api.Sex
 import kotlinx.datetime.LocalDate
 
-interface UserRepository {
-    suspend fun getCurrentUser(): Result<User>
+internal interface UserApi {
+    suspend fun getUser(): UserNet
 
     suspend fun createUser(
         name: String,
@@ -16,7 +18,7 @@ interface UserRepository {
         targetProtein: Double,
         targetCarbs: Double,
         targetFat: Double,
-    ): Result<User>
+    ): UserNet
 
     suspend fun updateUser(
         name: String? = null,
@@ -29,5 +31,5 @@ interface UserRepository {
         targetProtein: Double? = null,
         targetCarbs: Double? = null,
         targetFat: Double? = null,
-    ): Result<User>
+    ): UserNet
 }
