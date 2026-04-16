@@ -33,9 +33,8 @@ dependencyResolutionManagement {
 }
 
 include(":composeApp")
-include(":libs")
 include(":libs:domain-models")
-include(":libs:auth")
+include(":libs:user:api")
 include(":libs:auth:api")
 include(":libs:auth:impl")
 include(":libs:coroutines")
