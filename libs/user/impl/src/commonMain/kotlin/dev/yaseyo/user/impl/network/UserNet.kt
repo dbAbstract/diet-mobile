@@ -3,7 +3,6 @@ package dev.yaseyo.user.impl.network
 import dev.yaseyo.user.api.ActivityLevel
 import dev.yaseyo.user.api.Sex
 import dev.yaseyo.user.api.User
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
@@ -37,8 +36,8 @@ internal fun UserNet.toDomain() =
         targetProtein = targetProtein,
         targetCarbs = targetCarbs,
         targetFat = targetFat,
-        createdAt = Instant.parse(createdAt),
-        updatedAt = Instant.parse(updatedAt),
+        createdAt = kotlin.time.Instant.parse(createdAt),
+        updatedAt = kotlin.time.Instant.parse(updatedAt),
     )
 
 internal fun ActivityLevel.toApiString() =
