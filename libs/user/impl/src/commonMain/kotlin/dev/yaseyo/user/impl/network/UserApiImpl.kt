@@ -19,7 +19,10 @@ internal class UserApiImpl(
         private const val USER_PATH = "/user/"
     }
 
-    override suspend fun getUser(): UserNet = client.get(USER_PATH).body()
+    override suspend fun getUser(): UserNet =
+        client
+            .get(USER_PATH)
+            .body()
 
     override suspend fun createUser(
         name: String,
