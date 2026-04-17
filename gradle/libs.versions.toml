@@ -23,11 +23,11 @@ runner = "1.7.0"
 core = "1.7.0"
 skie = "0.10.11"
 kotlinx-coroutines = "1.10.2"
-spotless = "7.0.2"
+spotless = "8.4.0"
 ktlint = "1.5.0"
 ktor = "3.4.2"
 kotlinx-serialization = "1.11.0"
-kotlinx-datetime = "0.6.2"
+kotlinx-datetime = "0.7.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
