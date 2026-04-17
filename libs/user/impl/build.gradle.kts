@@ -2,9 +2,7 @@ plugins {
     id("yaseyo.kmp.library")
 }
 
-kmpLibrary {
-    enableSerialization = true
-}
+kmpLibrary {}
 
 kotlin {
     androidLibrary {
@@ -35,6 +33,9 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(libs.kotlin.test)
+                implementation(libs.ktor.testing)
+                implementation(libs.ktor.client.content.negotiation)
+                implementation(libs.ktor.serialization.kotlinx.json)
             }
         }
 

@@ -2,9 +2,7 @@ plugins {
     id("yaseyo.kmp.library")
 }
 
-kmpLibrary {
-    enableSerialization = true
-}
+kmpLibrary {}
 
 kotlin {
     androidLibrary {

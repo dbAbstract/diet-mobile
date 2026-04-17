@@ -11,7 +11,6 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 abstract class KmpLibraryExtension {
     abstract val iosFrameworkName: Property<String>
     abstract val enableSkie: Property<Boolean>
-    abstract val enableSerialization: Property<Boolean>
 }
 
 class KmpLibraryConventionPlugin : Plugin<Project> {
@@ -21,6 +20,7 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.multiplatform")
                 apply("com.android.kotlin.multiplatform.library")
                 apply("com.android.lint")
+                apply("org.jetbrains.kotlin.plugin.serialization")
             }
         }
 
@@ -30,7 +30,6 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
                 .create("kmpLibrary", KmpLibraryExtension::class.java)
 
         extension.enableSkie.convention(false)
-        extension.enableSerialization.convention(false)
 
         val kotlin = target.extensions.getByType(KotlinMultiplatformExtension::class.java)
 
@@ -62,11 +61,6 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
             val skieEnabled = extension.enableSkie.get()
             if (skieEnabled) {
                 target.plugins.apply("co.touchlab.skie")
-            }
-
-            val serializationEnabled = extension.enableSerialization.get()
-            if (serializationEnabled) {
-                target.plugins.apply("org.jetbrains.kotlin.plugin.serialization")
             }
         }
 
