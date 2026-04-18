@@ -3,6 +3,8 @@
 A personal diet app built with Kotlin Multiplatform. Native Android UI with Compose, native iOS UI
 with SwiftUI, shared business logic.
 
+Testing
+
 ---
 
 ## Tech Stack
