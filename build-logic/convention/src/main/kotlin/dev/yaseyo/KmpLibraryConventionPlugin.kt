@@ -1,17 +1,19 @@
 package dev.yaseyo
 
 import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget
+import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.api.provider.Property
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
 
 abstract class KmpLibraryExtension {
     abstract val iosFrameworkName: Property<String>
     abstract val enableSkie: Property<Boolean>
 }
+
+private val UMBRELLA_FRAMEWORK_PROJECTS = setOf(":libs:di")
 
 class KmpLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -38,22 +40,33 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
                 listOf(
                     iosArm64(),
                     iosSimulatorArm64(),
-                ).also { targetList ->
-                    targetList.forEach { iosTarget ->
-                        iosTarget.binaries.framework {
-                            isStatic = true
-                        }
-                    }
-                }
+                )
             }
 
         target.afterEvaluate {
             val frameworkName = extension.iosFrameworkName.orNull
 
+            if (frameworkName != null && target.path !in UMBRELLA_FRAMEWORK_PROJECTS) {
+                throw GradleException(
+                    buildString {
+                        appendLine(
+                            "Module '${target.path}' sets kmpLibrary.iosFrameworkName = \"$frameworkName\", but iOS framework production is restricted to: $UMBRELLA_FRAMEWORK_PROJECTS",
+                        )
+                        appendLine(
+                            "Why: iOS can load at most one Kotlin/Native framework per process — each framework ships its own K/N runtime and loading two triggers a runtime-injection crash at app launch.",
+                        )
+                        appendLine(
+                            "Fix: remove 'iosFrameworkName' from this module. Expose types to Swift by adding api(...) + export(...) in the umbrella module (${UMBRELLA_FRAMEWORK_PROJECTS.first()}) instead.",
+                        )
+                    },
+                )
+            }
+
             if (frameworkName != null) {
                 iosTargets.forEach { iosTarget ->
-                    iosTarget.binaries.withType(Framework::class.java).configureEach {
+                    iosTarget.binaries.framework {
                         baseName = frameworkName
+                        isStatic = true
                     }
                 }
             }

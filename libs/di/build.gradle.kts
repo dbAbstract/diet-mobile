@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
+
 plugins {
     id("yaseyo.kmp.library")
 }
@@ -12,6 +14,15 @@ kotlin {
         namespace = "dev.yaseyo.di"
     }
 
+    listOf(
+        iosArm64(),
+        iosSimulatorArm64(),
+    ).forEach { target ->
+        target.binaries.withType<Framework>().configureEach {
+            export(projects.libs.auth.api)
+        }
+    }
+
     sourceSets {
         commonMain {
             dependencies {
@@ -20,6 +31,7 @@ kotlin {
 
                 // Libs
                 implementation(projects.libs.coroutines)
+                api(projects.libs.auth.api)
                 implementation(projects.libs.auth)
                 implementation(projects.libs.network)
             }

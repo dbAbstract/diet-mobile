@@ -2,10 +2,6 @@ plugins {
     id("yaseyo.kmp.library")
 }
 
-kmpLibrary {
-    iosFrameworkName = "User"
-}
-
 kotlin {
     androidLibrary {
         namespace = "dev.yaseyo.user"

@@ -2,10 +2,6 @@ plugins {
     id("yaseyo.kmp.library")
 }
 
-kmpLibrary {
-    iosFrameworkName = "DomainModels"
-}
-
 kotlin {
     androidLibrary {
         namespace = "dev.yaseyo.domain.models"

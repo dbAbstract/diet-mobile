@@ -2,11 +2,6 @@ plugins {
     id("yaseyo.kmp.library")
 }
 
-kmpLibrary {
-    iosFrameworkName = "UserApi"
-    enableSkie = true
-}
-
 kotlin {
     androidLibrary {
         namespace = "dev.yaseyo.user.api"
