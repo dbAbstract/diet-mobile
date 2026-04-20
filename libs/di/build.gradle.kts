@@ -20,6 +20,8 @@ kotlin {
     ).forEach { target ->
         target.binaries.withType<Framework>().configureEach {
             export(projects.libs.auth.api)
+            export(projects.libs.user)
+            export(projects.libs.presentation)
         }
     }
 
@@ -34,7 +36,8 @@ kotlin {
                 api(projects.libs.auth.api)
                 implementation(projects.libs.auth)
                 implementation(projects.libs.network)
-                implementation(projects.libs.user)
+                api(projects.libs.user)
+                api(projects.libs.presentation)
 
                 // Features
                 implementation(projects.feature.onboarding.data)
