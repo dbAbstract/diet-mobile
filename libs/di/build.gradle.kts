@@ -22,6 +22,7 @@ kotlin {
             export(projects.libs.auth.api)
             export(projects.libs.user)
             export(projects.libs.presentation)
+            export(projects.feature.onboarding.presentation)
         }
     }
 
@@ -41,6 +42,7 @@ kotlin {
 
                 // Features
                 implementation(projects.feature.onboarding.data)
+                api(projects.feature.onboarding.presentation)
             }
         }
 
