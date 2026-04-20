@@ -34,6 +34,10 @@ kotlin {
                 api(projects.libs.auth.api)
                 implementation(projects.libs.auth)
                 implementation(projects.libs.network)
+                implementation(projects.libs.user)
+
+                // Features
+                implementation(projects.feature.onboarding.data)
             }
         }
 
