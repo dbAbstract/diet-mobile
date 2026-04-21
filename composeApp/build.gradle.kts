@@ -17,11 +17,17 @@ kotlin {
 
     sourceSets {
         androidMain.dependencies {
+            // Libs
+            implementation(projects.libs.di)
+
+            // Dependencies
+            implementation(libs.androidx.navigation3.ui)
+            implementation(libs.androidx.navigation3.runtime)
+            implementation(libs.androidx.lifecycle.viewmodel.navigation3)
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
             implementation(libs.koin.compose)
-            implementation(projects.libs.di)
         }
         commonMain.dependencies {
             implementation(libs.koin.core)
