@@ -37,6 +37,7 @@ kotlin {
                 implementation(projects.libs.auth)
                 implementation(projects.libs.network)
                 api(projects.libs.user)
+                implementation(projects.libs.navigation)
 
                 // Features
                 implementation(projects.feature.onboarding.impl)

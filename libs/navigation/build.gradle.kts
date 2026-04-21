@@ -17,6 +17,8 @@ kotlin {
         androidMain {
             dependencies {
                 api(libs.androidx.navigation3.runtime)
+                implementation(libs.koin.core)
+                implementation(libs.koin.android)
             }
         }
     }
