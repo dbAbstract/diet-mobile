@@ -25,7 +25,7 @@ kotlin {
                 // Projects
                 implementation(projects.libs.auth)
                 implementation(projects.libs.user)
-                implementation(projects.libs.navigation)
+                api(projects.libs.navigation)
             }
         }
 

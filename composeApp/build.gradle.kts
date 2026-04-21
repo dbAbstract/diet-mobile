@@ -21,6 +21,7 @@ kotlin {
             implementation(projects.libs.di)
 
             // Dependencies
+            implementation(libs.androidx.startup.runtime)
             implementation(libs.koin.core)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
@@ -37,6 +38,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
             implementation(libs.koin.compose)
+            implementation(libs.androidx.splashscreen)
         }
         androidUnitTest.dependencies {
             implementation(libs.kotlin.test)

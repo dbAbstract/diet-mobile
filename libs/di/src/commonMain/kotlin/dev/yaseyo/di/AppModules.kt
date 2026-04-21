@@ -3,8 +3,6 @@ package dev.yaseyo.di
 import dev.yaseyo.auth.di.authModule
 import dev.yaseyo.coroutines.coroutinesModule
 import dev.yaseyo.network.networkModule
-import dev.yaseyo.onboarding.data.onboardingDataModule
-import dev.yaseyo.onboarding.presentation.onboardingPresentationModule
 import dev.yaseyo.user.di.userModule
 import org.koin.dsl.module
 
@@ -14,6 +12,4 @@ internal val appModules = listOf(
     userModule,
     module { single { networkConfig } },
     networkModule,
-    onboardingDataModule,
-    onboardingPresentationModule,
 )
