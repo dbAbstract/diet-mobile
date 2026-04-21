@@ -1,7 +1,8 @@
-package dev.yaseyo.onboarding.api
+package dev.yaseyo
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.yaseyo.onboarding.api.ResolveAppStateUseCase
 import dev.yaseyo.onboarding.api.model.AppState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -9,7 +10,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class AppViewModel(
+class MainViewModel(
     private val resolveAppStateUseCase: ResolveAppStateUseCase,
 ) : ViewModel() {
     private val _appState = MutableStateFlow<AppState?>(null)
@@ -21,6 +22,6 @@ class AppViewModel(
         }.stateIn(
             scope = viewModelScope,
             initialValue = null,
-            started = SharingStarted.WhileSubscribed(5_000),
+            started = SharingStarted.Lazily,
         )
 }
