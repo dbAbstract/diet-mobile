@@ -38,6 +38,7 @@ kotlin {
 
         androidMain {
             dependencies {
+                implementation(libs.koin.compose.nav3)
             }
         }
 

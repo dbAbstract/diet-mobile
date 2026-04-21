@@ -4,17 +4,14 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import dev.yaseyo.navigation.Home
 import dev.yaseyo.navigation.Navigator
-import dev.yaseyo.onboarding.api.model.AppState
-import dev.yaseyo.onboarding.api.navigation.OnboardingRoutes
-import org.koin.android.ext.android.get
 import org.koin.android.scope.AndroidScopeComponent
 import org.koin.androidx.scope.activityRetainedScope
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,6 +23,7 @@ class MainActivity :
     override val scope: Scope by activityRetainedScope()
 
     private val viewModel: MainViewModel by viewModel()
+    private val navigator: Navigator by lazy { scope.get() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -33,34 +31,26 @@ class MainActivity :
         super.onCreate(savedInstanceState)
 
         splashScreen.setKeepOnScreenCondition {
-            viewModel.appState.value == null
+            viewModel.startDestination.value == null
         }
 
         setContent {
-            val navigator: Navigator = get()
-            val appState by viewModel.appState.collectAsStateWithLifecycle()
+            val startDestination by viewModel.startDestination.collectAsStateWithLifecycle()
 
-            LaunchedEffect(appState) {
-                appState?.let {
-                    val newRootDestination = when (it) {
-                        AppState.FullySetup -> Home
+            var showApp by remember {
+                mutableStateOf(false)
+            }
 
-                        AppState.RequiresLogin -> OnboardingRoutes.Auth
-
-                        AppState.RequiresProfileSetup -> OnboardingRoutes.ProfileSetup
-                    }
-
-                    navigator.replaceRootDestination(destination = newRootDestination)
+            LaunchedEffect(startDestination) {
+                startDestination?.let { startDestination ->
+                    navigator.goTo(startDestination)
+                    showApp = true
                 }
             }
 
-            App()
+            if (showApp) {
+                App(navigator = navigator)
+            }
         }
     }
-}
-
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
 }
