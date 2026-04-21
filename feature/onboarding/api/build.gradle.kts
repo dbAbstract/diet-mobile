@@ -21,6 +21,11 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 api(libs.kotlinx.coroutines.core)
+
+                // Projects
+                implementation(projects.libs.auth)
+                implementation(projects.libs.user)
+                implementation(projects.libs.navigation)
             }
         }
 
