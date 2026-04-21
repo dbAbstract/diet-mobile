@@ -4,7 +4,7 @@ plugins {
 
 kotlin {
     androidLibrary {
-        namespace = "dev.yaseyo.onboarding.presentation"
+        namespace = "dev.yaseyo.onboarding.api"
 
         withHostTestBuilder {
         }
@@ -20,14 +20,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-                api(libs.androidx.lifecycle.viewmodel)
                 api(libs.kotlinx.coroutines.core)
-                implementation(libs.koin.core)
-                implementation(libs.koin.core.viewmodel)
-                implementation(projects.feature.onboarding.domain)
-                implementation(projects.libs.auth.api)
-                implementation(projects.libs.user.api)
-                implementation(projects.libs.coroutines)
             }
         }
 

@@ -2,9 +2,11 @@ plugins {
     id("yaseyo.kmp.library")
 }
 
+kmpLibrary {}
+
 kotlin {
     androidLibrary {
-        namespace = "dev.yaseyo.onboarding.domain"
+        namespace = "dev.yaseyo.onboarding.impl"
 
         withHostTestBuilder {
         }
@@ -20,9 +22,8 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
+                implementation(projects.feature.onboarding.api)
                 implementation(libs.koin.core)
-                api(projects.libs.auth.api)
-                api(projects.libs.user.api)
             }
         }
 
