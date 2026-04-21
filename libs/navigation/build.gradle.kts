@@ -13,5 +13,11 @@ kotlin {
                 implementation(libs.kotlin.stdlib)
             }
         }
+
+        androidMain {
+            dependencies {
+                implementation(libs.androidx.navigation3.runtime)
+            }
+        }
     }
 }
