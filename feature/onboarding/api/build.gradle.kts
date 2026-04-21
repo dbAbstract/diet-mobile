@@ -20,6 +20,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
+                implementation(libs.koin.core)
                 api(libs.kotlinx.coroutines.core)
 
                 // Projects

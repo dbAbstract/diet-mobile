@@ -22,7 +22,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-                implementation(projects.feature.onboarding.api)
+                api(projects.feature.onboarding.api)
                 implementation(libs.koin.core)
             }
         }
