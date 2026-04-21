@@ -1,66 +1,60 @@
-package dev.yaseyo.onboarding.presentation
+package dev.yaseyo.onboarding.presentation.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.yaseyo.auth.api.AuthRepository
-import dev.yaseyo.onboarding.domain.AppState
+import dev.yaseyo.coroutines.DispatcherProvider
 import dev.yaseyo.onboarding.domain.CheckAppStateUseCase
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-sealed interface AuthUiState {
-    data object Idle : AuthUiState
-
-    data object Loading : AuthUiState
-
-    data class Success(
-        val appState: AppState,
-    ) : AuthUiState
-
-    data class Error(
-        val message: String,
-    ) : AuthUiState
-}
-
-class AuthPresenter(
+class AuthViewModel(
     private val authRepository: AuthRepository,
     private val checkAppState: CheckAppStateUseCase,
-) : ViewModel() {
+    private val dispatchers: DispatcherProvider,
+) : ViewModel(),
+    AuthEventHandler {
     private val _state = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
     val state: StateFlow<AuthUiState> = _state
 
-    fun signIn(
+    private val _actions = Channel<AuthUiAction>(Channel.BUFFERED)
+    val actions: Flow<AuthUiAction> = _actions.receiveAsFlow()
+
+    override fun signIn(
         email: String,
         password: String,
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.io) {
             _state.value = AuthUiState.Loading
             authRepository
                 .signInWithEmailAndPassword(email, password)
                 .fold(
-                    onSuccess = { _state.value = AuthUiState.Success(checkAppState()) },
+                    onSuccess = { _actions.send(AuthUiAction.NavigateTo(checkAppState())) },
                     onFailure = { _state.value = AuthUiState.Error(it.message ?: "Sign in failed") },
                 )
         }
     }
 
-    fun signUp(
+    override fun signUp(
         email: String,
         password: String,
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.io) {
             _state.value = AuthUiState.Loading
             authRepository
                 .signUpWithEmailAndPassword(email, password)
                 .fold(
-                    onSuccess = { _state.value = AuthUiState.Success(checkAppState()) },
+                    onSuccess = { _actions.send(AuthUiAction.NavigateTo(checkAppState())) },
                     onFailure = { _state.value = AuthUiState.Error(it.message ?: "Sign up failed") },
                 )
         }
     }
 
-    fun clearError() {
+    override fun clearError() {
         _state.value = AuthUiState.Idle
     }
 }
