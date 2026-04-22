@@ -42,9 +42,11 @@ class MainActivity :
             }
 
             LaunchedEffect(startDestination) {
-                startDestination?.let { startDestination ->
-                    navigator.goTo(startDestination)
-                    showApp = true
+                if (!showApp) {
+                    startDestination?.let { startDestination ->
+                        navigator.goTo(startDestination)
+                        showApp = true
+                    }
                 }
             }
 
