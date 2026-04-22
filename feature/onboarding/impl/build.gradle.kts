@@ -1,5 +1,6 @@
 plugins {
     id("yaseyo.kmp.library")
+    alias(libs.plugins.composeCompiler)
 }
 
 kmpLibrary {}
@@ -35,6 +36,9 @@ kotlin {
 
         androidMain {
             dependencies {
+                implementation(libs.compose.foundation)
+                implementation(libs.compose.material3)
+                implementation(libs.koin.android)
             }
         }
 
