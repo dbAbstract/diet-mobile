@@ -6,111 +6,128 @@ description: This skill is to instruct you how to go about implementing a new fe
 # How to create a new feature
 
 ## Module structure rules
-- Multi-module KMP project. No single `:shared` module.
-- `:lib` modules (e.g. `:lib:auth`) — core functionality or I/O. Usually `:api` and `:impl` children, plus a parent proxy module unless too simple to warrant it.
-- `:feature` modules (e.g. `:feature:onboarding`) — user-facing features. Usually `:api` and `:impl` children, plus a parent proxy module.
-  - `:feature:<name>:api` — routes, use case interfaces, domain models, common Koin module. Lives in `commonMain`.
-  - `:feature:<name>:impl` — concrete implementations and platform-specific code. Android nav wiring lives in `androidMain`.
-  - `:feature:<name>` (parent) — umbrella/proxy. Depends on `:api` (via `api(...)`) and `:impl`. Owns the aggregated Koin module that combines both. **This is what `:libs:di` and other consumers depend on — never `:api` or `:impl` directly.**
-- Always get the user's architectural approval before each step.
-- After any new feature or tech stack choice lands, update the project README.
+
+Multi-module KMP project. No single `:shared` module.
+
+### `:feature` modules (e.g. `:feature:onboarding`)
+User-facing features. Structure:
+
+```
+:feature:<name>              ← parent, thin proxy. No source. Just api(:api).
+  :api                       ← REQUIRED. KMP. Public surface: routes, use case interfaces, domain models, api Koin module.
+  :impl                      ← OPTIONAL. Only create when there's shared commonMain implementation to hide behind :api.
+  :android                   ← pure Android library. Nav entries, ViewModels, Compose, FeatureNavigation impl, Android Koin module.
+```
+
+Rules:
+- `:api` is mandatory.
+- `:impl` is case-by-case — add only when there's actual shared Kotlin implementation that warrants hiding. Don't create empty shells.
+- `:android` depends on `:impl` when one exists, otherwise depends on `:api` directly.
+- Parent has **no source**. It only exists to re-export `:api` via `api(projects.feature.<name>.api)`, so consumers depending on the parent get `:api` transitively without needing to know about the internal split.
+- iOS presentation lives in the Xcode/SwiftUI project — **not** as a Gradle module. iOS consumes the umbrella `:libs:di` framework for use cases.
+
+### `:lib` modules (e.g. `:lib:auth`)
+Core functionality or I/O. Structure is `:api` + `:impl` + parent aggregator (see existing `libs/auth` and `libs/user` for the pattern). Parent `api`-depends on `:api`, `implementation`-depends on `:impl`.
+
+## Always get architectural approval before each step. After any new feature lands, update the project README.
 
 ---
 
-## Step-by-step: wiring a new feature into navigation
+## Step-by-step: adding a new `:feature:<name>`
 
-### 1. Define routes in `:feature:<name>:api`
-File: `feature/<name>/api/src/commonMain/kotlin/dev/yaseyo/<name>/api/navigation/<Name>Routes.kt`
+### 1. Create `:feature:<name>:api`
+File: `feature/<name>/api/build.gradle.kts` — applies `yaseyo.kmp.library`, namespace `dev.yaseyo.<name>.api`, commonMain deps for what the public API needs.
 
+Place in `commonMain`:
+- `dev.yaseyo.<name>.api.navigation.<Name>Routes` — `sealed interface <Name>Routes : AppRoute`
+- `dev.yaseyo.<name>.api.model.*` — domain models
+- `dev.yaseyo.<name>.api.*` — use case classes/interfaces
+- `dev.yaseyo.<name>.api.di.<Name>Module.kt` — `val <name>Module = module { ... }` with bindings that are platform-agnostic
+
+### 2. Create `:feature:<name>` (parent proxy)
+File: `feature/<name>/build.gradle.kts`:
 ```kotlin
-sealed interface <Name>Routes : AppRoute {
-    data object <Screen> : <Name>Routes
-    // add more screens as needed
+plugins {
+    id("yaseyo.kmp.library")
 }
-```
 
-### 2. Create the `FeatureNavigation` impl in `:feature:<name>:impl`
-File: `feature/<name>/impl/src/androidMain/kotlin/dev/yaseyo/<name>/impl/<Name>FeatureNavigation.kt`
+kotlin {
+    androidLibrary { namespace = "dev.yaseyo.<name>" }
 
-```kotlin
-internal class <Name>FeatureNavigation : FeatureNavigation {
-    override val navEntryProvider: EntryProviderScope<AppRoute>.() -> Unit = {
-        entry<<Name>Routes.<Screen>> {
-            // Composable UI goes here
+    sourceSets {
+        commonMain.dependencies {
+            api(projects.feature.<name>.api)
         }
     }
 }
 ```
+No `src/` directory. Nothing else.
 
-### 3. Create the Koin android module in `:feature:<name>:impl`
-File: `feature/<name>/impl/src/androidMain/kotlin/dev/yaseyo/<name>/impl/<Name>FeatureAndroidModule.kt`
+### 3. Create `:feature:<name>:android`
+File: `feature/<name>/android/build.gradle.kts` — applies `yaseyo.android.library` (and `libs.plugins.composeCompiler` if the module uses Compose). Namespace `dev.yaseyo.<name>.android`. Depends on `projects.feature.<name>.api` (or `projects.feature.<name>.impl` if one exists).
 
+Place in `src/main/kotlin/dev/yaseyo/<name>/android/`:
+- `<Name>FeatureNavigation.kt` — `internal class <Name>FeatureNavigation : FeatureNavigation { ... }` with nav entries
+- `<Name>FeatureAndroidModule.kt` — `val <name>FeatureAndroidModule = module { factory<FeatureNavigation> { <Name>FeatureNavigation() } }`
+
+Do **not** wrap in `activityRetainedScope`. Register in the root scope (see `wiring-up-koin` skill).
+
+### 4. Register modules in `settings.gradle.kts`
 ```kotlin
-val <name>FeatureAndroidModule = module {
-    factory<FeatureNavigation> { <Name>FeatureNavigation() }
-}
+include(":feature:<name>")
+include(":feature:<name>:api")
+include(":feature:<name>:android")
+// include(":feature:<name>:impl") only if :impl was created
 ```
 
-Key rule: **do not wrap in `activityRetainedScope`**. Register directly in the root scope so `getKoin().getAll<FeatureNavigation>()` can collect it.
+### 5. Wire up in `:libs:di`
+`:libs:di` is the DI composition root — the ONE module allowed to depend on `:android` from outside its feature tree.
 
-### 4. Create the parent proxy module's aggregated Koin module
-File: `feature/<name>/src/androidMain/kotlin/dev/yaseyo/<name>/<Name>Module.kt`
-
-This is the single public entry point for all of this feature's DI. It includes both the `:api` and `:impl` modules:
-
-```kotlin
-val <name>Module = module {
-    includes(<name>ApiModule, <name>FeatureAndroidModule)
-}
-```
-
-The parent's `build.gradle.kts` must depend on both children:
+In `libs/di/build.gradle.kts`:
 ```kotlin
 commonMain.dependencies {
-    api(projects.feature.<name>.api)        // transitive — exposes the public API
-    implementation(projects.feature.<name>.impl)
+    api(projects.feature.<name>)  // transitive :api exposure
+}
+androidMain.dependencies {
+    implementation(projects.feature.<name>.android)
 }
 ```
 
-### 5. Register the parent module in `KoinInitializer`
-File: `libs/di/src/androidMain/kotlin/dev/yaseyo/di/KoinInitializer.kt`
-
+In `libs/di/src/commonMain/.../AppModules.kt`:
 ```kotlin
-modules(appModules + navigationAndroidModule + <name>Module)
+import dev.yaseyo.<name>.api.di.<name>Module
+// add to appModules list
 ```
 
-`:libs:di` must only depend on `projects.feature.<name>` (the parent) — never on `:api` or `:impl` directly.
+In `libs/di/src/androidMain/.../KoinInitializer.kt`:
+```kotlin
+import dev.yaseyo.<name>.android.<name>FeatureAndroidModule
+// add to startKoin { modules(...) } call
+```
+
+### 6. iOS framework export (if the feature is consumed from Swift)
+In `libs/di/build.gradle.kts` iOS target block:
+```kotlin
+export(projects.feature.<name>)
+```
+Exports the parent, which transitively exposes `:api` types to Swift.
 
 ---
 
-## How `App.kt` collects all features (do not change this)
+## How `App.kt` collects all Android nav entries (do not change this)
 
-`App.kt` uses `getKoin().getAll<FeatureNavigation>()` to collect every registered `FeatureNavigation` instance, then wires them all into the Nav3 `entryProvider` via the `registerAll()` extension:
-
-```kotlin
-val allFeatureNavigation = getKoin().getAll<FeatureNavigation>()
-
-NavDisplay(
-    ...
-    entryProvider = allFeatureNavigation.registerAll(),
-)
-
-private fun List<FeatureNavigation>.registerAll(): (AppRoute) -> NavEntry<AppRoute> =
-    entryProvider {
-        forEach { it.navEntryProvider(this) }
-    }
-```
-
-Each feature only needs to register its `factory<FeatureNavigation>` — `App.kt` picks it up automatically.
+`App.kt` uses `getKoin().getAll<FeatureNavigation>()` to collect every `FeatureNavigation` binding, then wires them all into the Nav3 `entryProvider` via the `registerAll()` extension. Each `:android` module only needs to register its own `factory<FeatureNavigation>` — `App.kt` picks it up automatically.
 
 ---
 
-## Checklist for a new feature
+## Checklist
 
-- [ ] Routes defined in `:api` as a `sealed interface` extending `AppRoute`
-- [ ] `<Name>FeatureNavigation` created in `:impl/androidMain`
-- [ ] `:impl` Koin module registering `factory<FeatureNavigation>` in root scope
-- [ ] Parent proxy module created with aggregated Koin module
-- [ ] `:libs:di` updated to depend on the parent (not `:api`/`:impl`) and include the aggregated module
+- [ ] `:api` created (routes, use cases, common Koin module)
+- [ ] Parent proxy created (no source, just `api(:api)`)
+- [ ] `:android` created (nav impl, android Koin module) — depends on `:api` or `:impl`
+- [ ] `:impl` added only if there's actual shared implementation to justify it
+- [ ] `settings.gradle.kts` updated
+- [ ] `:libs:di` wired up: commonMain imports `:api`'s module, androidMain imports `:android`'s module
+- [ ] iOS export added if Swift consumption expected
 - [ ] User approved architecture at each step
 - [ ] README updated

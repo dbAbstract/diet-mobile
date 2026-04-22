@@ -5,14 +5,50 @@ description: This skill is to instruct you how to go about setting up the wiring
 
 # How to wire up Koin
 
-## Module ownership rules
+## Composition-root model
 
-- `:lib` and `:feature` modules each have `:api`, `:impl`, and a **parent proxy** module.
-- `:api` owns a Koin module for its own definitions (use case bindings, interfaces, etc.).
-- `:impl` owns a Koin module for its concrete implementations and platform-specific registrations.
-- The **parent** module owns an **aggregated Koin module** that `includes(...)` both `:api` and `:impl` modules. This is the only Koin module that consumers (e.g. `:libs:di`) ever reference.
-- `:libs:di` collects all parent aggregated modules and passes them to `startKoin { modules(...) }`.
-- Consumers must **never** depend on `:api` or `:impl` directly — always depend on the parent.
+`:libs:di` is the single composition root for Dependency Injection. It:
+- Assembles all Koin modules in `AppModules.kt` (commonMain) and `KoinInitializer.kt` (androidMain)
+- Is the **only** module outside of a feature tree allowed to reference `:android` / `:impl` directly (enforced by the `yaseyo.kmp.library` / `yaseyo.android.library` convention plugin linter)
+- No aggregator/umbrella Koin module per feature. `:libs:di` references the common and platform-specific Koin modules directly.
+
+## Module ownership per module type
+
+### `:feature:<name>:api` (KMP, commonMain)
+```kotlin
+val <name>Module = module {
+    factoryOf(::SomeUseCase)
+    // platform-agnostic bindings only
+}
+```
+
+### `:feature:<name>:impl` (KMP, commonMain) — optional
+If an `:impl` exists, it hosts bindings for implementations that should not leak via `:api`. Define a separate `val <name>ImplModule = module { ... }` if needed.
+
+### `:feature:<name>:android` (pure Android library)
+```kotlin
+val <name>FeatureAndroidModule = module {
+    factory<FeatureNavigation> { <Name>FeatureNavigation() }
+    // Android-specific bindings: ViewModels, platform services, etc.
+}
+```
+
+### `:libs:di`
+`AppModules.kt` (commonMain):
+```kotlin
+internal val appModules = listOf(
+    // ...
+    <name>Module,  // from :api
+)
+```
+
+`KoinInitializer.kt` (androidMain):
+```kotlin
+startKoin {
+    androidContext(context)
+    modules(appModules + navigationAndroidModule + <name>FeatureAndroidModule)
+}
+```
 
 ## Scope rules
 
@@ -21,36 +57,10 @@ description: This skill is to instruct you how to go about setting up the wiring
 
 ## Multi-binding with `getAll`
 
-When multiple modules contribute implementations of the same interface (e.g. `FeatureNavigation`), each registers its own `factory<TheInterface>`. Call `getKoin().getAll<TheInterface>()` to collect all of them at the call site.
+When multiple `:android` modules contribute implementations of the same interface (e.g. `FeatureNavigation`), each registers its own `factory<TheInterface>`. Call `getKoin().getAll<TheInterface>()` at the call site to collect all of them. This is how `App.kt` aggregates nav entries across features.
 
-## Structure per module type
+## What NOT to do
 
-### `:feature:<name>:api` (commonMain)
-```kotlin
-val <name>ApiModule = module {
-    // interfaces, use case factories, etc.
-}
-```
-
-### `:feature:<name>:impl` (androidMain or commonMain)
-```kotlin
-val <name>FeatureAndroidModule = module {
-    factory<FeatureNavigation> { <Name>FeatureNavigation() }
-    // other impl-specific bindings
-}
-```
-
-### `:feature:<name>` parent (androidMain)
-```kotlin
-val <name>Module = module {
-    includes(<name>ApiModule, <name>FeatureAndroidModule)
-}
-```
-
-### `:libs:di` `KoinInitializer`
-```kotlin
-startKoin {
-    androidContext(context)
-    modules(appModules + navigationAndroidModule + <name>Module + ...)
-}
-```
+- **Don't create a per-feature aggregator Koin module** in the parent. The parent has no source. Aggregation happens at the `:libs:di` composition root.
+- **Don't have the parent depend on `:android`** — it would create a project cycle (`:android` depends on `:api`/`:impl`, which live under parent).
+- **Don't include `:api`'s Koin module from inside `:android`'s module**. `:libs:di` registers both separately. Using `includes(...)` double-registers.
