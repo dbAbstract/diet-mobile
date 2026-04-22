@@ -3,21 +3,54 @@ name: wiring-up-koin
 description: This skill is to instruct you how to go about setting up the wiring of Koin
 ---
 
-# How to teach me or explain to me
+# How to wire up Koin
 
-## Instructions
+## Module ownership rules
 
-- Among the shared KMP modules, there are 2 variants. `:lib` and `:feature`.
-- `:lib` modules (eg. `:lib:auth`) is for core functionality or I/O of a certain data.
-- `:lib` modules will always consist of two child modules. `:api` and `:impl`
-- `:feature` modules (eg. `:feature:history`) would be for consumer facing functionalities
-- `:feature` modules will always consist of three child modules. `:ui`, `:data` and `:domain`
-- `:feature:someFeature:ui` will, however, live in the native codebases since that's where it's
-  implemented
-- The feature's data and ui child modules, will depend on domain
-- Each parent module will have an aggregator DI Koin module, every child module will have its own
-  public Koin module
-- which then gets included in the parent module's Koin module.
-- The parent's Koin module is then added to the :lib:di module's Koin module.
+- `:lib` and `:feature` modules each have `:api`, `:impl`, and a **parent proxy** module.
+- `:api` owns a Koin module for its own definitions (use case bindings, interfaces, etc.).
+- `:impl` owns a Koin module for its concrete implementations and platform-specific registrations.
+- The **parent** module owns an **aggregated Koin module** that `includes(...)` both `:api` and `:impl` modules. This is the only Koin module that consumers (e.g. `:libs:di`) ever reference.
+- `:libs:di` collects all parent aggregated modules and passes them to `startKoin { modules(...) }`.
+- Consumers must **never** depend on `:api` or `:impl` directly — always depend on the parent.
 
-## Examples
+## Scope rules
+
+- Register definitions in the **root scope** (`module { factory<T> { ... } }`) unless there is a specific reason to scope them.
+- Do **not** wrap definitions in `activityRetainedScope { }` unless the definition must be tied to an activity's retained lifecycle. Scoped definitions are invisible to root-scope lookups like `getKoin().getAll<T>()`.
+
+## Multi-binding with `getAll`
+
+When multiple modules contribute implementations of the same interface (e.g. `FeatureNavigation`), each registers its own `factory<TheInterface>`. Call `getKoin().getAll<TheInterface>()` to collect all of them at the call site.
+
+## Structure per module type
+
+### `:feature:<name>:api` (commonMain)
+```kotlin
+val <name>ApiModule = module {
+    // interfaces, use case factories, etc.
+}
+```
+
+### `:feature:<name>:impl` (androidMain or commonMain)
+```kotlin
+val <name>FeatureAndroidModule = module {
+    factory<FeatureNavigation> { <Name>FeatureNavigation() }
+    // other impl-specific bindings
+}
+```
+
+### `:feature:<name>` parent (androidMain)
+```kotlin
+val <name>Module = module {
+    includes(<name>ApiModule, <name>FeatureAndroidModule)
+}
+```
+
+### `:libs:di` `KoinInitializer`
+```kotlin
+startKoin {
+    androidContext(context)
+    modules(appModules + navigationAndroidModule + <name>Module + ...)
+}
+```

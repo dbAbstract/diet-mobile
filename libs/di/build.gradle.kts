@@ -21,7 +21,7 @@ kotlin {
         target.binaries.withType<Framework>().configureEach {
             export(projects.libs.auth.api)
             export(projects.libs.user)
-            export(projects.feature.onboarding.api)
+            export(projects.feature.onboarding)
         }
     }
 
@@ -40,8 +40,7 @@ kotlin {
                 implementation(projects.libs.navigation)
 
                 // Features
-                implementation(projects.feature.onboarding.impl)
-                api(projects.feature.onboarding.api)
+                api(projects.feature.onboarding)
             }
         }
 
