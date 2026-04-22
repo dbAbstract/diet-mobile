@@ -1,4 +1,4 @@
-package dev.yaseyo.onboarding.impl
+package dev.yaseyo.onboarding.android
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

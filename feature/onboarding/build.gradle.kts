@@ -8,10 +8,8 @@ kotlin {
     }
 
     sourceSets {
-        androidMain.dependencies {
+        commonMain.dependencies {
             api(projects.feature.onboarding.api)
-            implementation(projects.feature.onboarding.impl)
-            implementation(libs.koin.core)
         }
     }
 }

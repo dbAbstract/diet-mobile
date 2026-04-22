@@ -20,5 +20,9 @@ gradlePlugin {
             id = "yaseyo.kmp.library"
             implementationClass = "dev.yaseyo.KmpLibraryConventionPlugin"
         }
+        register("androidLibrary") {
+            id = "yaseyo.android.library"
+            implementationClass = "dev.yaseyo.AndroidLibraryConventionPlugin"
+        }
     }
 }

@@ -23,7 +23,6 @@ kotlin {
                 implementation(libs.koin.core)
                 api(libs.kotlinx.coroutines.core)
 
-                // Projects
                 implementation(projects.libs.auth)
                 implementation(projects.libs.user)
                 api(projects.libs.navigation)
@@ -33,12 +32,6 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(libs.kotlin.test)
-            }
-        }
-
-        androidMain {
-            dependencies {
-                implementation(libs.koin.compose.nav3)
             }
         }
 

@@ -48,6 +48,8 @@ kotlin {
             dependencies {
                 implementation(libs.koin.android)
                 implementation(libs.androidx.startup.runtime)
+
+                implementation(projects.feature.onboarding.android)
             }
         }
 
