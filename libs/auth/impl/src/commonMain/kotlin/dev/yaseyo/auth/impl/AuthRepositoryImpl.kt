@@ -50,6 +50,17 @@ internal class AuthRepositoryImpl(
             )
         }
 
+    override suspend fun signUpWithEmailAndPassword(
+        email: String,
+        password: String,
+    ): Result<Unit> =
+        runCatching {
+            firebaseAuth.createUserWithEmailAndPassword(
+                email = email,
+                password = password,
+            )
+        }
+
     override suspend fun signOut() {
         firebaseAuth.signOut()
     }

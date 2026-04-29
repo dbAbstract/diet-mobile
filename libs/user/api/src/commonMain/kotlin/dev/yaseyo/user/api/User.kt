@@ -1,7 +1,7 @@
 package dev.yaseyo.user.api
 
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlin.time.Instant
 
 data class User(
     val id: String,
