@@ -1,5 +1,6 @@
 plugins {
     id("yaseyo.kmp.library")
+    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
 }
 
@@ -27,6 +28,10 @@ kotlin {
                 implementation(projects.libs.auth)
                 implementation(projects.libs.user)
                 api(projects.libs.navigation)
+
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material3)
             }
         }
 
@@ -40,8 +45,6 @@ kotlin {
             dependencies {
                 implementation(libs.koin.android)
                 implementation(libs.koin.compose.nav3)
-                implementation(libs.compose.foundation)
-                implementation(libs.compose.material3)
             }
         }
 
