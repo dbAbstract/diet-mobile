@@ -1,4 +1,4 @@
-package dev.yaseyo.onboarding.api.navigation
+package dev.yaseyo.onboarding.navigation
 
 import dev.yaseyo.navigation.AppRoute
 

@@ -3,7 +3,7 @@ package dev.yaseyo.di
 import android.content.Context
 import androidx.startup.Initializer
 import dev.yaseyo.navigation.navigationAndroidModule
-import dev.yaseyo.onboarding.android.onboardingFeatureAndroidModule
+import dev.yaseyo.onboarding.onboardingFeatureAndroidModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin

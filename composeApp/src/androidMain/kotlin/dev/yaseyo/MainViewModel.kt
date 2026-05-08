@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.yaseyo.navigation.AppRoute
 import dev.yaseyo.navigation.Home
-import dev.yaseyo.onboarding.api.ResolveAppStateUseCase
-import dev.yaseyo.onboarding.api.model.AppState
-import dev.yaseyo.onboarding.api.navigation.OnboardingRoutes
+import dev.yaseyo.onboarding.ResolveAppStateUseCase
+import dev.yaseyo.onboarding.model.AppState
+import dev.yaseyo.onboarding.navigation.OnboardingRoutes
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow

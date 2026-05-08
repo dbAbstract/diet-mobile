@@ -1,6 +1,6 @@
-package dev.yaseyo.onboarding.api.di
+package dev.yaseyo.onboarding.di
 
-import dev.yaseyo.onboarding.api.ResolveAppStateUseCase
+import dev.yaseyo.onboarding.ResolveAppStateUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 

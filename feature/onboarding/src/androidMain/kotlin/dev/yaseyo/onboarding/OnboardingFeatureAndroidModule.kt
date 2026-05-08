@@ -1,4 +1,4 @@
-package dev.yaseyo.onboarding.android
+package dev.yaseyo.onboarding
 
 import dev.yaseyo.navigation.FeatureNavigation
 import org.koin.dsl.module

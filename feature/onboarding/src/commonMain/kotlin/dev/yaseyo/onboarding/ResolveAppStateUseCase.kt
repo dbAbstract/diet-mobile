@@ -1,8 +1,8 @@
-package dev.yaseyo.onboarding.api
+package dev.yaseyo.onboarding
 
 import dev.yaseyo.auth.api.AuthRepository
 import dev.yaseyo.auth.api.AuthState
-import dev.yaseyo.onboarding.api.model.AppState
+import dev.yaseyo.onboarding.model.AppState
 import dev.yaseyo.user.api.UserRepository
 
 class ResolveAppStateUseCase(

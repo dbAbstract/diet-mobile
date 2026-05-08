@@ -1,4 +1,4 @@
-package dev.yaseyo.onboarding.api.model
+package dev.yaseyo.onboarding.model
 
 sealed interface AppState {
     data object FullySetup : AppState
