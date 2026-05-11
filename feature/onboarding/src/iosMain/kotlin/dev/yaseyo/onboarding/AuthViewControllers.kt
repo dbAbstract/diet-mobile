@@ -1,6 +1,6 @@
 package dev.yaseyo.onboarding
 
-import androidx.compose.ui.window.ComposeUIViewController
+import dev.yaseyo.design.createYaseyoUiViewController
 import dev.yaseyo.onboarding.ui.AuthScreen
 
-fun authScreenViewController() = ComposeUIViewController { AuthScreen() }
+fun authScreenViewController() = createYaseyoUiViewController { AuthScreen() }
