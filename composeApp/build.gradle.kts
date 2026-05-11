@@ -19,6 +19,7 @@ kotlin {
         androidMain.dependencies {
             // Libs
             implementation(projects.libs.di)
+            implementation(projects.libs.design)
 
             // Dependencies
             implementation(libs.androidx.startup.runtime)

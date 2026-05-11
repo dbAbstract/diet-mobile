@@ -31,7 +31,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,161 +45,169 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.yaseyo.design.LocalSnackBarHostState
 import dev.yaseyo.design.YaseyoTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AuthScreen(viewModel: AuthViewModel = koinViewModel()) {
-    val state by viewModel.uiState.collectAsState()
+internal fun AuthScreen(viewModel: AuthViewModel = koinViewModel()) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val snackBarHostState = LocalSnackBarHostState.current
+
     AuthContent(state = state, eventHandler = viewModel)
+
+    LaunchedEffect(viewModel) {
+        viewModel.action.collect {
+            snackBarHostState.showSnackbar(it)
+        }
+    }
 }
 
 @Composable
-fun AuthContent(
+private fun AuthContent(
     state: AuthUiState,
     eventHandler: AuthEventHandler,
 ) {
-    YaseyoTheme {
-        val colors = YaseyoTheme.colors
+    val colors = YaseyoTheme.colors
 
-        Box(
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(colors.backgroundBase)),
+    ) {
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(colors.backgroundBase)),
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp, vertical = 56.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 24.dp, vertical = 56.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+            AppLogo(accentSubtle = Color(colors.accentSubtle))
+
+            Spacer(Modifier.height(16.dp))
+
+            Text(
+                text = "Yaseyo",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(colors.accentDefault),
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            Text(
+                text = "Cultivating a lighter, healthier you.",
+                fontSize = 15.sp,
+                color = Color(colors.contentSecondary),
+            )
+
+            Spacer(Modifier.height(32.dp))
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(colors.backgroundElevated)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             ) {
-                AppLogo(accentSubtle = Color(colors.accentSubtle))
+                Column(modifier = Modifier.padding(20.dp)) {
+                    AuthToggle(
+                        selectedTab = state.tab,
+                        onTabSelected = eventHandler::onTabChanged,
+                    )
 
-                Spacer(Modifier.height(16.dp))
+                    Spacer(Modifier.height(24.dp))
 
-                Text(
-                    text = "Yaseyo",
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(colors.accentDefault),
-                )
+                    FieldLabel("EMAIL ADDRESS")
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = state.email,
+                        onValueChange = eventHandler::onEmailChanged,
+                        modifier = Modifier.fillMaxWidth(),
+                        placeholder = { Text("hello@example.com", color = Color(colors.contentTertiary)) },
+                        leadingIcon = {
+                            Icon(Icons.Default.Email, contentDescription = null, tint = Color(colors.contentTertiary))
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                        colors = fieldColors(),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    )
 
-                Spacer(Modifier.height(8.dp))
+                    Spacer(Modifier.height(16.dp))
 
-                Text(
-                    text = "Cultivating a lighter, healthier you.",
-                    fontSize = 15.sp,
-                    color = Color(colors.contentSecondary),
-                )
+                    FieldLabel("PASSWORD")
+                    Spacer(Modifier.height(8.dp))
+                    OutlinedTextField(
+                        value = state.password,
+                        onValueChange = eventHandler::onPasswordChanged,
+                        modifier = Modifier.fillMaxWidth(),
+                        leadingIcon = {
+                            Icon(Icons.Default.Lock, contentDescription = null, tint = Color(colors.contentTertiary))
+                        },
+                        trailingIcon = {
+                            IconButton(onClick = eventHandler::onPasswordVisibilityToggled) {
+                                Icon(
+                                    imageVector = if (state.isPasswordVisible) {
+                                        Icons.Default.VisibilityOff
+                                    } else {
+                                        Icons.Default.Visibility
+                                    },
+                                    contentDescription = if (state.isPasswordVisible) "Hide password" else "Show password",
+                                    tint = Color(colors.contentTertiary),
+                                )
+                            }
+                        },
+                        visualTransformation = if (state.isPasswordVisible) {
+                            VisualTransformation.None
+                        } else {
+                            PasswordVisualTransformation()
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                        colors = fieldColors(),
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                    )
 
-                Spacer(Modifier.height(32.dp))
+                    Spacer(Modifier.height(8.dp))
 
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color(colors.backgroundElevated)),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                ) {
-                    Column(modifier = Modifier.padding(20.dp)) {
-                        AuthToggle(
-                            selectedTab = state.tab,
-                            onTabSelected = eventHandler::onTabChanged,
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                        Text(
+                            text = "Forgot Password?",
+                            color = Color(colors.accentDefault),
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 14.sp,
+                            modifier = Modifier.clickable { eventHandler.onForgotPasswordClicked() },
                         )
+                    }
 
-                        Spacer(Modifier.height(24.dp))
+                    Spacer(Modifier.height(24.dp))
 
-                        FieldLabel("EMAIL ADDRESS")
-                        Spacer(Modifier.height(8.dp))
-                        OutlinedTextField(
-                            value = state.email,
-                            onValueChange = eventHandler::onEmailChanged,
-                            modifier = Modifier.fillMaxWidth(),
-                            placeholder = { Text("hello@example.com", color = Color(colors.contentTertiary)) },
-                            leadingIcon = {
-                                Icon(Icons.Default.Email, contentDescription = null, tint = Color(colors.contentTertiary))
-                            },
-                            shape = RoundedCornerShape(12.dp),
-                            colors = fieldColors(),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    Button(
+                        onClick = eventHandler::onSubmitClicked,
+                        modifier = Modifier.fillMaxWidth().height(56.dp),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(colors.accentDefault)),
+                        enabled = !state.isLoading,
+                    ) {
+                        Text(
+                            text = if (state.tab == AuthTab.SignIn) "Log In →" else "Sign Up →",
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = Color(colors.contentOnAccent),
                         )
-
-                        Spacer(Modifier.height(16.dp))
-
-                        FieldLabel("PASSWORD")
-                        Spacer(Modifier.height(8.dp))
-                        OutlinedTextField(
-                            value = state.password,
-                            onValueChange = eventHandler::onPasswordChanged,
-                            modifier = Modifier.fillMaxWidth(),
-                            leadingIcon = {
-                                Icon(Icons.Default.Lock, contentDescription = null, tint = Color(colors.contentTertiary))
-                            },
-                            trailingIcon = {
-                                IconButton(onClick = eventHandler::onPasswordVisibilityToggled) {
-                                    Icon(
-                                        imageVector = if (state.isPasswordVisible) {
-                                            Icons.Default.VisibilityOff
-                                        } else {
-                                            Icons.Default.Visibility
-                                        },
-                                        contentDescription = if (state.isPasswordVisible) "Hide password" else "Show password",
-                                        tint = Color(colors.contentTertiary),
-                                    )
-                                }
-                            },
-                            visualTransformation = if (state.isPasswordVisible) {
-                                VisualTransformation.None
-                            } else {
-                                PasswordVisualTransformation()
-                            },
-                            shape = RoundedCornerShape(12.dp),
-                            colors = fieldColors(),
-                            singleLine = true,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        )
-
-                        Spacer(Modifier.height(8.dp))
-
-                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-                            Text(
-                                text = "Forgot Password?",
-                                color = Color(colors.accentDefault),
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 14.sp,
-                                modifier = Modifier.clickable { eventHandler.onForgotPasswordClicked() },
-                            )
-                        }
-
-                        Spacer(Modifier.height(24.dp))
-
-                        Button(
-                            onClick = eventHandler::onSubmitClicked,
-                            modifier = Modifier.fillMaxWidth().height(56.dp),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = ButtonDefaults.buttonColors(containerColor = Color(colors.accentDefault)),
-                            enabled = !state.isLoading,
-                        ) {
-                            Text(
-                                text = if (state.tab == AuthTab.SignIn) "Log In →" else "Sign Up →",
-                                fontSize = 17.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color(colors.contentOnAccent),
-                            )
-                        }
                     }
                 }
-
-                Spacer(Modifier.height(24.dp))
-
-                Text(
-                    text = "By continuing, you agree to Yaseyo's Terms of Service and Privacy Policy.",
-                    fontSize = 12.sp,
-                    color = Color(colors.contentTertiary),
-                    textAlign = TextAlign.Center,
-                )
             }
+
+            Spacer(Modifier.height(24.dp))
+
+            Text(
+                text = "By continuing, you agree to Yaseyo's Terms of Service and Privacy Policy.",
+                fontSize = 12.sp,
+                color = Color(colors.contentTertiary),
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }
