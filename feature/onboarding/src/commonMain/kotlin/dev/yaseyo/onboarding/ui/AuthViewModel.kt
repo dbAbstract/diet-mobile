@@ -54,6 +54,21 @@ internal class AuthViewModel(
                 }
             }
             AuthTab.SignUp -> {
+                viewModelScope.launch {
+                    val signUpResult = authRepository.signUpWithEmailAndPassword(
+                        email = uiState.value.email,
+                        password = uiState.value.password,
+                    )
+
+                    signUpResult.fold(
+                        onSuccess = {
+                            router.navigate(route = OnboardingRoutes.ProfileSetup)
+                        },
+                        onFailure = {
+                            _action.send("Something went wrong")
+                        },
+                    )
+                }
             }
         }
     }
