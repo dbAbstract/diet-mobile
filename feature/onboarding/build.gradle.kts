@@ -27,6 +27,7 @@ kotlin {
                 implementation(libs.koin.compose)
                 implementation(libs.koin.compose.viewmodel)
                 api(libs.kotlinx.coroutines.core)
+                implementation(libs.ktor.client.core)
 
                 implementation(projects.libs.auth)
                 implementation(projects.libs.user)
@@ -39,6 +40,7 @@ kotlin {
                 implementation(libs.compose.material3)
                 implementation(libs.compose.uiToolingPreview)
                 implementation(libs.compose.material.icons.extended)
+                implementation(libs.compose.navigationevent)
             }
         }
 
