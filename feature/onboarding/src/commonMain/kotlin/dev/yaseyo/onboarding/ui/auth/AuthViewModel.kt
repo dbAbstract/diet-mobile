@@ -1,4 +1,4 @@
-package dev.yaseyo.onboarding.ui
+package dev.yaseyo.onboarding.ui.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

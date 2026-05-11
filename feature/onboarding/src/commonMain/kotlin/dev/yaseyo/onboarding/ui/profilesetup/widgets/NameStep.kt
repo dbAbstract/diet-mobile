@@ -1,4 +1,4 @@
-package dev.yaseyo.onboarding.ui.profilesetup.steps
+package dev.yaseyo.onboarding.ui.profilesetup.widgets
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

@@ -34,8 +34,8 @@ import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.onboarding.model.OnboardingStep
-import dev.yaseyo.onboarding.ui.profilesetup.components.OnboardingProgressBar
-import dev.yaseyo.onboarding.ui.profilesetup.steps.NameStep
+import dev.yaseyo.onboarding.ui.profilesetup.widgets.NameStep
+import dev.yaseyo.onboarding.ui.profilesetup.widgets.OnboardingProgressBar
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

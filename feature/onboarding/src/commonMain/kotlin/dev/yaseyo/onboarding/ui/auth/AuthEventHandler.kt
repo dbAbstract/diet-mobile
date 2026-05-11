@@ -1,4 +1,4 @@
-package dev.yaseyo.onboarding.ui
+package dev.yaseyo.onboarding.ui.auth
 
 interface AuthEventHandler {
     fun onTabChanged(tab: AuthTab)

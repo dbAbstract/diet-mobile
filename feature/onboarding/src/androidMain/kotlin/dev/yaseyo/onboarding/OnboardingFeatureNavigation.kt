@@ -4,7 +4,7 @@ import androidx.navigation3.runtime.EntryProviderScope
 import dev.yaseyo.navigation.AppRoute
 import dev.yaseyo.navigation.FeatureNavigation
 import dev.yaseyo.onboarding.navigation.OnboardingRoutes
-import dev.yaseyo.onboarding.ui.AuthScreen
+import dev.yaseyo.onboarding.ui.auth.AuthScreen
 import dev.yaseyo.onboarding.ui.profilesetup.ProfileSetupScreen
 
 internal class OnboardingFeatureNavigation : FeatureNavigation {

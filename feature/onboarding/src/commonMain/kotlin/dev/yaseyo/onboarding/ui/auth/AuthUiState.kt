@@ -1,4 +1,4 @@
-package dev.yaseyo.onboarding.ui
+package dev.yaseyo.onboarding.ui.auth
 
 enum class AuthTab { SignIn, SignUp }
 
