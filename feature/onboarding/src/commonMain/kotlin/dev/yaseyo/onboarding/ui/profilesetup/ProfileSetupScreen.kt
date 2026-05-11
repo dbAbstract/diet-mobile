@@ -34,6 +34,7 @@ import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.onboarding.model.OnboardingStep
+import dev.yaseyo.onboarding.ui.profilesetup.widgets.AboutYouStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.NameStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.OnboardingProgressBar
 import org.koin.compose.viewmodel.koinViewModel
@@ -108,6 +109,18 @@ private fun ProfileSetupContent(
                         subtitle = state.currentStep?.subtitle,
                         onNameChanged = eventHandler::onNameChanged,
                     )
+                    1 -> AboutYouStep(
+                        sex = state.sex,
+                        dobMonth = state.dobMonth,
+                        dobDay = state.dobDay,
+                        dobYear = state.dobYear,
+                        title = state.currentStep?.title ?: "Tell us about yourself",
+                        subtitle = state.currentStep?.subtitle,
+                        onSexChanged = eventHandler::onSexChanged,
+                        onMonthChanged = eventHandler::onDobMonthChanged,
+                        onDayChanged = eventHandler::onDobDayChanged,
+                        onYearChanged = eventHandler::onDobYearChanged,
+                    )
                 }
             }
 
@@ -124,6 +137,7 @@ private fun ProfileSetupContent(
                 ),
                 enabled = when (state.currentStepIndex) {
                     0 -> state.name.isNotBlank()
+                    1 -> state.sex != null
                     else -> true
                 },
             ) {
@@ -157,6 +171,14 @@ private val previewState = ProfileSetupUiState(
 
 private val previewHandler = object : ProfileSetupEventHandler {
     override fun onNameChanged(name: String) {}
+
+    override fun onSexChanged(sex: dev.yaseyo.user.api.Sex) {}
+
+    override fun onDobMonthChanged(month: Int) {}
+
+    override fun onDobDayChanged(day: Int) {}
+
+    override fun onDobYearChanged(year: Int) {}
 
     override fun onContinue() {}
 

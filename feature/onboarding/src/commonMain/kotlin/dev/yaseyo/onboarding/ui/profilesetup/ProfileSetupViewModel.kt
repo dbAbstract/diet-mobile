@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dev.yaseyo.navigation.AppRouter
 import dev.yaseyo.onboarding.model.OnboardingStep
 import dev.yaseyo.onboarding.network.OnboardingApi
+import dev.yaseyo.user.api.Sex
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,6 +41,14 @@ internal class ProfileSetupViewModel(
     }
 
     override fun onNameChanged(name: String) = _uiState.update { it.copy(name = name) }
+
+    override fun onSexChanged(sex: Sex) = _uiState.update { it.copy(sex = sex) }
+
+    override fun onDobMonthChanged(month: Int) = _uiState.update { it.copy(dobMonth = month) }
+
+    override fun onDobDayChanged(day: Int) = _uiState.update { it.copy(dobDay = day) }
+
+    override fun onDobYearChanged(year: Int) = _uiState.update { it.copy(dobYear = year) }
 
     override fun onContinue() {
         val state = _uiState.value
