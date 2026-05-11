@@ -23,6 +23,9 @@ kotlin {
             dependencies {
                 implementation(libs.kotlin.stdlib)
                 implementation(libs.koin.core)
+                implementation(libs.koin.core.viewmodel)
+                implementation(libs.koin.compose)
+                implementation(libs.koin.compose.viewmodel)
                 api(libs.kotlinx.coroutines.core)
 
                 implementation(projects.libs.auth)
@@ -30,11 +33,13 @@ kotlin {
                 api(projects.libs.navigation)
                 implementation(projects.libs.design)
 
+                implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
+                implementation(libs.compose.uiToolingPreview)
                 // Pinned at 1.7.3 — CMP 1.8+ recommends Material Symbols for future icon work
-                implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
+                implementation(libs.compose.material.icons.extended)
             }
         }
 
@@ -48,7 +53,6 @@ kotlin {
             dependencies {
                 implementation(libs.koin.android)
                 implementation(libs.koin.compose.nav3)
-                implementation(libs.compose.uiToolingPreview)
             }
         }
 

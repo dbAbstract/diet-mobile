@@ -2,15 +2,18 @@ package dev.yaseyo.onboarding
 
 import dev.yaseyo.auth.api.AuthRepository
 import dev.yaseyo.auth.api.AuthState
+import dev.yaseyo.navigation.AppRoute
+import dev.yaseyo.navigation.Home
 import dev.yaseyo.onboarding.model.AppState
+import dev.yaseyo.onboarding.navigation.OnboardingRoutes
 import dev.yaseyo.user.api.UserRepository
 
-class ResolveAppStateUseCase(
+class ResolveStartDestinationUseCase(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
 ) {
-    suspend fun execute(): AppState =
-        when (authRepository.authState.value) {
+    suspend fun execute(): AppRoute {
+        val appState = when (authRepository.authState.value) {
             is AuthState.SignedOut -> AppState.RequiresLogin
 
             is AuthState.SignedIn -> {
@@ -22,4 +25,13 @@ class ResolveAppStateUseCase(
                 }
             }
         }
+
+        return when (appState) {
+            AppState.FullySetup -> Home
+
+            AppState.RequiresLogin -> OnboardingRoutes.Auth
+
+            AppState.RequiresProfileSetup -> OnboardingRoutes.ProfileSetup
+        }
+    }
 }

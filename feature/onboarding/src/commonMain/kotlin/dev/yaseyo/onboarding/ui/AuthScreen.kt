@@ -31,10 +31,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,18 +42,25 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.yaseyo.design.YaseyoTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun AuthScreen() =
+fun AuthScreen(viewModel: AuthViewModel = koinViewModel()) {
+    val state by viewModel.uiState.collectAsState()
+    AuthContent(state = state, eventHandler = viewModel)
+}
+
+@Composable
+fun AuthContent(
+    state: AuthUiState,
+    eventHandler: AuthEventHandler,
+) {
     YaseyoTheme {
         val colors = YaseyoTheme.colors
-        var isSignIn by remember { mutableStateOf(true) }
-        var email by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
-        var passwordVisible by remember { mutableStateOf(false) }
 
         Box(
             modifier = Modifier
@@ -98,9 +103,8 @@ fun AuthScreen() =
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {
                         AuthToggle(
-                            isSignIn = isSignIn,
-                            onSignInSelected = { isSignIn = true },
-                            onSignUpSelected = { isSignIn = false },
+                            selectedTab = state.tab,
+                            onTabSelected = eventHandler::onTabChanged,
                         )
 
                         Spacer(Modifier.height(24.dp))
@@ -108,8 +112,8 @@ fun AuthScreen() =
                         FieldLabel("EMAIL ADDRESS")
                         Spacer(Modifier.height(8.dp))
                         OutlinedTextField(
-                            value = email,
-                            onValueChange = { email = it },
+                            value = state.email,
+                            onValueChange = eventHandler::onEmailChanged,
                             modifier = Modifier.fillMaxWidth(),
                             placeholder = { Text("hello@example.com", color = Color(colors.contentTertiary)) },
                             leadingIcon = {
@@ -126,22 +130,30 @@ fun AuthScreen() =
                         FieldLabel("PASSWORD")
                         Spacer(Modifier.height(8.dp))
                         OutlinedTextField(
-                            value = password,
-                            onValueChange = { password = it },
+                            value = state.password,
+                            onValueChange = eventHandler::onPasswordChanged,
                             modifier = Modifier.fillMaxWidth(),
                             leadingIcon = {
                                 Icon(Icons.Default.Lock, contentDescription = null, tint = Color(colors.contentTertiary))
                             },
                             trailingIcon = {
-                                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                                IconButton(onClick = eventHandler::onPasswordVisibilityToggled) {
                                     Icon(
-                                        imageVector = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                                        contentDescription = if (passwordVisible) "Hide password" else "Show password",
+                                        imageVector = if (state.isPasswordVisible) {
+                                            Icons.Default.VisibilityOff
+                                        } else {
+                                            Icons.Default.Visibility
+                                        },
+                                        contentDescription = if (state.isPasswordVisible) "Hide password" else "Show password",
                                         tint = Color(colors.contentTertiary),
                                     )
                                 }
                             },
-                            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                            visualTransformation = if (state.isPasswordVisible) {
+                                VisualTransformation.None
+                            } else {
+                                PasswordVisualTransformation()
+                            },
                             shape = RoundedCornerShape(12.dp),
                             colors = fieldColors(),
                             singleLine = true,
@@ -156,19 +168,21 @@ fun AuthScreen() =
                                 color = Color(colors.accentDefault),
                                 fontWeight = FontWeight.Medium,
                                 fontSize = 14.sp,
+                                modifier = Modifier.clickable { eventHandler.onForgotPasswordClicked() },
                             )
                         }
 
                         Spacer(Modifier.height(24.dp))
 
                         Button(
-                            onClick = {},
+                            onClick = eventHandler::onSubmitClicked,
                             modifier = Modifier.fillMaxWidth().height(56.dp),
                             shape = RoundedCornerShape(16.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = Color(colors.accentDefault)),
+                            enabled = !state.isLoading,
                         ) {
                             Text(
-                                text = "Log In →",
+                                text = if (state.tab == AuthTab.SignIn) "Log In →" else "Sign Up →",
                                 fontSize = 17.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = Color(colors.contentOnAccent),
@@ -188,6 +202,7 @@ fun AuthScreen() =
             }
         }
     }
+}
 
 @Composable
 private fun AppLogo(accentSubtle: Color) {
@@ -204,9 +219,8 @@ private fun AppLogo(accentSubtle: Color) {
 
 @Composable
 private fun AuthToggle(
-    isSignIn: Boolean,
-    onSignInSelected: () -> Unit,
-    onSignUpSelected: () -> Unit,
+    selectedTab: AuthTab,
+    onTabSelected: (AuthTab) -> Unit,
 ) {
     val colors = YaseyoTheme.colors
     Row(
@@ -216,13 +230,23 @@ private fun AuthToggle(
             .background(Color(colors.backgroundSubtle))
             .padding(4.dp),
     ) {
-        AuthTab(label = "Sign In", selected = isSignIn, modifier = Modifier.weight(1f), onClick = onSignInSelected)
-        AuthTab(label = "Sign Up", selected = !isSignIn, modifier = Modifier.weight(1f), onClick = onSignUpSelected)
+        AuthTabButton(
+            label = "Sign In",
+            selected = selectedTab == AuthTab.SignIn,
+            modifier = Modifier.weight(1f),
+            onClick = { onTabSelected(AuthTab.SignIn) },
+        )
+        AuthTabButton(
+            label = "Sign Up",
+            selected = selectedTab == AuthTab.SignUp,
+            modifier = Modifier.weight(1f),
+            onClick = { onTabSelected(AuthTab.SignUp) },
+        )
     }
 }
 
 @Composable
-private fun AuthTab(
+private fun AuthTabButton(
     label: String,
     selected: Boolean,
     modifier: Modifier = Modifier,
@@ -267,4 +291,40 @@ private fun fieldColors(): TextFieldColors {
         unfocusedTextColor = Color(colors.contentPrimary),
         focusedTextColor = Color(colors.contentPrimary),
     )
+}
+
+private val previewState = AuthUiState()
+
+private val previewHandler = object : AuthEventHandler {
+    override fun onTabChanged(tab: AuthTab) {}
+
+    override fun onEmailChanged(email: String) {}
+
+    override fun onPasswordChanged(password: String) {}
+
+    override fun onPasswordVisibilityToggled() {}
+
+    override fun onSubmitClicked() {}
+
+    override fun onForgotPasswordClicked() {}
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AuthContentLightPreview() {
+    YaseyoTheme(darkTheme = false) { AuthContent(state = previewState, eventHandler = previewHandler) }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AuthContentSignUpPreview() {
+    YaseyoTheme(darkTheme = false) {
+        AuthContent(state = previewState.copy(tab = AuthTab.SignUp), eventHandler = previewHandler)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AuthContentDarkPreview() {
+    YaseyoTheme(darkTheme = true) { AuthContent(state = previewState, eventHandler = previewHandler) }
 }

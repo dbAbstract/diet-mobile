@@ -10,34 +10,18 @@ import Di
 private class AppCoordinator: ObservableObject {
 
     // nil == "not resolved yet" — mirrors the initialValue = null in StateFlow
-    @Published var destination: AppDestination?
+    @Published var destination: NavigationAppRoute?
 
     func resolveDestination() async {
-        let useCase = getResolveAppStateUseCase()
+        let useCase = getResolveStartDestinationUseCase()
 
         // SKIE turns suspend fun into async throws.
         // try? mirrors the fact that Android's coroutine scope swallows errors silently here.
-        guard let state = try? await useCase.execute() else {
-            destination = .auth
+        guard let state: NavigationAppRoute = try? await useCase.execute() else {
+            destination = OnboardingRoutesAuth()
             return
         }
-
-        // onEnum(of:) is SKIE's exhaustive switch helper for Kotlin sealed interfaces.
-        // Android analogy: it's the Swift equivalent of a Kotlin `when (state)` expression.
-        // The case labels are camelCase versions of the Kotlin subclass names.
-        switch onEnum(of: state) {
-        case .fullySetup:
-            destination = .home
-        case .requiresLogin:
-            destination = .auth
-        case .requiresProfileSetup:
-            destination = .profileSetup
-        }
     }
-}
-
-private enum AppDestination {
-    case auth, home, profileSetup
 }
 
 // ── Root view ─────────────────────────────────────────────────────────────────
