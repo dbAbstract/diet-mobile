@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.yaseyo.design.YaseyoTheme
@@ -54,5 +55,29 @@ internal fun OnboardingProgressBar(
             trackColor = Color(colors.backgroundSubtle),
             strokeCap = StrokeCap.Round,
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun OnboardingProgressBarStep1Preview() {
+    YaseyoTheme(darkTheme = false) {
+        OnboardingProgressBar(currentStep = 1, totalSteps = 6)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun OnboardingProgressBarStep4Preview() {
+    YaseyoTheme(darkTheme = false) {
+        OnboardingProgressBar(currentStep = 4, totalSteps = 6)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun OnboardingProgressBarDarkPreview() {
+    YaseyoTheme(darkTheme = true) {
+        OnboardingProgressBar(currentStep = 5, totalSteps = 6)
     }
 }

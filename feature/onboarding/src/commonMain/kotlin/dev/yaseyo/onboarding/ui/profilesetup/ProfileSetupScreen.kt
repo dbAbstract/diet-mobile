@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,6 +33,7 @@ import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import dev.yaseyo.design.YaseyoTheme
+import dev.yaseyo.onboarding.model.OnboardingStep
 import dev.yaseyo.onboarding.ui.profilesetup.components.OnboardingProgressBar
 import dev.yaseyo.onboarding.ui.profilesetup.steps.NameStep
 import org.koin.compose.viewmodel.koinViewModel
@@ -134,5 +136,53 @@ private fun ProfileSetupContent(
                 )
             }
         }
+    }
+}
+
+private val previewSteps = listOf(
+    OnboardingStep(key = "name", title = "What should we call you?", subtitle = "We'll use this to personalize your experience."),
+    OnboardingStep(
+        key = "about_you",
+        title = "Tell us about yourself",
+        subtitle = "This helps us calculate your calorie needs accurately.",
+    ),
+)
+
+private val previewState = ProfileSetupUiState(
+    steps = previewSteps,
+    isLoadingSteps = false,
+    currentStepIndex = 0,
+    name = "",
+)
+
+private val previewHandler = object : ProfileSetupEventHandler {
+    override fun onNameChanged(name: String) {}
+
+    override fun onContinue() {}
+
+    override fun onBack() {}
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ProfileSetupNameLightPreview() {
+    YaseyoTheme(darkTheme = false) {
+        ProfileSetupContent(state = previewState, eventHandler = previewHandler)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ProfileSetupNameDarkPreview() {
+    YaseyoTheme(darkTheme = true) {
+        ProfileSetupContent(state = previewState, eventHandler = previewHandler)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ProfileSetupNameFilledPreview() {
+    YaseyoTheme(darkTheme = false) {
+        ProfileSetupContent(state = previewState.copy(name = "Taki"), eventHandler = previewHandler)
     }
 }
