@@ -1,75 +1,31 @@
 import SwiftUI
 import Di
 
-// ── App coordinator ───────────────────────────────────────────────────────────
-// Equivalent of MainViewModel on Android.
-// @MainActor pins all @Published mutations to the main thread, same as
-// how Android's StateFlow.value updates land on Dispatchers.Main in Compose.
-
-@MainActor
-private class AppCoordinator: ObservableObject {
-
-    // nil == "not resolved yet" — mirrors the initialValue = null in StateFlow
-    @Published var destination: NavigationAppRoute?
-
-    func resolveDestination() async {
-        let useCase = getResolveStartDestinationUseCase()
-
-        // SKIE turns suspend fun into async throws.
-        // try? mirrors the fact that Android's coroutine scope swallows errors silently here.
-        guard let state: NavigationAppRoute = try? await useCase.execute() else {
-            destination = OnboardingRoutesAuth()
-            return
-        }
-    }
-}
-
-// ── Root view ─────────────────────────────────────────────────────────────────
-// Mirrors the setContent { } block in MainActivity.
-
 struct ContentView: View {
-
-    // @StateObject ≈ viewModel() in Compose — one instance, survives recomposition
-    @StateObject private var coordinator = AppCoordinator()
+    @ObservedObject var coordinator: AppCoordinator
 
     var body: some View {
-        Group {
-            switch coordinator.destination {
-            case .auth:
-                AuthComposeView()
-            case .home, .profileSetup:
-                // TODO: implement home / profile-setup screens
-                Text("Coming soon")
-            case .none:
-                // Holds a blank screen while the use case resolves,
-                // same role as splashScreen.setKeepOnScreenCondition on Android.
-                Color(.systemBackground).ignoresSafeArea()
-            }
-        }
-        // .task { } ≈ LaunchedEffect(Unit) — fires once on first appearance
-        .task {
-            await coordinator.resolveDestination()
-        }
+        RootNavigationView(coordinator: coordinator)
+            .ignoresSafeArea()
+            .task { await coordinator.resolveInitialDestination() }
+            .task { await coordinator.subscribeToNavigationEvents() }
     }
 }
 
-// ── CMP screen bridge ─────────────────────────────────────────────────────────
-// UIViewControllerRepresentable ≈ AndroidView { } — wraps a UIViewController
-// (the ComposeUIViewController produced by authScreenViewController()) inside
-// a SwiftUI view so NavigationStack can treat it like any other SwiftUI screen.
+private struct RootNavigationView: UIViewControllerRepresentable {
+    let coordinator: AppCoordinator
 
-private struct AuthComposeView: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> UIViewController {
-        authScreenViewController()
+    func makeUIViewController(context: Context) -> UINavigationController {
+        let navController = UINavigationController()
+        coordinator.navigationController = navController
+        return navController
     }
 
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
 }
-
-// ── Preview ───────────────────────────────────────────────────────────────────
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(coordinator: AppCoordinator())
     }
 }
