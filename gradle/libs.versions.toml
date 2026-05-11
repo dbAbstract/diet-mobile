@@ -1,5 +1,5 @@
 [versions]
-agp = "8.11.2"
+agp = "9.1.1"
 firebase-gitlive = "2.4.0"
 firebase-android-bom = "34.12.0"
 googleServices = "4.4.4"
@@ -23,14 +23,15 @@ androidx-splashscreen = "1.0.1"
 runner = "1.7.0"
 core = "1.7.0"
 skie = "0.10.11"
-kotlinx-coroutines = "1.10.2"
+kotlinx-coroutines = "1.11.0"
 spotless = "8.4.0"
 ktlint = "1.5.0"
-ktor = "3.4.2"
+ktor = "3.4.3"
 kotlinx-serialization = "1.11.0"
-kotlinx-datetime = "0.7.1"
-nav3Core = "1.1.0"
-lifecycleViewmodelNav3 = "2.11.0-alpha03"
+kotlinx-datetime = "0.8.0"
+nav3Core = "1.1.1"
+lifecycleViewmodelNav3 = "2.11.0-beta01"
+ui-tooling = "1.11.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -81,6 +82,7 @@ kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.
 androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "nav3Core" }
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "ui-tooling" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

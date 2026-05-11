@@ -38,7 +38,6 @@ kotlin {
                 implementation(libs.compose.foundation)
                 implementation(libs.compose.material3)
                 implementation(libs.compose.uiToolingPreview)
-                // Pinned at 1.7.3 — CMP 1.8+ recommends Material Symbols for future icon work
                 implementation(libs.compose.material.icons.extended)
             }
         }
@@ -53,6 +52,7 @@ kotlin {
             dependencies {
                 implementation(libs.koin.android)
                 implementation(libs.koin.compose.nav3)
+                implementation(libs.androidx.ui.tooling)
             }
         }
 
