@@ -63,11 +63,11 @@ private fun SexCard(
     modifier: Modifier = Modifier,
 ) {
     val colors = YaseyoTheme.colors
-    val iconBg = if (selected) Color(colors.accentDefault) else Color(colors.backgroundSubtle)
-    val iconTint = if (selected) Color(colors.contentOnAccent) else Color(colors.contentSecondary)
-    val labelColor = if (selected) Color(colors.accentDefault) else Color(colors.contentPrimary)
-    val borderColor = if (selected) Color(colors.accentDefault) else Color.Transparent
-    val cardBg = if (selected) Color(colors.accentSubtle) else Color(colors.backgroundElevated)
+    val iconBg = if (selected) colors.accentDefault else colors.backgroundSubtle
+    val iconTint = if (selected) colors.contentOnAccent else colors.contentSecondary
+    val labelColor = if (selected) colors.accentDefault else colors.contentPrimary
+    val borderColor = if (selected) colors.accentDefault else Color.Transparent
+    val cardBg = if (selected) colors.accentSubtle else colors.backgroundElevated
 
     Column(
         modifier = modifier

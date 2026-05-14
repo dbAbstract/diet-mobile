@@ -74,7 +74,7 @@ private fun AuthContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(colors.backgroundBase)),
+            .background(colors.backgroundBase),
     ) {
         Column(
             modifier = Modifier
@@ -83,7 +83,7 @@ private fun AuthContent(
                 .padding(horizontal = 24.dp, vertical = 56.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            AppLogo(accentSubtle = Color(colors.accentSubtle))
+            AppLogo(accentSubtle = colors.accentSubtle)
 
             Spacer(Modifier.height(16.dp))
 
@@ -91,7 +91,7 @@ private fun AuthContent(
                 text = "Yaseyo",
                 fontSize = 32.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(colors.accentDefault),
+                color = colors.accentDefault,
             )
 
             Spacer(Modifier.height(8.dp))
@@ -99,7 +99,7 @@ private fun AuthContent(
             Text(
                 text = "Cultivating a lighter, healthier you.",
                 fontSize = 15.sp,
-                color = Color(colors.contentSecondary),
+                color = colors.contentSecondary,
             )
 
             Spacer(Modifier.height(32.dp))
@@ -107,7 +107,7 @@ private fun AuthContent(
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(colors.backgroundElevated)),
+                colors = CardDefaults.cardColors(containerColor = colors.backgroundElevated),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
@@ -124,9 +124,9 @@ private fun AuthContent(
                         value = state.email,
                         onValueChange = eventHandler::onEmailChanged,
                         modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("hello@example.com", color = Color(colors.contentTertiary)) },
+                        placeholder = { Text("hello@example.com", color = colors.contentTertiary) },
                         leadingIcon = {
-                            Icon(Icons.Default.Email, contentDescription = null, tint = Color(colors.contentTertiary))
+                            Icon(Icons.Default.Email, contentDescription = null, tint = colors.contentTertiary)
                         },
                         shape = RoundedCornerShape(12.dp),
                         colors = fieldColors(),
@@ -143,7 +143,7 @@ private fun AuthContent(
                         onValueChange = eventHandler::onPasswordChanged,
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = {
-                            Icon(Icons.Default.Lock, contentDescription = null, tint = Color(colors.contentTertiary))
+                            Icon(Icons.Default.Lock, contentDescription = null, tint = colors.contentTertiary)
                         },
                         trailingIcon = {
                             IconButton(onClick = eventHandler::onPasswordVisibilityToggled) {
@@ -154,7 +154,7 @@ private fun AuthContent(
                                         Icons.Default.Visibility
                                     },
                                     contentDescription = if (state.isPasswordVisible) "Hide password" else "Show password",
-                                    tint = Color(colors.contentTertiary),
+                                    tint = colors.contentTertiary,
                                 )
                             }
                         },
@@ -174,7 +174,7 @@ private fun AuthContent(
                     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
                         Text(
                             text = "Forgot Password?",
-                            color = Color(colors.accentDefault),
+                            color = colors.accentDefault,
                             fontWeight = FontWeight.Medium,
                             fontSize = 14.sp,
                             modifier = Modifier.clickable { eventHandler.onForgotPasswordClicked() },
@@ -187,14 +187,14 @@ private fun AuthContent(
                         onClick = eventHandler::onSubmitClicked,
                         modifier = Modifier.fillMaxWidth().height(56.dp),
                         shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(colors.accentDefault)),
+                        colors = ButtonDefaults.buttonColors(containerColor = colors.accentDefault),
                         enabled = !state.isLoading,
                     ) {
                         Text(
                             text = if (state.tab == AuthTab.SignIn) "Log In →" else "Sign Up →",
                             fontSize = 17.sp,
                             fontWeight = FontWeight.SemiBold,
-                            color = Color(colors.contentOnAccent),
+                            color = colors.contentOnAccent,
                         )
                     }
                 }
@@ -205,7 +205,7 @@ private fun AuthContent(
             Text(
                 text = "By continuing, you agree to Yaseyo's Terms of Service and Privacy Policy.",
                 fontSize = 12.sp,
-                color = Color(colors.contentTertiary),
+                color = colors.contentTertiary,
                 textAlign = TextAlign.Center,
             )
         }
@@ -235,7 +235,7 @@ private fun AuthToggle(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(50.dp))
-            .background(Color(colors.backgroundSubtle))
+            .background(colors.backgroundSubtle)
             .padding(4.dp),
     ) {
         AuthTabButton(
@@ -264,14 +264,14 @@ private fun AuthTabButton(
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(50.dp))
-            .background(if (selected) Color(colors.accentDefault) else Color.Transparent)
+            .background(if (selected) colors.accentDefault else Color.Transparent)
             .clickable(onClick = onClick)
             .padding(vertical = 12.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = label,
-            color = if (selected) Color(colors.contentOnAccent) else Color(colors.contentSecondary),
+            color = if (selected) colors.contentOnAccent else colors.contentSecondary,
             fontWeight = FontWeight.SemiBold,
             fontSize = 15.sp,
         )
@@ -286,7 +286,7 @@ private fun FieldLabel(text: String) {
         fontSize = 11.sp,
         fontWeight = FontWeight.Bold,
         letterSpacing = 1.sp,
-        color = Color(colors.contentTertiary),
+        color = colors.contentTertiary,
     )
 }
 
@@ -294,10 +294,10 @@ private fun FieldLabel(text: String) {
 private fun fieldColors(): TextFieldColors {
     val colors = YaseyoTheme.colors
     return OutlinedTextFieldDefaults.colors(
-        unfocusedBorderColor = Color(colors.borderDefault),
-        focusedBorderColor = Color(colors.accentDefault),
-        unfocusedTextColor = Color(colors.contentPrimary),
-        focusedTextColor = Color(colors.contentPrimary),
+        unfocusedBorderColor = colors.borderDefault,
+        focusedBorderColor = colors.accentDefault,
+        unfocusedTextColor = colors.contentPrimary,
+        focusedTextColor = colors.contentPrimary,
     )
 }
 

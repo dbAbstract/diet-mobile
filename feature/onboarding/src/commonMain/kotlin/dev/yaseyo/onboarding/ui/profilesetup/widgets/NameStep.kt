@@ -11,7 +11,6 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -35,7 +34,7 @@ internal fun NameStep(
             text = title,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(colors.contentPrimary),
+            color = colors.contentPrimary,
             lineHeight = 34.sp,
         )
 
@@ -44,7 +43,7 @@ internal fun NameStep(
             Text(
                 text = subtitle,
                 fontSize = 15.sp,
-                color = Color(colors.contentSecondary),
+                color = colors.contentSecondary,
             )
         }
 
@@ -57,20 +56,20 @@ internal fun NameStep(
             placeholder = {
                 Text(
                     text = "Your name",
-                    color = Color(colors.contentTertiary),
+                    color = colors.contentTertiary,
                     fontSize = 17.sp,
                 )
             },
             textStyle = TextStyle(
                 fontSize = 17.sp,
-                color = Color(colors.contentPrimary),
+                color = colors.contentPrimary,
             ),
             shape = RoundedCornerShape(16.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                unfocusedBorderColor = Color(colors.borderDefault),
-                focusedBorderColor = Color(colors.accentDefault),
-                unfocusedTextColor = Color(colors.contentPrimary),
-                focusedTextColor = Color(colors.contentPrimary),
+                unfocusedBorderColor = colors.borderDefault,
+                focusedBorderColor = colors.accentDefault,
+                unfocusedTextColor = colors.contentPrimary,
+                focusedTextColor = colors.contentPrimary,
             ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),

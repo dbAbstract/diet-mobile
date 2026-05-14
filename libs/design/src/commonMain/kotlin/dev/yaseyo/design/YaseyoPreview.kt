@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 
 @Composable
 fun YaseyoPreview(
@@ -16,7 +15,7 @@ fun YaseyoPreview(
     YaseyoTheme {
         val colors = YaseyoTheme.colors
         Scaffold(
-            containerColor = Color(colors.backgroundBase),
+            containerColor = colors.backgroundBase,
         ) {
             Box(modifier = Modifier.padding(it).fillMaxSize()) {
                 composable()

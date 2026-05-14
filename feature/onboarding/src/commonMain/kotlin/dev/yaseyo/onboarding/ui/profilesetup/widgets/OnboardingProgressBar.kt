@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,14 +33,14 @@ internal fun OnboardingProgressBar(
         ) {
             Text(
                 text = "Step $currentStep of $totalSteps",
-                color = Color(colors.accentDefault),
+                color = colors.accentDefault,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 13.sp,
                 modifier = Modifier.weight(1f),
             )
             Text(
                 text = "$percentage%",
-                color = Color(colors.contentSecondary),
+                color = colors.contentSecondary,
                 fontSize = 13.sp,
             )
         }
@@ -51,8 +50,8 @@ internal fun OnboardingProgressBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(4.dp),
-            color = Color(colors.accentDefault),
-            trackColor = Color(colors.backgroundSubtle),
+            color = colors.accentDefault,
+            trackColor = colors.backgroundSubtle,
             strokeCap = StrokeCap.Round,
         )
     }

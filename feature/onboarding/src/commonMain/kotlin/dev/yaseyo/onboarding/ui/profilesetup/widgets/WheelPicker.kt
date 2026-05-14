@@ -16,7 +16,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -80,7 +79,7 @@ internal fun WheelPicker(
                         text = item,
                         fontSize = if (isSelected) 18.sp else 14.sp,
                         fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isSelected) Color(colors.accentDefault) else Color(colors.contentTertiary),
+                        color = if (isSelected) colors.accentDefault else colors.contentTertiary,
                     )
                 }
             }
@@ -91,13 +90,13 @@ internal fun WheelPicker(
             modifier = Modifier
                 .fillMaxWidth()
                 .offset(y = ItemHeight),
-            color = Color(colors.borderDefault),
+            color = colors.borderDefault,
         )
         HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
                 .offset(y = ItemHeight * 2),
-            color = Color(colors.borderDefault),
+            color = colors.borderDefault,
         )
     }
 }

@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.yaseyo.design.YaseyoTheme
@@ -53,7 +52,7 @@ internal fun WheelDatePicker(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color(colors.backgroundSubtle)),
+            .background(colors.backgroundSubtle),
     ) {
         WheelPicker(
             items = months,

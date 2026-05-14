@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -64,7 +63,7 @@ private fun ProfileSetupContent(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(colors.backgroundBase)),
+            .background(colors.backgroundBase),
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
             Row(
@@ -78,14 +77,14 @@ private fun ProfileSetupContent(
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Back",
-                        tint = Color(colors.contentPrimary),
+                        tint = colors.contentPrimary,
                     )
                 }
                 Text(
                     text = "Yaseyo",
                     fontSize = 17.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color(colors.accentDefault),
+                    color = colors.accentDefault,
                 )
                 // Balance the row so title stays centered
                 Spacer(Modifier.size(48.dp))
@@ -132,8 +131,8 @@ private fun ProfileSetupContent(
                     .height(56.dp),
                 shape = RoundedCornerShape(50.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(colors.accentDefault),
-                    disabledContainerColor = Color(colors.accentSubtle),
+                    containerColor = colors.accentDefault,
+                    disabledContainerColor = colors.accentSubtle,
                 ),
                 enabled = when (state.currentStepIndex) {
                     0 -> state.name.isNotBlank()
@@ -146,7 +145,7 @@ private fun ProfileSetupContent(
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = 1.sp,
-                    color = Color(colors.contentOnAccent),
+                    color = colors.contentOnAccent,
                 )
             }
         }
