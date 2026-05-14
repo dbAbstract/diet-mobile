@@ -12,7 +12,7 @@ fun YaseyoPreview(
     darkTheme: Boolean = false,
     composable: @Composable () -> Unit,
 ) {
-    YaseyoTheme {
+    YaseyoTheme(darkTheme = darkTheme) {
         val colors = YaseyoTheme.colors
         Scaffold(
             containerColor = colors.backgroundBase,
