@@ -2,12 +2,7 @@ package dev.yaseyo.onboarding.ui.profilesetup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.yaseyo.navigation.AppRouter
-import dev.yaseyo.onboarding.model.OnboardingStep
-import dev.yaseyo.onboarding.network.GoalSuggestionRequestNet
 import dev.yaseyo.onboarding.network.OnboardingApi
-import dev.yaseyo.onboarding.network.OnboardingSummaryRequestNet
-import dev.yaseyo.onboarding.network.toApiValue
 import dev.yaseyo.user.api.ActivityLevel
 import dev.yaseyo.user.api.Sex
 import kotlinx.coroutines.async
@@ -21,7 +16,6 @@ import kotlinx.coroutines.launch
 
 internal class ProfileSetupViewModel(
     private val onboardingApi: OnboardingApi,
-    private val router: AppRouter,
 ) : ViewModel(),
     ProfileSetupEventHandler {
     private val _uiState = MutableStateFlow(ProfileSetupUiState())
@@ -40,40 +34,14 @@ internal class ProfileSetupViewModel(
 
             stepsDeferred
                 .await()
-                .onSuccess { nets ->
-                    _uiState.update { state ->
-                        state.copy(
-                            steps = nets.map {
-                                OnboardingStep(
-                                    key = it.key,
-                                    title = it.title,
-                                    subtitle = it.subtitle,
-                                )
-                            },
-                            isLoadingSteps = false,
-                        )
-                    }
+                .onSuccess { steps ->
+                    _uiState.update { it.copy(steps = steps, isLoadingSteps = false) }
                 }.onFailure {
                     _uiState.update { it.copy(isLoadingSteps = false) }
                 }
 
-            levelsDeferred.await().onSuccess { nets ->
-                _uiState.update { state ->
-                    state.copy(
-                        activityLevels = nets.mapNotNull { net ->
-                            val level = when (net.level) {
-                                "SEDENTARY" -> ActivityLevel.Sedentary
-                                "LIGHTLY_ACTIVE" -> ActivityLevel.LightlyActive
-                                else -> return@mapNotNull null
-                            }
-                            ActivityLevelOption(
-                                level = level,
-                                label = net.label,
-                                description = net.description,
-                            )
-                        },
-                    )
-                }
+            levelsDeferred.await().onSuccess { levels ->
+                _uiState.update { it.copy(activityLevels = levels) }
             }
         }
     }
@@ -113,45 +81,37 @@ internal class ProfileSetupViewModel(
         }
     }
 
+    override fun onBack() {
+        val currentIndex = _uiState.value.currentStepIndex
+        if (currentIndex == 0) {
+            // TODO: navigate back via UiAction (Chunk 4)
+        } else {
+            _uiState.update { it.copy(currentStepIndex = currentIndex - 1) }
+        }
+    }
+
     private fun fetchGoalSuggestion(state: ProfileSetupUiState) {
         val sex = state.sex ?: return
         _uiState.update { it.copy(isLoadingGoalSuggestion = true) }
         viewModelScope.launch {
             runCatching {
                 onboardingApi.getGoalSuggestion(
-                    GoalSuggestionRequestNet(
-                        sex = sex.toApiValue(),
-                        height = state.heightCm.toDouble(),
-                        dateOfBirth = state.dateOfBirth().toString(),
-                        currentWeightKg = state.currentWeightKg.toDouble(),
-                    ),
+                    sex = sex,
+                    heightCm = state.heightCm,
+                    dateOfBirth = state.dateOfBirth(),
+                    currentWeightKg = state.currentWeightKg,
                 )
-            }.onSuccess { net ->
-                val suggested = net.suggestedTargetKg.toInt()
+            }.onSuccess { suggestion ->
                 _uiState.update {
                     it.copy(
-                        goalSuggestion = GoalSuggestion(
-                            currentBmi = net.current.bmi,
-                            currentBodyFatPct = net.current.bodyFat?.estimatedPct,
-                            currentBodyFatCategory = net.current.bodyFat?.category,
-                            suggestedTargetKg = suggested,
-                        ),
-                        targetWeightKg = suggested,
+                        goalSuggestion = suggestion,
+                        targetWeightKg = suggestion.suggestedTargetKg,
                         isLoadingGoalSuggestion = false,
                     )
                 }
             }.onFailure {
                 _uiState.update { it.copy(isLoadingGoalSuggestion = false) }
             }
-        }
-    }
-
-    override fun onBack() {
-        val currentIndex = _uiState.value.currentStepIndex
-        if (currentIndex == 0) {
-            router.goBack()
-        } else {
-            _uiState.update { it.copy(currentStepIndex = currentIndex - 1) }
         }
     }
 
@@ -162,29 +122,15 @@ internal class ProfileSetupViewModel(
         viewModelScope.launch {
             runCatching {
                 onboardingApi.getSummary(
-                    OnboardingSummaryRequestNet(
-                        sex = sex.toApiValue(),
-                        height = state.heightCm.toDouble(),
-                        dateOfBirth = state.dateOfBirth().toString(),
-                        currentWeightKg = state.currentWeightKg.toDouble(),
-                        activityLevel = activityLevel.toApiValue(),
-                        dailyDeficitKcal = state.dailyDeficitKcal,
-                    ),
+                    sex = sex,
+                    heightCm = state.heightCm,
+                    dateOfBirth = state.dateOfBirth(),
+                    currentWeightKg = state.currentWeightKg,
+                    activityLevel = activityLevel,
+                    dailyDeficitKcal = state.dailyDeficitKcal,
                 )
-            }.onSuccess { net ->
-                _uiState.update {
-                    it.copy(
-                        onboardingSummary = OnboardingSummary(
-                            tdee = net.tdee.toInt(),
-                            dailyCalorieTarget = net.dailyCalorieTarget.toInt(),
-                            weeklyLossKg = net.weeklyLossKg,
-                            proteinG = net.suggestedMacros.protein.toInt(),
-                            carbsG = net.suggestedMacros.carbs.toInt(),
-                            fatG = net.suggestedMacros.fat.toInt(),
-                        ),
-                        isLoadingSummary = false,
-                    )
-                }
+            }.onSuccess { summary ->
+                _uiState.update { it.copy(onboardingSummary = summary, isLoadingSummary = false) }
             }.onFailure {
                 _uiState.update { it.copy(isLoadingSummary = false) }
             }
@@ -192,6 +138,6 @@ internal class ProfileSetupViewModel(
     }
 
     private fun submitProfile() {
-        // TODO: POST /user + POST /weight — wired up on the final step
+        // TODO: POST /user — wired up in Chunk 4
     }
 }

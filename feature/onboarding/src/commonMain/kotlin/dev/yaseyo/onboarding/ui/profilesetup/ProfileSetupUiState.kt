@@ -1,6 +1,9 @@
 package dev.yaseyo.onboarding.ui.profilesetup
 
+import dev.yaseyo.onboarding.model.ActivityLevelOption
+import dev.yaseyo.onboarding.model.GoalSuggestion
 import dev.yaseyo.onboarding.model.OnboardingStep
+import dev.yaseyo.onboarding.model.OnboardingSummary
 import dev.yaseyo.user.api.ActivityLevel
 import dev.yaseyo.user.api.Sex
 import kotlinx.datetime.LocalDate
@@ -16,39 +19,14 @@ internal data class ProfileSetupUiState(
     val dobYear: Int = 1990,
     val heightCm: Int = 170,
     val currentWeightKg: Int = 70,
-    // Step 5 — activity level
     val activityLevels: List<ActivityLevelOption> = emptyList(),
     val selectedActivityLevel: ActivityLevel? = null,
-    // Step 6 — goal weight
     val goalSuggestion: GoalSuggestion? = null,
     val isLoadingGoalSuggestion: Boolean = false,
     val targetWeightKg: Int = 70,
-    // Step 7 — summary
     val dailyDeficitKcal: Int = 500,
     val onboardingSummary: OnboardingSummary? = null,
     val isLoadingSummary: Boolean = false,
-)
-
-internal data class OnboardingSummary(
-    val tdee: Int,
-    val dailyCalorieTarget: Int,
-    val weeklyLossKg: Double,
-    val proteinG: Int,
-    val carbsG: Int,
-    val fatG: Int,
-)
-
-internal data class GoalSuggestion(
-    val currentBmi: Double,
-    val currentBodyFatPct: Double?,
-    val currentBodyFatCategory: String?,
-    val suggestedTargetKg: Int,
-)
-
-internal data class ActivityLevelOption(
-    val level: ActivityLevel,
-    val label: String,
-    val description: String,
 )
 
 internal fun daysInMonth(

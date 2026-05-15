@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoTheme
-import dev.yaseyo.onboarding.ui.profilesetup.OnboardingSummary
+import dev.yaseyo.onboarding.model.OnboardingSummary
 
 private val deficitOptions = listOf(
     250 to "Mild",
