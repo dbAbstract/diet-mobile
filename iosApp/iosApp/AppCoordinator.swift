@@ -20,7 +20,12 @@ class AppCoordinator: ObservableObject {
                 navigationController?.popViewController(animated: true)
             case .goTo(let navigationEvent):
                 guard let vc = makeViewController(for: navigationEvent.route) else { return }
-                navigationController?.pushViewController(vc, animated: true)
+                if (navigationEvent.route is ModalRoute) {
+                    vc.modalPresentationStyle = .pageSheet
+                    navigationController?.present(vc, animated: true)
+                } else {
+                    navigationController?.pushViewController(vc, animated: true)
+                }
             }
         }
     }
@@ -34,7 +39,9 @@ class AppCoordinator: ObservableObject {
     }
 
     private func makeViewController(for route: any AppRoute) -> UIViewController? {
-        if route is OnboardingRoutesAuth { return authScreenViewController() }
+        if route is OnboardingRoutesAuth.Landing { return authLandingScreenViewController() }
+        if route is OnboardingRoutesAuth.SignIn { return signInScreenViewController() }
+        if route is OnboardingRoutesAuth.SignUp { return signUpScreenViewController() }
         if route is OnboardingRoutesProfileSetup { return nil } // TODO
         if route is Home { return nil } // TODO
         return nil

@@ -13,6 +13,7 @@ fun createYaseyoUiViewController(screen: @Composable () -> Unit) =
     ComposeUIViewController {
         YaseyoTheme {
             Scaffold(
+                containerColor = YaseyoTheme.colors.backgroundBase,
                 snackbarHost = {
                     SnackbarHost(hostState = LocalSnackBarHostState.current)
                 },
