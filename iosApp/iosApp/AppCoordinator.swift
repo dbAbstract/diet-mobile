@@ -22,6 +22,9 @@ class AppCoordinator: ObservableObject {
                 guard let vc = makeViewController(for: navigationEvent.route) else { return }
                 if (navigationEvent.route is ModalRoute) {
                     vc.modalPresentationStyle = .pageSheet
+                    if let sheet = vc.sheetPresentationController {
+                      sheet.prefersGrabberVisible = true
+                    }
                     navigationController?.present(vc, animated: true)
                 } else {
                     navigationController?.pushViewController(vc, animated: true)
