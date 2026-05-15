@@ -1,31 +1,31 @@
 import SwiftUI
+import Di
 
 struct ContentView: View {
-    @State private var showContent = false
-    var body: some View {
-        VStack {
-            Button("Click me!") {
-                withAnimation {
-                    showContent = !showContent
-                }
-            }
+    @ObservedObject var coordinator: AppCoordinator
 
-            if showContent {
-                VStack(spacing: 16) {
-                    Image(systemName: "swift")
-                        .font(.system(size: 200))
-                        .foregroundColor(.accentColor)
-                }
-                .transition(.move(edge: .top).combined(with: .opacity))
-            }
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-        .padding()
+    var body: some View {
+        RootNavigationView(coordinator: coordinator)
+            .ignoresSafeArea()
+            .task { await coordinator.resolveInitialDestination() }
+            .task { await coordinator.subscribeToNavigationEvents() }
     }
+}
+
+private struct RootNavigationView: UIViewControllerRepresentable {
+    let coordinator: AppCoordinator
+
+    func makeUIViewController(context: Context) -> UINavigationController {
+        let navController = UINavigationController()
+        coordinator.navigationController = navController
+        return navController
+    }
+
+    func updateUIViewController(_ uiViewController: UINavigationController, context: Context) {}
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(coordinator: AppCoordinator())
     }
 }

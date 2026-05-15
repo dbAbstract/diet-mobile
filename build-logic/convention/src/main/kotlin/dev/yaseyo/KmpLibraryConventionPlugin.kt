@@ -43,8 +43,6 @@ class KmpLibraryConventionPlugin : Plugin<Project> {
                 )
             }
 
-        target.enforceInternalModuleBoundaries()
-
         target.afterEvaluate {
             val frameworkName = extension.iosFrameworkName.orNull
 

@@ -1,10 +1,11 @@
 plugins {
     id("yaseyo.kmp.library")
+    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "dev.yaseyo.design"
     }
 
@@ -12,14 +13,9 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-            }
-        }
-
-        androidMain {
-            dependencies {
-                implementation(libs.compose.ui)
-                implementation(libs.compose.material3)
+                implementation(libs.compose.runtime)
                 implementation(libs.compose.foundation)
+                implementation(libs.compose.material3)
             }
         }
     }

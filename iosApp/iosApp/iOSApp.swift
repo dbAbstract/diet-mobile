@@ -4,6 +4,8 @@ import FirebaseCore
 
 @main
 struct iOSApp: App {
+    @StateObject private var coordinator = AppCoordinator()
+    
     init() {
         startKoin()
         FirebaseApp.configure()
@@ -11,7 +13,7 @@ struct iOSApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(coordinator: self.coordinator)
         }
     }
 }

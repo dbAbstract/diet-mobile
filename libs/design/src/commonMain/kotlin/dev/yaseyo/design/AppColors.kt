@@ -1,82 +1,84 @@
 package dev.yaseyo.design
 
+import androidx.compose.ui.graphics.Color
+
 data class AppColors(
     // ── Backgrounds ──────────────────────────────────────────────────────────
-    val backgroundBase: Long, // app root background
-    val backgroundSubtle: Long, // recessed areas, input fills
-    val backgroundElevated: Long, // cards, sheets, dialogs
+    val backgroundBase: Color,
+    val backgroundSubtle: Color,
+    val backgroundElevated: Color,
     // ── Content (text & icons) ───────────────────────────────────────────────
-    val contentPrimary: Long, // body text, primary icons
-    val contentSecondary: Long, // labels, captions
-    val contentTertiary: Long, // placeholder, hints
-    val contentDisabled: Long, // disabled state
-    val contentOnAccent: Long, // text / icons sitting on accent fill
+    val contentPrimary: Color,
+    val contentSecondary: Color,
+    val contentTertiary: Color,
+    val contentDisabled: Color,
+    val contentOnAccent: Color,
     // ── Accent (brand action) ────────────────────────────────────────────────
-    val accentDefault: Long, // buttons, active controls, links
-    val accentHover: Long, // accentDefault darkened for hover/press
-    val accentSubtle: Long, // tinted backgrounds, selected rows
-    val accentMuted: Long, // very light tint, chips, tags
+    val accentDefault: Color,
+    val accentHover: Color,
+    val accentSubtle: Color,
+    val accentMuted: Color,
     // ── Borders ───────────────────────────────────────────────────────────────
-    val borderSubtle: Long, // dividers, hairlines
-    val borderDefault: Long, // input rings, card edges
-    val borderStrong: Long, // focused input, emphasis
+    val borderSubtle: Color,
+    val borderDefault: Color,
+    val borderStrong: Color,
     // ── Feedback ──────────────────────────────────────────────────────────────
-    val feedbackPositive: Long,
-    val feedbackPositiveSubtle: Long,
-    val feedbackCritical: Long,
-    val feedbackCriticalSubtle: Long,
-    val feedbackWarning: Long,
-    val feedbackWarningSubtle: Long,
+    val feedbackPositive: Color,
+    val feedbackPositiveSubtle: Color,
+    val feedbackCritical: Color,
+    val feedbackCriticalSubtle: Color,
+    val feedbackWarning: Color,
+    val feedbackWarningSubtle: Color,
     // ── Scrim ─────────────────────────────────────────────────────────────────
-    val scrim: Long,
+    val scrim: Color,
 )
 
 val LightAppColors = AppColors(
-    backgroundBase = 0xFFFBFDF9L,
-    backgroundSubtle = 0xFFEEF2EFL,
-    backgroundElevated = 0xFFFFFFFFL,
-    contentPrimary = 0xFF191C1AL,
-    contentSecondary = 0xFF404943L,
-    contentTertiary = 0xFF707973L,
-    contentDisabled = 0xFFC0C9C2L,
-    contentOnAccent = 0xFFFFFFFFL,
-    accentDefault = 0xFF1B7A5EL,
-    accentHover = 0xFF145C46L,
-    accentSubtle = 0xFFA5F2D6L,
-    accentMuted = 0xFFDCE5DEL,
-    borderSubtle = 0xFFDCE5DEL,
-    borderDefault = 0xFFC0C9C2L,
-    borderStrong = 0xFF707973L,
-    feedbackPositive = 0xFF1B7A5EL,
-    feedbackPositiveSubtle = 0xFFA5F2D6L,
-    feedbackCritical = 0xFFBA1A1AL,
-    feedbackCriticalSubtle = 0xFFFFDAD6L,
-    feedbackWarning = 0xFF7D5700L,
-    feedbackWarningSubtle = 0xFFFFDFA3L,
-    scrim = 0x99000000L,
+    backgroundBase = Color(0xFFFBFDF9),
+    backgroundSubtle = Color(0xFFEEF2EF),
+    backgroundElevated = Color(0xFFFFFFFF),
+    contentPrimary = Color(0xFF191C1A),
+    contentSecondary = Color(0xFF404943),
+    contentTertiary = Color(0xFF707973),
+    contentDisabled = Color(0xFFC0C9C2),
+    contentOnAccent = Color(0xFFFFFFFF),
+    accentDefault = Color(0xFF1B7A5E),
+    accentHover = Color(0xFF145C46),
+    accentSubtle = Color(0xFFA5F2D6),
+    accentMuted = Color(0xFFDCE5DE),
+    borderSubtle = Color(0xFFDCE5DE),
+    borderDefault = Color(0xFFC0C9C2),
+    borderStrong = Color(0xFF707973),
+    feedbackPositive = Color(0xFF1B7A5E),
+    feedbackPositiveSubtle = Color(0xFFA5F2D6),
+    feedbackCritical = Color(0xFFBA1A1A),
+    feedbackCriticalSubtle = Color(0xFFFFDAD6),
+    feedbackWarning = Color(0xFF7D5700),
+    feedbackWarningSubtle = Color(0xFFFFDFA3),
+    scrim = Color(0x99000000),
 )
 
 val DarkAppColors = AppColors(
-    backgroundBase = 0xFF191C1AL,
-    backgroundSubtle = 0xFF1F2421L,
-    backgroundElevated = 0xFF2E3130L,
-    contentPrimary = 0xFFE1E3DFL,
-    contentSecondary = 0xFFC0C9C2L,
-    contentTertiary = 0xFF8A938CL,
-    contentDisabled = 0xFF404943L,
-    contentOnAccent = 0xFF00382AL,
-    accentDefault = 0xFF89D5B5L,
-    accentHover = 0xFFA5E8C9L,
-    accentSubtle = 0xFF005140L,
-    accentMuted = 0xFF404943L,
-    borderSubtle = 0xFF2E3130L,
-    borderDefault = 0xFF404943L,
-    borderStrong = 0xFF8A938CL,
-    feedbackPositive = 0xFF89D5B5L,
-    feedbackPositiveSubtle = 0xFF005140L,
-    feedbackCritical = 0xFFFFB4ABL,
-    feedbackCriticalSubtle = 0xFF93000AL,
-    feedbackWarning = 0xFFF5BE48L,
-    feedbackWarningSubtle = 0xFF4C3800L,
-    scrim = 0xCC000000L,
+    backgroundBase = Color(0xFF191C1A),
+    backgroundSubtle = Color(0xFF1F2421),
+    backgroundElevated = Color(0xFF2E3130),
+    contentPrimary = Color(0xFFE1E3DF),
+    contentSecondary = Color(0xFFC0C9C2),
+    contentTertiary = Color(0xFF8A938C),
+    contentDisabled = Color(0xFF404943),
+    contentOnAccent = Color(0xFFE1E3DF),
+    accentDefault = Color(0xFF1A6B50),
+    accentHover = Color(0xFF226B52),
+    accentSubtle = Color(0xFF003D2E),
+    accentMuted = Color(0xFF404943),
+    borderSubtle = Color(0xFF2E3130),
+    borderDefault = Color(0xFF404943),
+    borderStrong = Color(0xFF8A938C),
+    feedbackPositive = Color(0xFF89D5B5),
+    feedbackPositiveSubtle = Color(0xFF005140),
+    feedbackCritical = Color(0xFFFFB4AB),
+    feedbackCriticalSubtle = Color(0xFF93000A),
+    feedbackWarning = Color(0xFFF5BE48),
+    feedbackWarningSubtle = Color(0xFF4C3800),
+    scrim = Color(0xCC000000),
 )

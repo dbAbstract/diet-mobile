@@ -17,8 +17,6 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             }
         }
 
-        target.enforceInternalModuleBoundaries()
-
         val libs =
             target
                 .extensions
