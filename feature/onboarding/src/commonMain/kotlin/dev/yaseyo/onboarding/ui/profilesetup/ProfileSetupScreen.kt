@@ -31,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
+import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.onboarding.model.OnboardingStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.AboutYouStep
@@ -196,7 +197,7 @@ private val previewHandler = object : ProfileSetupEventHandler {
 @Preview(showBackground = true)
 @Composable
 private fun ProfileSetupNameLightPreview() {
-    YaseyoTheme(darkTheme = false) {
+    YaseyoPreview(darkTheme = false) {
         ProfileSetupContent(state = previewState, eventHandler = previewHandler)
     }
 }
@@ -204,7 +205,7 @@ private fun ProfileSetupNameLightPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun ProfileSetupNameDarkPreview() {
-    YaseyoTheme(darkTheme = true) {
+    YaseyoPreview(darkTheme = true) {
         ProfileSetupContent(state = previewState, eventHandler = previewHandler)
     }
 }
@@ -212,7 +213,7 @@ private fun ProfileSetupNameDarkPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun ProfileSetupNameFilledPreview() {
-    YaseyoTheme(darkTheme = false) {
+    YaseyoPreview(darkTheme = false) {
         ProfileSetupContent(state = previewState.copy(name = "Taki"), eventHandler = previewHandler)
     }
 }

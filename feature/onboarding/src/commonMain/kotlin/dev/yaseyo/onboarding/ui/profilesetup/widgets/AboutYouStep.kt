@@ -10,6 +10,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.user.api.Sex
 
@@ -90,7 +91,7 @@ private fun SectionLabel(
 @Preview(showBackground = true)
 @Composable
 private fun AboutYouStepNoneSelectedPreview() {
-    YaseyoTheme(darkTheme = false) {
+    YaseyoPreview(darkTheme = false) {
         AboutYouStep(
             sex = null,
             dobMonth = 2,
@@ -109,9 +110,9 @@ private fun AboutYouStepNoneSelectedPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun AboutYouStepFemalePreview() {
-    YaseyoTheme(darkTheme = false) {
+    YaseyoPreview(darkTheme = false) {
         AboutYouStep(
-            sex = Sex.FEMALE,
+            sex = Sex.Female,
             dobMonth = 2,
             dobDay = 14,
             dobYear = 1994,
@@ -128,9 +129,9 @@ private fun AboutYouStepFemalePreview() {
 @Preview(showBackground = true)
 @Composable
 private fun AboutYouStepDarkPreview() {
-    YaseyoTheme(darkTheme = true) {
+    YaseyoPreview(darkTheme = true) {
         AboutYouStep(
-            sex = Sex.MALE,
+            sex = Sex.Male,
             dobMonth = 6,
             dobDay = 1,
             dobYear = 1990,

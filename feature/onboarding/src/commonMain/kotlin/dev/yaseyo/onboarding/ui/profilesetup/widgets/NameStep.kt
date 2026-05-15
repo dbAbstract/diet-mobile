@@ -17,6 +17,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoTheme
 
 @Composable
@@ -80,7 +81,7 @@ internal fun NameStep(
 @Preview(showBackground = true)
 @Composable
 private fun NameStepEmptyLightPreview() {
-    YaseyoTheme(darkTheme = false) {
+    YaseyoPreview(darkTheme = false) {
         NameStep(
             name = "",
             title = "What should we call you?",
@@ -93,7 +94,7 @@ private fun NameStepEmptyLightPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun NameStepFilledPreview() {
-    YaseyoTheme(darkTheme = false) {
+    YaseyoPreview(darkTheme = false) {
         NameStep(
             name = "Taki",
             title = "What should we call you?",
@@ -106,7 +107,7 @@ private fun NameStepFilledPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun NameStepDarkPreview() {
-    YaseyoTheme(darkTheme = true) {
+    YaseyoPreview(darkTheme = true) {
         NameStep(
             name = "",
             title = "What should we call you?",

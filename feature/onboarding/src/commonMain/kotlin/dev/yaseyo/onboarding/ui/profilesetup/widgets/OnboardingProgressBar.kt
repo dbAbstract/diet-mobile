@@ -15,6 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoTheme
 
 @Composable
@@ -60,7 +61,7 @@ internal fun OnboardingProgressBar(
 @Preview(showBackground = true)
 @Composable
 private fun OnboardingProgressBarStep1Preview() {
-    YaseyoTheme(darkTheme = false) {
+    YaseyoPreview(darkTheme = false) {
         OnboardingProgressBar(currentStep = 1, totalSteps = 6)
     }
 }
@@ -68,7 +69,7 @@ private fun OnboardingProgressBarStep1Preview() {
 @Preview(showBackground = true)
 @Composable
 private fun OnboardingProgressBarStep4Preview() {
-    YaseyoTheme(darkTheme = false) {
+    YaseyoPreview(darkTheme = false) {
         OnboardingProgressBar(currentStep = 4, totalSteps = 6)
     }
 }
@@ -76,7 +77,7 @@ private fun OnboardingProgressBarStep4Preview() {
 @Preview(showBackground = true)
 @Composable
 private fun OnboardingProgressBarDarkPreview() {
-    YaseyoTheme(darkTheme = true) {
+    YaseyoPreview(darkTheme = true) {
         OnboardingProgressBar(currentStep = 5, totalSteps = 6)
     }
 }

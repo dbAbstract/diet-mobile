@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.onboarding.ui.profilesetup.daysInMonth
 
@@ -78,7 +79,7 @@ internal fun WheelDatePicker(
 @Preview(showBackground = true)
 @Composable
 private fun WheelDatePickerPreview() {
-    YaseyoTheme(darkTheme = false) {
+    YaseyoPreview(darkTheme = false) {
         WheelDatePicker(
             month = 2,
             day = 14,
@@ -93,7 +94,7 @@ private fun WheelDatePickerPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun WheelDatePickerDarkPreview() {
-    YaseyoTheme(darkTheme = true) {
+    YaseyoPreview(darkTheme = true) {
         WheelDatePicker(
             month = 6,
             day = 1,
