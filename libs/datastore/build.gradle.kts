@@ -13,8 +13,8 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlinx.serialization.json)
-                implementation(libs.androidx.datastore)
-                implementation(libs.androidx.datastore.preferences)
+                api(libs.androidx.datastore)
+                api(libs.androidx.datastore.preferences)
                 implementation(libs.koin.core)
             }
         }

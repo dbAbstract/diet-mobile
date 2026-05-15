@@ -2,25 +2,48 @@ package dev.yaseyo.onboarding.ui.profilesetup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dev.yaseyo.onboarding.network.OnboardingApi
+import dev.yaseyo.onboarding.model.OnboardingDraft
+import dev.yaseyo.onboarding.repository.OnboardingRepository
 import dev.yaseyo.user.api.ActivityLevel
 import dev.yaseyo.user.api.Sex
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class ProfileSetupViewModel(
-    private val onboardingApi: OnboardingApi,
+    private val repo: OnboardingRepository,
 ) : ViewModel(),
     ProfileSetupEventHandler {
+    private val draftState: StateFlow<OnboardingDraft> = repo.draft
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.Eagerly,
+            initialValue = OnboardingDraft(),
+        )
+
     private val _uiState = MutableStateFlow(ProfileSetupUiState())
-    val uiState: StateFlow<ProfileSetupUiState> = _uiState
-        .onStart { loadInitialData() }
+
+    val uiState: StateFlow<ProfileSetupUiState> = combine(draftState, _uiState) { draft, state ->
+        state.copy(
+            currentStepIndex = draft.currentStepIndex,
+            name = draft.name,
+            sex = draft.sex,
+            dobDay = draft.dobDay,
+            dobMonth = draft.dobMonth,
+            dobYear = draft.dobYear,
+            heightCm = draft.heightCm,
+            currentWeightKg = draft.currentWeightKg,
+            selectedActivityLevel = draft.activityLevel,
+            targetWeightKg = draft.targetWeightKg,
+            dailyDeficitKcal = draft.dailyDeficitKcal,
+        )
+    }.onStart { loadInitialData() }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -29,115 +52,117 @@ internal class ProfileSetupViewModel(
 
     private fun loadInitialData() {
         viewModelScope.launch {
-            val stepsDeferred = async { runCatching { onboardingApi.getSteps() } }
-            val levelsDeferred = async { runCatching { onboardingApi.getActivityLevels() } }
+            val stepsDeferred = async { repo.getSteps() }
+            val levelsDeferred = async { repo.getActivityLevels() }
 
             stepsDeferred
                 .await()
                 .onSuccess { steps ->
-                    _uiState.update { it.copy(steps = steps, isLoadingSteps = false) }
-                }.onFailure {
-                    _uiState.update { it.copy(isLoadingSteps = false) }
-                }
+                    _uiState.update {
+                        it.copy(
+                            steps = steps,
+                            isLoadingSteps = false,
+                        )
+                    }
+                }.onFailure { _uiState.update { it.copy(isLoadingSteps = false) } }
 
-            levelsDeferred.await().onSuccess { levels ->
-                _uiState.update { it.copy(activityLevels = levels) }
-            }
+            levelsDeferred
+                .await()
+                .onSuccess { levels -> _uiState.update { it.copy(activityLevels = levels) } }
         }
     }
 
-    override fun onNameChanged(name: String) = _uiState.update { it.copy(name = name) }
+    override fun onNameChanged(name: String) = save { it.copy(name = name) }
 
-    override fun onSexChanged(sex: Sex) = _uiState.update { it.copy(sex = sex) }
+    override fun onSexChanged(sex: Sex) = save { it.copy(sex = sex) }
 
-    override fun onDobMonthChanged(month: Int) = _uiState.update { it.copy(dobMonth = month) }
+    override fun onDobMonthChanged(month: Int) = save { it.copy(dobMonth = month) }
 
-    override fun onDobDayChanged(day: Int) = _uiState.update { it.copy(dobDay = day) }
+    override fun onDobDayChanged(day: Int) = save { it.copy(dobDay = day) }
 
-    override fun onDobYearChanged(year: Int) = _uiState.update { it.copy(dobYear = year) }
+    override fun onDobYearChanged(year: Int) = save { it.copy(dobYear = year) }
 
-    override fun onHeightChanged(heightCm: Int) = _uiState.update { it.copy(heightCm = heightCm) }
+    override fun onHeightChanged(heightCm: Int) = save { it.copy(heightCm = heightCm) }
 
-    override fun onCurrentWeightChanged(weightKg: Int) = _uiState.update { it.copy(currentWeightKg = weightKg) }
+    override fun onCurrentWeightChanged(weightKg: Int) = save { it.copy(currentWeightKg = weightKg) }
 
-    override fun onActivityLevelSelected(level: ActivityLevel) = _uiState.update { it.copy(selectedActivityLevel = level) }
+    override fun onActivityLevelSelected(level: ActivityLevel) = save { it.copy(activityLevel = level) }
 
-    override fun onTargetWeightChanged(weightKg: Int) = _uiState.update { it.copy(targetWeightKg = weightKg) }
+    override fun onTargetWeightChanged(weightKg: Int) = save { it.copy(targetWeightKg = weightKg) }
 
     override fun onDeficitChanged(kcal: Int) {
-        _uiState.update { it.copy(dailyDeficitKcal = kcal) }
-        fetchSummary(_uiState.value)
+        save { it.copy(dailyDeficitKcal = kcal) }
+        fetchSummary(overrideDeficitKcal = kcal)
     }
 
     override fun onContinue() {
-        val state = _uiState.value
+        val state = uiState.value
         val nextIndex = state.currentStepIndex + 1
-        if (state.currentStepIndex == 4) fetchGoalSuggestion(state)
+        if (state.currentStepIndex == 4) fetchGoalSuggestion()
         if (nextIndex < state.totalSteps) {
-            _uiState.update { it.copy(currentStepIndex = nextIndex) }
-            if (nextIndex == state.totalSteps - 1) fetchSummary(_uiState.value)
+            save { it.copy(currentStepIndex = nextIndex) }
+            if (nextIndex == state.totalSteps - 1) fetchSummary()
         } else {
             submitProfile()
         }
     }
 
     override fun onBack() {
-        val currentIndex = _uiState.value.currentStepIndex
+        val currentIndex = draftState.value.currentStepIndex
         if (currentIndex == 0) {
             // TODO: navigate back via UiAction (Chunk 4)
         } else {
-            _uiState.update { it.copy(currentStepIndex = currentIndex - 1) }
+            save { it.copy(currentStepIndex = currentIndex - 1) }
         }
     }
 
-    private fun fetchGoalSuggestion(state: ProfileSetupUiState) {
+    private fun fetchGoalSuggestion() {
+        val state = uiState.value
         val sex = state.sex ?: return
         _uiState.update { it.copy(isLoadingGoalSuggestion = true) }
         viewModelScope.launch {
-            runCatching {
-                onboardingApi.getGoalSuggestion(
+            repo
+                .getGoalSuggestion(
                     sex = sex,
                     heightCm = state.heightCm,
                     dateOfBirth = state.dateOfBirth(),
                     currentWeightKg = state.currentWeightKg,
-                )
-            }.onSuccess { suggestion ->
-                _uiState.update {
-                    it.copy(
-                        goalSuggestion = suggestion,
-                        targetWeightKg = suggestion.suggestedTargetKg,
-                        isLoadingGoalSuggestion = false,
-                    )
+                ).onSuccess { suggestion ->
+                    _uiState.update { it.copy(goalSuggestion = suggestion, isLoadingGoalSuggestion = false) }
+                    save { it.copy(targetWeightKg = suggestion.suggestedTargetKg) }
+                }.onFailure {
+                    _uiState.update { it.copy(isLoadingGoalSuggestion = false) }
                 }
-            }.onFailure {
-                _uiState.update { it.copy(isLoadingGoalSuggestion = false) }
-            }
         }
     }
 
-    private fun fetchSummary(state: ProfileSetupUiState) {
+    private fun fetchSummary(overrideDeficitKcal: Int? = null) {
+        val state = uiState.value
         val sex = state.sex ?: return
         val activityLevel = state.selectedActivityLevel ?: return
         _uiState.update { it.copy(isLoadingSummary = true) }
         viewModelScope.launch {
-            runCatching {
-                onboardingApi.getSummary(
+            repo
+                .getSummary(
                     sex = sex,
                     heightCm = state.heightCm,
                     dateOfBirth = state.dateOfBirth(),
                     currentWeightKg = state.currentWeightKg,
                     activityLevel = activityLevel,
-                    dailyDeficitKcal = state.dailyDeficitKcal,
-                )
-            }.onSuccess { summary ->
-                _uiState.update { it.copy(onboardingSummary = summary, isLoadingSummary = false) }
-            }.onFailure {
-                _uiState.update { it.copy(isLoadingSummary = false) }
-            }
+                    dailyDeficitKcal = overrideDeficitKcal ?: state.dailyDeficitKcal,
+                ).onSuccess { summary ->
+                    _uiState.update { it.copy(onboardingSummary = summary, isLoadingSummary = false) }
+                }.onFailure {
+                    _uiState.update { it.copy(isLoadingSummary = false) }
+                }
         }
     }
 
+    private fun save(transform: (OnboardingDraft) -> OnboardingDraft) {
+        viewModelScope.launch { repo.saveDraft(transform(draftState.value)) }
+    }
+
     private fun submitProfile() {
-        // TODO: POST /user — wired up in Chunk 4
+        // TODO: POST /user — Chunk 4
     }
 }
