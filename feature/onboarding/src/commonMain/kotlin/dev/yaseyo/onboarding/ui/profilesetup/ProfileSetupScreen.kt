@@ -79,12 +79,16 @@ private fun ProfileSetupContent(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
-                IconButton(onClick = eventHandler::onBack) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Back",
-                        tint = colors.contentPrimary,
-                    )
+                if (state.currentStepIndex > 0) {
+                    IconButton(onClick = eventHandler::onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = colors.contentPrimary,
+                        )
+                    }
+                } else {
+                    Spacer(Modifier.size(48.dp))
                 }
                 Text(
                     text = "Yaseyo",
