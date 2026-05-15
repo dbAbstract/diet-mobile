@@ -2,6 +2,7 @@ package dev.yaseyo.onboarding.ui.profilesetup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dev.yaseyo.coroutines.DispatcherProvider
 import dev.yaseyo.onboarding.model.OnboardingDraft
 import dev.yaseyo.onboarding.repository.OnboardingRepository
 import dev.yaseyo.user.api.ActivityLevel
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 
 internal class ProfileSetupViewModel(
     private val repo: OnboardingRepository,
+    private val dispatchers: DispatcherProvider,
 ) : ViewModel(),
     ProfileSetupEventHandler {
     private val draftState: StateFlow<OnboardingDraft> = repo.draft
@@ -51,7 +53,7 @@ internal class ProfileSetupViewModel(
         )
 
     private fun loadInitialData() {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.io) {
             val stepsDeferred = async { repo.getSteps() }
             val levelsDeferred = async { repo.getActivityLevels() }
 
@@ -120,7 +122,7 @@ internal class ProfileSetupViewModel(
         val state = uiState.value
         val sex = state.sex ?: return
         _uiState.update { it.copy(isLoadingGoalSuggestion = true) }
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.io) {
             repo
                 .getGoalSuggestion(
                     sex = sex,
@@ -141,7 +143,7 @@ internal class ProfileSetupViewModel(
         val sex = state.sex ?: return
         val activityLevel = state.selectedActivityLevel ?: return
         _uiState.update { it.copy(isLoadingSummary = true) }
-        viewModelScope.launch {
+        viewModelScope.launch(dispatchers.io) {
             repo
                 .getSummary(
                     sex = sex,
@@ -159,7 +161,7 @@ internal class ProfileSetupViewModel(
     }
 
     private fun save(transform: (OnboardingDraft) -> OnboardingDraft) {
-        viewModelScope.launch { repo.saveDraft(transform(draftState.value)) }
+        viewModelScope.launch(dispatchers.io) { repo.saveDraft(transform(draftState.value)) }
     }
 
     private fun submitProfile() {

@@ -31,6 +31,7 @@ kotlin {
 
                 implementation(projects.libs.auth)
                 implementation(projects.libs.user)
+                implementation(projects.libs.coroutines)
                 api(projects.libs.navigation)
                 implementation(projects.libs.design)
                 implementation(projects.libs.datastore)
@@ -48,6 +49,8 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(libs.kotlin.test)
+                implementation(libs.turbine)
+                implementation(projects.libs.coroutines.testing)
             }
         }
 
