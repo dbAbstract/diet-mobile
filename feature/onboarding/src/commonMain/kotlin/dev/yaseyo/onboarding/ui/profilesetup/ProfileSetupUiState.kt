@@ -1,6 +1,7 @@
 package dev.yaseyo.onboarding.ui.profilesetup
 
 import dev.yaseyo.onboarding.model.OnboardingStep
+import dev.yaseyo.user.api.ActivityLevel
 import dev.yaseyo.user.api.Sex
 import kotlinx.datetime.LocalDate
 
@@ -14,6 +15,16 @@ internal data class ProfileSetupUiState(
     val dobDay: Int = 1,
     val dobYear: Int = 1990,
     val heightCm: Int = 170,
+    val currentWeightKg: Int = 70,
+    // Step 5 — activity level
+    val activityLevels: List<ActivityLevelOption> = emptyList(),
+    val selectedActivityLevel: ActivityLevel? = null,
+)
+
+internal data class ActivityLevelOption(
+    val level: ActivityLevel,
+    val label: String,
+    val description: String,
 )
 
 internal fun daysInMonth(

@@ -35,6 +35,8 @@ import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.onboarding.model.OnboardingStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.AboutYouStep
+import dev.yaseyo.onboarding.ui.profilesetup.widgets.ActivityLevelStep
+import dev.yaseyo.onboarding.ui.profilesetup.widgets.CurrentWeightStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.HeightStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.NameStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.OnboardingProgressBar
@@ -128,6 +130,19 @@ private fun ProfileSetupContent(
                         subtitle = state.currentStep?.subtitle,
                         onHeightChanged = eventHandler::onHeightChanged,
                     )
+                    3 -> CurrentWeightStep(
+                        weightKg = state.currentWeightKg,
+                        title = state.currentStep?.title ?: "What's your current weight?",
+                        subtitle = state.currentStep?.subtitle,
+                        onWeightChanged = eventHandler::onCurrentWeightChanged,
+                    )
+                    4 -> ActivityLevelStep(
+                        options = state.activityLevels,
+                        selected = state.selectedActivityLevel,
+                        title = state.currentStep?.title ?: "How active is your daily life?",
+                        subtitle = state.currentStep?.subtitle,
+                        onSelected = eventHandler::onActivityLevelSelected,
+                    )
                 }
             }
 
@@ -145,6 +160,7 @@ private fun ProfileSetupContent(
                 enabled = when (state.currentStepIndex) {
                     0 -> state.name.isNotBlank()
                     1 -> state.sex != null
+                    4 -> state.selectedActivityLevel != null
                     else -> true
                 },
             ) {
@@ -189,6 +205,10 @@ private val previewHandler = object : ProfileSetupEventHandler {
 
     override fun onHeightChanged(heightCm: Int) {}
 
+    override fun onCurrentWeightChanged(weightKg: Int) {}
+
+    override fun onActivityLevelSelected(level: dev.yaseyo.user.api.ActivityLevel) {}
+
     override fun onContinue() {}
 
     override fun onBack() {}
@@ -214,6 +234,6 @@ private fun ProfileSetupNameDarkPreview() {
 @Composable
 private fun ProfileSetupNameFilledPreview() {
     YaseyoPreview(darkTheme = false) {
-        ProfileSetupContent(state = previewState.copy(name = "Taki"), eventHandler = previewHandler)
+        ProfileSetupContent(state = previewState.copy(name = "Alex"), eventHandler = previewHandler)
     }
 }

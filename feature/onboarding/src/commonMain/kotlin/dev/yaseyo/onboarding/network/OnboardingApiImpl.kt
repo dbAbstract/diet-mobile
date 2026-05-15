@@ -8,4 +8,6 @@ internal class OnboardingApiImpl(
     private val client: HttpClient,
 ) : OnboardingApi {
     override suspend fun getSteps(): List<OnboardingStepNet> = client.get("/onboarding/steps").body()
+
+    override suspend fun getActivityLevels(): List<ActivityLevelNet> = client.get("/user/activity-levels").body()
 }

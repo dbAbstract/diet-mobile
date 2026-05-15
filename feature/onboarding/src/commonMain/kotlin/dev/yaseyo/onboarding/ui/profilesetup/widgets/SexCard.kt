@@ -66,7 +66,6 @@ private fun SexCard(
     val colors = YaseyoTheme.colors
     val iconBg = if (selected) colors.accentDefault else colors.backgroundSubtle
     val iconTint = if (selected) colors.contentOnAccent else colors.contentSecondary
-    val labelColor = if (selected) colors.accentDefault else colors.contentPrimary
     val borderColor = if (selected) colors.accentDefault else Color.Transparent
     val cardBg = if (selected) colors.accentSubtle else colors.backgroundElevated
 
@@ -93,7 +92,7 @@ private fun SexCard(
             text = label,
             fontWeight = FontWeight.SemiBold,
             fontSize = 15.sp,
-            color = labelColor,
+            color = colors.contentPrimary,
         )
     }
 }
