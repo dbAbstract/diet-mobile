@@ -50,6 +50,8 @@ internal class ProfileSetupViewModel(
 
     override fun onDobYearChanged(year: Int) = _uiState.update { it.copy(dobYear = year) }
 
+    override fun onHeightChanged(heightCm: Int) = _uiState.update { it.copy(heightCm = heightCm) }
+
     override fun onContinue() {
         val state = _uiState.value
         val nextIndex = state.currentStepIndex + 1

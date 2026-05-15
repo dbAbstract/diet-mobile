@@ -8,13 +8,12 @@ internal data class ProfileSetupUiState(
     val steps: List<OnboardingStep> = emptyList(),
     val isLoadingSteps: Boolean = true,
     val currentStepIndex: Int = 0,
-    // Step 1 — name
     val name: String = "",
-    // Step 2 — about you
     val sex: Sex? = null,
     val dobMonth: Int = 1,
     val dobDay: Int = 1,
     val dobYear: Int = 1990,
+    val heightCm: Int = 170,
 )
 
 internal fun daysInMonth(

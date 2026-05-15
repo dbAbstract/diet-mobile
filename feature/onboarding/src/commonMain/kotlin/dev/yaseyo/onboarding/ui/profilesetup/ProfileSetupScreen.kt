@@ -34,6 +34,7 @@ import androidx.navigationevent.compose.rememberNavigationEventState
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.onboarding.model.OnboardingStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.AboutYouStep
+import dev.yaseyo.onboarding.ui.profilesetup.widgets.HeightStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.NameStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.OnboardingProgressBar
 import org.koin.compose.viewmodel.koinViewModel
@@ -120,6 +121,12 @@ private fun ProfileSetupContent(
                         onDayChanged = eventHandler::onDobDayChanged,
                         onYearChanged = eventHandler::onDobYearChanged,
                     )
+                    2 -> HeightStep(
+                        heightCm = state.heightCm,
+                        title = state.currentStep?.title ?: "How tall are you?",
+                        subtitle = state.currentStep?.subtitle,
+                        onHeightChanged = eventHandler::onHeightChanged,
+                    )
                 }
             }
 
@@ -178,6 +185,8 @@ private val previewHandler = object : ProfileSetupEventHandler {
     override fun onDobDayChanged(day: Int) {}
 
     override fun onDobYearChanged(year: Int) {}
+
+    override fun onHeightChanged(heightCm: Int) {}
 
     override fun onContinue() {}
 

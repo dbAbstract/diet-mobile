@@ -15,6 +15,9 @@ internal interface ProfileSetupEventHandler {
 
     fun onDobYearChanged(year: Int)
 
+    // Step 3
+    fun onHeightChanged(heightCm: Int)
+
     fun onContinue()
 
     fun onBack()
