@@ -96,7 +96,7 @@ private fun NameStepEmptyLightPreview() {
 private fun NameStepFilledPreview() {
     YaseyoPreview(darkTheme = false) {
         NameStep(
-            name = "Taki",
+            name = "Alex",
             title = "What should we call you?",
             subtitle = "We'll use this to personalize your experience.",
             onNameChanged = {},
