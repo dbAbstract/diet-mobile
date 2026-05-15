@@ -21,4 +21,11 @@ internal class OnboardingApiImpl(
                 contentType(ContentType.Application.Json)
                 setBody(request)
             }.body()
+
+    override suspend fun getSummary(request: OnboardingSummaryRequestNet): OnboardingSummaryNet =
+        client
+            .post("/onboarding/summary") {
+                contentType(ContentType.Application.Json)
+                setBody(request)
+            }.body()
 }

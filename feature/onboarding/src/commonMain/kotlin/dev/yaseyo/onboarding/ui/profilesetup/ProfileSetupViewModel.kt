@@ -6,6 +6,7 @@ import dev.yaseyo.navigation.AppRouter
 import dev.yaseyo.onboarding.model.OnboardingStep
 import dev.yaseyo.onboarding.network.GoalSuggestionRequestNet
 import dev.yaseyo.onboarding.network.OnboardingApi
+import dev.yaseyo.onboarding.network.OnboardingSummaryRequestNet
 import dev.yaseyo.user.api.ActivityLevel
 import dev.yaseyo.user.api.Sex
 import kotlinx.coroutines.async
@@ -94,14 +95,18 @@ internal class ProfileSetupViewModel(
 
     override fun onTargetWeightChanged(weightKg: Int) = _uiState.update { it.copy(targetWeightKg = weightKg) }
 
+    override fun onDeficitChanged(kcal: Int) {
+        _uiState.update { it.copy(dailyDeficitKcal = kcal) }
+        fetchSummary(_uiState.value)
+    }
+
     override fun onContinue() {
         val state = _uiState.value
         val nextIndex = state.currentStepIndex + 1
-        if (state.currentStepIndex == 4) {
-            fetchGoalSuggestion(state)
-        }
+        if (state.currentStepIndex == 4) fetchGoalSuggestion(state)
         if (nextIndex < state.totalSteps) {
             _uiState.update { it.copy(currentStepIndex = nextIndex) }
+            if (nextIndex == state.totalSteps - 1) fetchSummary(_uiState.value)
         } else {
             submitProfile()
         }
@@ -146,6 +151,42 @@ internal class ProfileSetupViewModel(
             router.goBack()
         } else {
             _uiState.update { it.copy(currentStepIndex = currentIndex - 1) }
+        }
+    }
+
+    private fun fetchSummary(state: ProfileSetupUiState) {
+        val sex = state.sex ?: return
+        val activityLevel = state.selectedActivityLevel ?: return
+        _uiState.update { it.copy(isLoadingSummary = true) }
+        viewModelScope.launch {
+            runCatching {
+                onboardingApi.getSummary(
+                    OnboardingSummaryRequestNet(
+                        sex = sex.name.uppercase(),
+                        height = state.heightCm.toDouble(),
+                        dateOfBirth = state.dateOfBirth().toString(),
+                        currentWeightKg = state.currentWeightKg.toDouble(),
+                        activityLevel = activityLevel.name.uppercase(),
+                        dailyDeficitKcal = state.dailyDeficitKcal,
+                    ),
+                )
+            }.onSuccess { net ->
+                _uiState.update {
+                    it.copy(
+                        onboardingSummary = OnboardingSummary(
+                            tdee = net.tdee.toInt(),
+                            dailyCalorieTarget = net.dailyCalorieTarget.toInt(),
+                            weeklyLossKg = net.weeklyLossKg,
+                            proteinG = net.suggestedMacros.protein.toInt(),
+                            carbsG = net.suggestedMacros.carbs.toInt(),
+                            fatG = net.suggestedMacros.fat.toInt(),
+                        ),
+                        isLoadingSummary = false,
+                    )
+                }
+            }.onFailure {
+                _uiState.update { it.copy(isLoadingSummary = false) }
+            }
         }
     }
 

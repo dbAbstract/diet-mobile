@@ -6,4 +6,6 @@ internal interface OnboardingApi {
     suspend fun getActivityLevels(): List<ActivityLevelNet>
 
     suspend fun getGoalSuggestion(request: GoalSuggestionRequestNet): GoalSuggestionNet
+
+    suspend fun getSummary(request: OnboardingSummaryRequestNet): OnboardingSummaryNet
 }

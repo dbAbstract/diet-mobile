@@ -23,6 +23,19 @@ internal data class ProfileSetupUiState(
     val goalSuggestion: GoalSuggestion? = null,
     val isLoadingGoalSuggestion: Boolean = false,
     val targetWeightKg: Int = 70,
+    // Step 7 — summary
+    val dailyDeficitKcal: Int = 500,
+    val onboardingSummary: OnboardingSummary? = null,
+    val isLoadingSummary: Boolean = false,
+)
+
+internal data class OnboardingSummary(
+    val tdee: Int,
+    val dailyCalorieTarget: Int,
+    val weeklyLossKg: Double,
+    val proteinG: Int,
+    val carbsG: Int,
+    val fatG: Int,
 )
 
 internal data class GoalSuggestion(

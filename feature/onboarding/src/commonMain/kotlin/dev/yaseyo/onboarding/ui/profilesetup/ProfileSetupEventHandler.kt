@@ -28,6 +28,9 @@ internal interface ProfileSetupEventHandler {
     // Step 6
     fun onTargetWeightChanged(weightKg: Int)
 
+    // Step 7
+    fun onDeficitChanged(kcal: Int)
+
     fun onContinue()
 
     fun onBack()

@@ -41,6 +41,7 @@ import dev.yaseyo.onboarding.ui.profilesetup.widgets.GoalWeightStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.HeightStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.NameStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.OnboardingProgressBar
+import dev.yaseyo.onboarding.ui.profilesetup.widgets.SummaryStep
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -153,6 +154,14 @@ private fun ProfileSetupContent(
                         subtitle = state.currentStep?.subtitle,
                         onTargetWeightChanged = eventHandler::onTargetWeightChanged,
                     )
+                    6 -> SummaryStep(
+                        summary = state.onboardingSummary,
+                        isLoading = state.isLoadingSummary,
+                        dailyDeficitKcal = state.dailyDeficitKcal,
+                        title = state.currentStep?.title ?: "Here's your plan",
+                        subtitle = state.currentStep?.subtitle,
+                        onDeficitChanged = eventHandler::onDeficitChanged,
+                    )
                 }
             }
 
@@ -171,6 +180,7 @@ private fun ProfileSetupContent(
                     0 -> state.name.isNotBlank()
                     1 -> state.sex != null
                     4 -> state.selectedActivityLevel != null
+                    6 -> state.onboardingSummary != null
                     else -> true
                 },
             ) {
@@ -220,6 +230,8 @@ private val previewHandler = object : ProfileSetupEventHandler {
     override fun onActivityLevelSelected(level: dev.yaseyo.user.api.ActivityLevel) {}
 
     override fun onTargetWeightChanged(weightKg: Int) {}
+
+    override fun onDeficitChanged(kcal: Int) {}
 
     override fun onContinue() {}
 
