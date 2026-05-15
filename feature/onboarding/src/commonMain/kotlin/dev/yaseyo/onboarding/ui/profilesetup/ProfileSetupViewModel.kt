@@ -7,6 +7,7 @@ import dev.yaseyo.onboarding.model.OnboardingStep
 import dev.yaseyo.onboarding.network.GoalSuggestionRequestNet
 import dev.yaseyo.onboarding.network.OnboardingApi
 import dev.yaseyo.onboarding.network.OnboardingSummaryRequestNet
+import dev.yaseyo.onboarding.network.toApiValue
 import dev.yaseyo.user.api.ActivityLevel
 import dev.yaseyo.user.api.Sex
 import kotlinx.coroutines.async
@@ -119,7 +120,7 @@ internal class ProfileSetupViewModel(
             runCatching {
                 onboardingApi.getGoalSuggestion(
                     GoalSuggestionRequestNet(
-                        sex = sex.name.uppercase(),
+                        sex = sex.toApiValue(),
                         height = state.heightCm.toDouble(),
                         dateOfBirth = state.dateOfBirth().toString(),
                         currentWeightKg = state.currentWeightKg.toDouble(),
@@ -162,11 +163,11 @@ internal class ProfileSetupViewModel(
             runCatching {
                 onboardingApi.getSummary(
                     OnboardingSummaryRequestNet(
-                        sex = sex.name.uppercase(),
+                        sex = sex.toApiValue(),
                         height = state.heightCm.toDouble(),
                         dateOfBirth = state.dateOfBirth().toString(),
                         currentWeightKg = state.currentWeightKg.toDouble(),
-                        activityLevel = activityLevel.name.uppercase(),
+                        activityLevel = activityLevel.toApiValue(),
                         dailyDeficitKcal = state.dailyDeficitKcal,
                     ),
                 )
