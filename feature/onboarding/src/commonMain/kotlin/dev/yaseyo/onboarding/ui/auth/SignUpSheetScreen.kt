@@ -32,6 +32,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -143,7 +144,8 @@ private fun SheetEmailField(
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .focusRequester(focusRequester),
+                .focusRequester(focusRequester)
+                .clip(MaterialTheme.shapes.large),
             state = state,
             placeholder = {
                 Text(text = "yamadataro@yaseyo.com", color = YaseyoTheme.colors.contentTertiary)
@@ -184,7 +186,9 @@ private fun SheetPasswordField(
             color = YaseyoTheme.colors.contentSecondary,
         )
         TextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.large),
             state = state,
             placeholder = {
                 Text(text = "••••••••", color = YaseyoTheme.colors.contentTertiary)

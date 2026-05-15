@@ -3,6 +3,8 @@ package dev.yaseyo.onboarding.ui.profilesetup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.yaseyo.coroutines.DispatcherProvider
+import dev.yaseyo.navigation.AppRouter
+import dev.yaseyo.navigation.Home
 import dev.yaseyo.onboarding.model.OnboardingDraft
 import dev.yaseyo.onboarding.repository.OnboardingRepository
 import dev.yaseyo.user.api.ActivityLevel
@@ -20,6 +22,7 @@ import kotlinx.coroutines.launch
 internal class ProfileSetupViewModel(
     private val repo: OnboardingRepository,
     private val dispatchers: DispatcherProvider,
+    private val router: AppRouter,
 ) : ViewModel(),
     ProfileSetupEventHandler {
     private val draftState: StateFlow<OnboardingDraft> = repo.draft
@@ -165,6 +168,9 @@ internal class ProfileSetupViewModel(
     }
 
     private fun submitProfile() {
-        // TODO: POST /user — Chunk 4
+        viewModelScope.launch(dispatchers.io) {
+            repo.clearDraft()
+            router.navigateAndClearBackStack(Home)
+        }
     }
 }

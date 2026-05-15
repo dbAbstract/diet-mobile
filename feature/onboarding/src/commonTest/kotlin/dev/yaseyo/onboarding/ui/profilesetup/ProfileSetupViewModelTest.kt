@@ -4,6 +4,7 @@ package dev.yaseyo.onboarding.ui.profilesetup
 
 import app.cash.turbine.test
 import dev.yaseyo.coroutines.testing.TestDispatcherProvider
+import dev.yaseyo.navigation.AppRouter
 import dev.yaseyo.onboarding.fake.FakeOnboardingApi
 import dev.yaseyo.onboarding.fake.FakeOnboardingRepository
 import dev.yaseyo.onboarding.model.OnboardingDraft
@@ -40,7 +41,7 @@ class ProfileSetupViewModelTest {
     }
 
     private fun viewModel(repo: FakeOnboardingRepository = FakeOnboardingRepository()) =
-        ProfileSetupViewModel(repo = repo, dispatchers = dispatchers)
+        ProfileSetupViewModel(repo = repo, dispatchers = dispatchers, router = AppRouter())
 
     // --- draft restoration ---
 

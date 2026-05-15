@@ -5,5 +5,9 @@ sealed interface NavigationEvent {
         val route: AppRoute,
     ) : NavigationEvent
 
+    data class ClearBackStackAndGoTo(
+        val route: AppRoute,
+    ) : NavigationEvent
+
     data object GoBack : NavigationEvent
 }

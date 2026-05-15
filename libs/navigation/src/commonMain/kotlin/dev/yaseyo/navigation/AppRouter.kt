@@ -12,6 +12,10 @@ class AppRouter {
         _events.tryEmit(NavigationEvent.GoTo(route))
     }
 
+    fun navigateAndClearBackStack(route: AppRoute) {
+        _events.tryEmit(NavigationEvent.ClearBackStackAndGoTo(route))
+    }
+
     fun goBack() {
         _events.tryEmit(NavigationEvent.GoBack)
     }
