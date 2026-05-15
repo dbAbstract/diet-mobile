@@ -29,7 +29,7 @@ class ResolveStartDestinationUseCase(
         return when (appState) {
             AppState.FullySetup -> Home
 
-            AppState.RequiresLogin -> OnboardingRoutes.Auth
+            AppState.RequiresLogin -> OnboardingRoutes.Auth.Landing
 
             AppState.RequiresProfileSetup -> OnboardingRoutes.ProfileSetup
         }

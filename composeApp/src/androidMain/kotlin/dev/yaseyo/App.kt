@@ -6,6 +6,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
@@ -16,6 +17,7 @@ import dev.yaseyo.design.LocalSnackBarHostState
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.navigation.AppRoute
 import dev.yaseyo.navigation.AppRouter
+import dev.yaseyo.navigation.BottomSheetSceneStrategy
 import dev.yaseyo.navigation.FeatureNavigation
 import dev.yaseyo.navigation.NavigationEvent
 import dev.yaseyo.navigation.Navigator
@@ -29,6 +31,7 @@ fun App(navigator: Navigator) =
     YaseyoTheme {
         val appRouter = koinInject<AppRouter>()
         val allFeatureNavigation = getKoin().getAll<FeatureNavigation>()
+        val bottomSheetStrategy = remember { BottomSheetSceneStrategy<AppRoute>() }
 
         LaunchedEffect(appRouter) {
             appRouter.events.collect { event ->
@@ -54,6 +57,7 @@ fun App(navigator: Navigator) =
                         rememberViewModelStoreNavEntryDecorator(),
                     ),
                     entryProvider = allFeatureNavigation.registerAll(),
+                    sceneStrategies = listOf(bottomSheetStrategy),
                 )
             }
         }

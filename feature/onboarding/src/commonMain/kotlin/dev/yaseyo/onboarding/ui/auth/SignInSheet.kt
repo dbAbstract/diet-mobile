@@ -130,8 +130,6 @@ internal fun SignInSheetContent(
     }
 }
 
-// --- Private field components ---
-
 @Composable
 private fun SheetEmailField(
     state: TextFieldState,
