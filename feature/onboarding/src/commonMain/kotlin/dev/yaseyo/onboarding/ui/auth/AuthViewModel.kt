@@ -21,54 +21,73 @@ internal class AuthViewModel(
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
-    private val _action = Channel<String>(capacity = Channel.UNLIMITED)
+    private val _action = Channel<String>(capacity = Channel.BUFFERED)
     val action = _action.receiveAsFlow()
 
-    override fun onTabChanged(tab: AuthTab) = _uiState.update { it.copy(tab = tab) }
+    override fun onSignInClicked() {
+        router.navigate(OnboardingRoutes.Auth.SignIn)
+    }
 
-    override fun onEmailChanged(email: String) = _uiState.update { it.copy(email = email) }
-
-    override fun onPasswordChanged(password: String) = _uiState.update { it.copy(password = password) }
-
-    override fun onPasswordVisibilityToggled() = _uiState.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
+    override fun onSignUpClicked() {
+        router.navigate(OnboardingRoutes.Auth.SignUp)
+    }
 
     override fun onForgotPasswordClicked() { /* TODO */ }
 
-    override fun onSubmitClicked() {
-        when (uiState.value.tab) {
-            AuthTab.SignIn -> {
-                viewModelScope.launch {
-                    val signInResult = authRepository.signInWithEmailAndPassword(
-                        email = uiState.value.email,
-                        password = uiState.value.password,
-                    )
+    override fun signInWithEmailAndPassword(
+        email: String,
+        password: String,
+    ) {
+        _uiState.update {
+            it.copy(isLoading = true)
+        }
 
-                    signInResult.fold(
-                        onSuccess = {
-                            router.navigate(route = OnboardingRoutes.ProfileSetup)
-                        },
-                        onFailure = {
-                            _action.send("Something went wrong")
-                        },
-                    )
-                }
+        viewModelScope.launch {
+            val signInResult = authRepository.signInWithEmailAndPassword(
+                email = email,
+                password = password,
+            )
+
+            signInResult.fold(
+                onSuccess = {
+                    router.navigate(OnboardingRoutes.ProfileSetup)
+                },
+                onFailure = {
+                    _action.send("Something went wrong")
+                },
+            )
+
+            _uiState.update {
+                it.copy(isLoading = false)
             }
-            AuthTab.SignUp -> {
-                viewModelScope.launch {
-                    val signUpResult = authRepository.signUpWithEmailAndPassword(
-                        email = uiState.value.email,
-                        password = uiState.value.password,
-                    )
+        }
+    }
 
-                    signUpResult.fold(
-                        onSuccess = {
-                            router.navigate(route = OnboardingRoutes.ProfileSetup)
-                        },
-                        onFailure = {
-                            _action.send("Something went wrong")
-                        },
-                    )
-                }
+    override fun signUpWithEmailAndPassword(
+        email: String,
+        password: String,
+    ) {
+        _uiState.update {
+            it.copy(isLoading = true)
+        }
+
+        viewModelScope.launch {
+            val signInResult = authRepository.signUpWithEmailAndPassword(
+                email = email,
+                password = password,
+            )
+
+            signInResult.fold(
+                onSuccess = {
+                    router.navigate(OnboardingRoutes.ProfileSetup)
+                },
+                onFailure = {
+                    _action.send("Something went wrong")
+                },
+            )
+
+            _uiState.update {
+                it.copy(isLoading = false)
             }
         }
     }

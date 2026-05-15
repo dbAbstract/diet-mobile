@@ -1,15 +1,19 @@
 package dev.yaseyo.onboarding.ui.auth
 
 interface AuthEventHandler {
-    fun onTabChanged(tab: AuthTab)
+    fun onSignInClicked()
 
-    fun onEmailChanged(email: String)
-
-    fun onPasswordChanged(password: String)
-
-    fun onPasswordVisibilityToggled()
-
-    fun onSubmitClicked()
+    fun onSignUpClicked()
 
     fun onForgotPasswordClicked()
+
+    fun signInWithEmailAndPassword(
+        email: String,
+        password: String,
+    )
+
+    fun signUpWithEmailAndPassword(
+        email: String,
+        password: String,
+    )
 }

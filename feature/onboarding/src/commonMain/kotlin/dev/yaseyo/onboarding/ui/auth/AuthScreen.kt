@@ -1,338 +1,284 @@
 package dev.yaseyo.onboarding.ui.auth
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.TextFieldState
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.yaseyo.design.LocalSnackBarHostState
+import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 internal fun AuthScreen(viewModel: AuthViewModel = koinViewModel()) {
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val snackBarHostState = LocalSnackBarHostState.current
 
-    AuthContent(state = state, eventHandler = viewModel)
+    AuthContent(eventHandler = viewModel)
 
     LaunchedEffect(viewModel) {
-        viewModel.action.collect {
-            snackBarHostState.showSnackbar(it)
-        }
+        viewModel.action.collect { snackBarHostState.showSnackbar(it) }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AuthContent(
-    state: AuthUiState,
     eventHandler: AuthEventHandler,
+    modifier: Modifier = Modifier,
 ) {
-    val colors = YaseyoTheme.colors
+    AuthLandingContent(eventHandler = eventHandler, modifier = modifier)
+}
 
-    Box(
-        modifier = Modifier
+@Composable
+internal fun AuthLandingContent(
+    eventHandler: AuthEventHandler,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
             .fillMaxSize()
-            .background(colors.backgroundBase),
+            .padding(horizontal = 24.dp, vertical = 48.dp),
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Column(
+        AuthHeader()
+        AuthOptions(
+            onSignInClick = eventHandler::onSignInClicked,
+            onSignUpClick = eventHandler::onSignUpClicked,
+        )
+        TermsText()
+    }
+}
+
+@Composable
+internal fun SheetContent(
+    title: String,
+    submitLabel: String,
+    onSubmit: (email: String, password: String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val emailState = rememberTextFieldState()
+    val passwordState = rememberTextFieldState()
+
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 32.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+    ) {
+        Text(
+            text = title,
+            fontSize = 22.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = YaseyoTheme.colors.contentPrimary,
+        )
+        AuthField(label = "Email", state = emailState, placeholder = "yamadataro@yaseyo.com")
+        AuthField(label = "Password", state = passwordState, placeholder = "••••••••")
+        Button(
+            onClick = { onSubmit(emailState.text.toString(), passwordState.text.toString()) },
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp, vertical = 56.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            shape = MaterialTheme.shapes.large,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = YaseyoTheme.colors.accentDefault,
+            ),
         ) {
-            AppLogo(accentSubtle = colors.accentSubtle)
-
-            Spacer(Modifier.height(16.dp))
-
             Text(
-                text = "Yaseyo",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold,
-                color = colors.accentDefault,
-            )
-
-            Spacer(Modifier.height(8.dp))
-
-            Text(
-                text = "Cultivating a lighter, healthier you.",
-                fontSize = 15.sp,
-                color = colors.contentSecondary,
-            )
-
-            Spacer(Modifier.height(32.dp))
-
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = colors.backgroundElevated),
-                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-            ) {
-                Column(modifier = Modifier.padding(20.dp)) {
-                    AuthToggle(
-                        selectedTab = state.tab,
-                        onTabSelected = eventHandler::onTabChanged,
-                    )
-
-                    Spacer(Modifier.height(24.dp))
-
-                    FieldLabel("EMAIL ADDRESS")
-                    Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = state.email,
-                        onValueChange = eventHandler::onEmailChanged,
-                        modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("hello@example.com", color = colors.contentTertiary) },
-                        leadingIcon = {
-                            Icon(Icons.Default.Email, contentDescription = null, tint = colors.contentTertiary)
-                        },
-                        shape = RoundedCornerShape(12.dp),
-                        colors = fieldColors(),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    )
-
-                    Spacer(Modifier.height(16.dp))
-
-                    FieldLabel("PASSWORD")
-                    Spacer(Modifier.height(8.dp))
-                    OutlinedTextField(
-                        value = state.password,
-                        onValueChange = eventHandler::onPasswordChanged,
-                        modifier = Modifier.fillMaxWidth(),
-                        leadingIcon = {
-                            Icon(Icons.Default.Lock, contentDescription = null, tint = colors.contentTertiary)
-                        },
-                        trailingIcon = {
-                            IconButton(onClick = eventHandler::onPasswordVisibilityToggled) {
-                                Icon(
-                                    imageVector = if (state.isPasswordVisible) {
-                                        Icons.Default.VisibilityOff
-                                    } else {
-                                        Icons.Default.Visibility
-                                    },
-                                    contentDescription = if (state.isPasswordVisible) "Hide password" else "Show password",
-                                    tint = colors.contentTertiary,
-                                )
-                            }
-                        },
-                        visualTransformation = if (state.isPasswordVisible) {
-                            VisualTransformation.None
-                        } else {
-                            PasswordVisualTransformation()
-                        },
-                        shape = RoundedCornerShape(12.dp),
-                        colors = fieldColors(),
-                        singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    )
-
-                    Spacer(Modifier.height(8.dp))
-
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-                        Text(
-                            text = "Forgot Password?",
-                            color = colors.accentDefault,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 14.sp,
-                            modifier = Modifier.clickable { eventHandler.onForgotPasswordClicked() },
-                        )
-                    }
-
-                    Spacer(Modifier.height(24.dp))
-
-                    Button(
-                        onClick = eventHandler::onSubmitClicked,
-                        modifier = Modifier.fillMaxWidth().height(56.dp),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = colors.accentDefault),
-                        enabled = !state.isLoading,
-                    ) {
-                        Text(
-                            text = if (state.tab == AuthTab.SignIn) "Log In →" else "Sign Up →",
-                            fontSize = 17.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = colors.contentOnAccent,
-                        )
-                    }
-                }
-            }
-
-            Spacer(Modifier.height(24.dp))
-
-            Text(
-                text = "By continuing, you agree to Yaseyo's Terms of Service and Privacy Policy.",
-                fontSize = 12.sp,
-                color = colors.contentTertiary,
-                textAlign = TextAlign.Center,
+                text = submitLabel,
+                modifier = Modifier.padding(vertical = 8.dp),
+                fontSize = 16.sp,
             )
         }
     }
 }
 
 @Composable
-private fun AppLogo(accentSubtle: Color) {
+private fun AuthHeader(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        AppLogo(
+            modifier = Modifier
+                .size(80.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .background(YaseyoTheme.colors.accentSubtle),
+        )
+        Text(
+            text = "Yaseyo",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = YaseyoTheme.colors.accentDefault,
+        )
+        Text(
+            text = "Your fat-loss companion",
+            fontSize = 14.sp,
+            color = YaseyoTheme.colors.contentSecondary,
+        )
+    }
+}
+
+@Composable
+private fun AuthOptions(
+    onSignInClick: () -> Unit,
+    onSignUpClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Button(
+            onClick = onSignUpClick,
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = YaseyoTheme.colors.accentDefault,
+            ),
+        ) {
+            Text(
+                text = "Get started",
+                modifier = Modifier.padding(vertical = 8.dp),
+                fontSize = 16.sp,
+            )
+        }
+        OutlinedButton(
+            onClick = onSignInClick,
+            modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large,
+            border = BorderStroke(1.dp, YaseyoTheme.colors.borderDefault),
+        ) {
+            Text(
+                text = "Log in",
+                modifier = Modifier.padding(vertical = 8.dp),
+                fontSize = 16.sp,
+                color = YaseyoTheme.colors.contentPrimary,
+            )
+        }
+    }
+}
+
+@Composable
+private fun TermsText(modifier: Modifier = Modifier) {
+    Text(
+        modifier = modifier,
+        text = "By continuing, you agree to Yaseyo's Terms of Service and Privacy Policy.",
+        fontSize = 12.sp,
+        color = YaseyoTheme.colors.contentTertiary,
+    )
+}
+
+@Composable
+private fun AuthField(
+    label: String,
+    state: TextFieldState,
+    placeholder: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Text(
+            text = label,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Medium,
+            color = YaseyoTheme.colors.contentSecondary,
+        )
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            state = state,
+            placeholder = { Text(text = placeholder, color = YaseyoTheme.colors.contentTertiary) },
+            lineLimits = TextFieldLineLimits.SingleLine,
+            shape = MaterialTheme.shapes.large,
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            ),
+        )
+    }
+}
+
+@Composable
+private fun AppLogo(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
-            .size(80.dp)
-            .clip(RoundedCornerShape(20.dp))
-            .background(accentSubtle),
+        modifier = modifier,
         contentAlignment = Alignment.Center,
     ) {
         Text(text = "🌿", fontSize = 36.sp)
     }
 }
 
-@Composable
-private fun AuthToggle(
-    selectedTab: AuthTab,
-    onTabSelected: (AuthTab) -> Unit,
-) {
-    val colors = YaseyoTheme.colors
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(50.dp))
-            .background(colors.backgroundSubtle)
-            .padding(4.dp),
-    ) {
-        AuthTabButton(
-            label = "Sign In",
-            selected = selectedTab == AuthTab.SignIn,
-            modifier = Modifier.weight(1f),
-            onClick = { onTabSelected(AuthTab.SignIn) },
-        )
-        AuthTabButton(
-            label = "Sign Up",
-            selected = selectedTab == AuthTab.SignUp,
-            modifier = Modifier.weight(1f),
-            onClick = { onTabSelected(AuthTab.SignUp) },
-        )
-    }
-}
+internal val previewAuthUiState = AuthUiState()
 
-@Composable
-private fun AuthTabButton(
-    label: String,
-    selected: Boolean,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    val colors = YaseyoTheme.colors
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(50.dp))
-            .background(if (selected) colors.accentDefault else Color.Transparent)
-            .clickable(onClick = onClick)
-            .padding(vertical = 12.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(
-            text = label,
-            color = if (selected) colors.contentOnAccent else colors.contentSecondary,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 15.sp,
-        )
-    }
-}
+internal val previewAuthEventHandler = object : AuthEventHandler {
+    override fun onSignInClicked() {}
 
-@Composable
-private fun FieldLabel(text: String) {
-    val colors = YaseyoTheme.colors
-    Text(
-        text = text,
-        fontSize = 11.sp,
-        fontWeight = FontWeight.Bold,
-        letterSpacing = 1.sp,
-        color = colors.contentTertiary,
-    )
-}
-
-@Composable
-private fun fieldColors(): TextFieldColors {
-    val colors = YaseyoTheme.colors
-    return OutlinedTextFieldDefaults.colors(
-        unfocusedBorderColor = colors.borderDefault,
-        focusedBorderColor = colors.accentDefault,
-        unfocusedTextColor = colors.contentPrimary,
-        focusedTextColor = colors.contentPrimary,
-    )
-}
-
-private val previewState = AuthUiState()
-
-private val previewHandler = object : AuthEventHandler {
-    override fun onTabChanged(tab: AuthTab) {}
-
-    override fun onEmailChanged(email: String) {}
-
-    override fun onPasswordChanged(password: String) {}
-
-    override fun onPasswordVisibilityToggled() {}
-
-    override fun onSubmitClicked() {}
+    override fun onSignUpClicked() {}
 
     override fun onForgotPasswordClicked() {}
+
+    override fun signInWithEmailAndPassword(
+        email: String,
+        password: String,
+    ) {}
+
+    override fun signUpWithEmailAndPassword(
+        email: String,
+        password: String,
+    ) {}
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun AuthContentLightPreview() {
-    YaseyoTheme(darkTheme = false) { AuthContent(state = previewState, eventHandler = previewHandler) }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun AuthContentSignUpPreview() {
-    YaseyoTheme(darkTheme = false) {
-        AuthContent(state = previewState.copy(tab = AuthTab.SignUp), eventHandler = previewHandler)
+private fun AuthLandingLightPreview() {
+    YaseyoPreview(darkTheme = false) {
+        AuthLandingContent(eventHandler = previewAuthEventHandler)
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun AuthContentDarkPreview() {
-    YaseyoTheme(darkTheme = true) { AuthContent(state = previewState, eventHandler = previewHandler) }
+private fun AuthLandingDarkPreview() {
+    YaseyoPreview(darkTheme = true) {
+        AuthLandingContent(eventHandler = previewAuthEventHandler)
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SheetContentPreview() {
+    YaseyoPreview(darkTheme = false) {
+        SheetContent(title = "Sign in", submitLabel = "Sign in", onSubmit = { _, _ -> })
+    }
 }
