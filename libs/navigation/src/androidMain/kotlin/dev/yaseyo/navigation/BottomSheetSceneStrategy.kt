@@ -3,6 +3,7 @@ package dev.yaseyo.navigation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalBottomSheetProperties
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -15,6 +16,7 @@ import androidx.navigation3.scene.OverlayScene
 import androidx.navigation3.scene.Scene
 import androidx.navigation3.scene.SceneStrategy
 import androidx.navigation3.scene.SceneStrategyScope
+import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.navigation.BottomSheetSceneStrategy.Companion.bottomSheet
 
 /** An [OverlayScene] that renders an [entry] within a [ModalBottomSheet]. */
@@ -31,12 +33,17 @@ internal data class BottomSheetScene<T : Any>(
 
     override val content: @Composable () -> Unit = {
         val lifecycleOwner = rememberLifecycleOwner()
-        ModalBottomSheet(
-            onDismissRequest = onBack,
-            properties = modalBottomSheetProperties,
-        ) {
-            CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) {
-                entry.Content()
+
+        YaseyoTheme {
+            ModalBottomSheet(
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+                onDismissRequest = onBack,
+                properties = modalBottomSheetProperties,
+                containerColor = YaseyoTheme.colors.backgroundElevated,
+            ) {
+                CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) {
+                    entry.Content()
+                }
             }
         }
     }

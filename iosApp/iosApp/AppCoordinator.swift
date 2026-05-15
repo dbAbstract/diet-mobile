@@ -29,7 +29,7 @@ class AppCoordinator: ObservableObject {
         let startRoute = try? await resolveStartDestinationUseCase.execute()
         let vc = startRoute.flatMap { route in
             makeViewController(for: route)
-        } ?? authScreenViewController()
+        } ?? authLandingScreenViewController()
         navigationController?.setViewControllers([vc], animated: false)
     }
 

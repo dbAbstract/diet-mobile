@@ -1,6 +1,5 @@
 package dev.yaseyo.onboarding.ui.auth
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,9 +14,7 @@ import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -27,7 +24,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,7 +37,7 @@ import dev.yaseyo.design.YaseyoTheme
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-internal fun AuthScreen(viewModel: AuthViewModel = koinViewModel()) {
+internal fun AuthLandingScreen(viewModel: AuthViewModel = koinViewModel()) {
     val snackBarHostState = LocalSnackBarHostState.current
 
     AuthContent(eventHandler = viewModel)
@@ -47,7 +47,6 @@ internal fun AuthScreen(viewModel: AuthViewModel = koinViewModel()) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AuthContent(
     eventHandler: AuthEventHandler,
@@ -156,7 +155,7 @@ private fun AuthOptions(
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Button(
             onClick = onSignUpClick,
@@ -172,19 +171,25 @@ private fun AuthOptions(
                 fontSize = 16.sp,
             )
         }
-        OutlinedButton(
-            onClick = onSignInClick,
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.large,
-            border = BorderStroke(1.dp, YaseyoTheme.colors.borderDefault),
-        ) {
-            Text(
-                text = "Log in",
-                modifier = Modifier.padding(vertical = 8.dp),
-                fontSize = 16.sp,
-                color = YaseyoTheme.colors.contentPrimary,
-            )
-        }
+        Text(
+            text = buildAnnotatedString {
+                append("Already have an account? ")
+                val linkStart = length
+                append("Sign in instead.")
+                addLink(
+                    clickable = LinkAnnotation.Clickable(
+                        tag = "sign_in",
+                        linkInteractionListener = { onSignInClick() },
+                    ),
+                    start = linkStart,
+                    end = length,
+                )
+            },
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+            fontSize = 16.sp,
+            color = YaseyoTheme.colors.contentPrimary,
+            textAlign = TextAlign.Center,
+        )
     }
 }
 

@@ -19,6 +19,7 @@ kotlin {
 
         androidMain {
             dependencies {
+                implementation(projects.libs.design)
                 api(libs.androidx.navigation3.runtime)
                 implementation(libs.androidx.navigation3.ui)
                 implementation(libs.koin.core)
