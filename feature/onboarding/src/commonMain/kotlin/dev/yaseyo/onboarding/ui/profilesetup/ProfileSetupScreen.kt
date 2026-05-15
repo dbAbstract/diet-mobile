@@ -37,6 +37,7 @@ import dev.yaseyo.onboarding.model.OnboardingStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.AboutYouStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.ActivityLevelStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.CurrentWeightStep
+import dev.yaseyo.onboarding.ui.profilesetup.widgets.GoalWeightStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.HeightStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.NameStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.OnboardingProgressBar
@@ -143,6 +144,15 @@ private fun ProfileSetupContent(
                         subtitle = state.currentStep?.subtitle,
                         onSelected = eventHandler::onActivityLevelSelected,
                     )
+                    5 -> GoalWeightStep(
+                        targetWeightKg = state.targetWeightKg,
+                        currentWeightKg = state.currentWeightKg,
+                        suggestion = state.goalSuggestion,
+                        isLoading = state.isLoadingGoalSuggestion,
+                        title = state.currentStep?.title ?: "What's your goal weight?",
+                        subtitle = state.currentStep?.subtitle,
+                        onTargetWeightChanged = eventHandler::onTargetWeightChanged,
+                    )
                 }
             }
 
@@ -208,6 +218,8 @@ private val previewHandler = object : ProfileSetupEventHandler {
     override fun onCurrentWeightChanged(weightKg: Int) {}
 
     override fun onActivityLevelSelected(level: dev.yaseyo.user.api.ActivityLevel) {}
+
+    override fun onTargetWeightChanged(weightKg: Int) {}
 
     override fun onContinue() {}
 

@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.yaseyo.navigation.AppRouter
 import dev.yaseyo.onboarding.model.OnboardingStep
+import dev.yaseyo.onboarding.network.GoalSuggestionRequestNet
 import dev.yaseyo.onboarding.network.OnboardingApi
 import dev.yaseyo.user.api.ActivityLevel
 import dev.yaseyo.user.api.Sex
@@ -91,13 +92,51 @@ internal class ProfileSetupViewModel(
 
     override fun onActivityLevelSelected(level: ActivityLevel) = _uiState.update { it.copy(selectedActivityLevel = level) }
 
+    override fun onTargetWeightChanged(weightKg: Int) = _uiState.update { it.copy(targetWeightKg = weightKg) }
+
     override fun onContinue() {
         val state = _uiState.value
         val nextIndex = state.currentStepIndex + 1
+        if (state.currentStepIndex == 4) {
+            fetchGoalSuggestion(state)
+        }
         if (nextIndex < state.totalSteps) {
             _uiState.update { it.copy(currentStepIndex = nextIndex) }
         } else {
             submitProfile()
+        }
+    }
+
+    private fun fetchGoalSuggestion(state: ProfileSetupUiState) {
+        val sex = state.sex ?: return
+        _uiState.update { it.copy(isLoadingGoalSuggestion = true) }
+        viewModelScope.launch {
+            runCatching {
+                onboardingApi.getGoalSuggestion(
+                    GoalSuggestionRequestNet(
+                        sex = sex.name.uppercase(),
+                        height = state.heightCm.toDouble(),
+                        dateOfBirth = state.dateOfBirth().toString(),
+                        currentWeightKg = state.currentWeightKg.toDouble(),
+                    ),
+                )
+            }.onSuccess { net ->
+                val suggested = net.suggestedTargetKg.toInt()
+                _uiState.update {
+                    it.copy(
+                        goalSuggestion = GoalSuggestion(
+                            currentBmi = net.current.bmi,
+                            currentBodyFatPct = net.current.bodyFat?.estimatedPct,
+                            currentBodyFatCategory = net.current.bodyFat?.category,
+                            suggestedTargetKg = suggested,
+                        ),
+                        targetWeightKg = suggested,
+                        isLoadingGoalSuggestion = false,
+                    )
+                }
+            }.onFailure {
+                _uiState.update { it.copy(isLoadingGoalSuggestion = false) }
+            }
         }
     }
 

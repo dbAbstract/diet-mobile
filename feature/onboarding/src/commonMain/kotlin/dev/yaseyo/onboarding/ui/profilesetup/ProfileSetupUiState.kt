@@ -19,6 +19,17 @@ internal data class ProfileSetupUiState(
     // Step 5 — activity level
     val activityLevels: List<ActivityLevelOption> = emptyList(),
     val selectedActivityLevel: ActivityLevel? = null,
+    // Step 6 — goal weight
+    val goalSuggestion: GoalSuggestion? = null,
+    val isLoadingGoalSuggestion: Boolean = false,
+    val targetWeightKg: Int = 70,
+)
+
+internal data class GoalSuggestion(
+    val currentBmi: Double,
+    val currentBodyFatPct: Double?,
+    val currentBodyFatCategory: String?,
+    val suggestedTargetKg: Int,
 )
 
 internal data class ActivityLevelOption(

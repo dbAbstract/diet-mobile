@@ -25,6 +25,9 @@ internal interface ProfileSetupEventHandler {
     // Step 5
     fun onActivityLevelSelected(level: ActivityLevel)
 
+    // Step 6
+    fun onTargetWeightChanged(weightKg: Int)
+
     fun onContinue()
 
     fun onBack()
