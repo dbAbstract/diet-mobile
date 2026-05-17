@@ -12,6 +12,8 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -68,7 +70,11 @@ internal fun WheelPicker(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             itemsIndexed(paddedItems) { index, item ->
-                val isSelected = index == listState.firstVisibleItemIndex + 1
+                val isSelected by remember {
+                    derivedStateOf {
+                        index == listState.firstVisibleItemIndex + 1
+                    }
+                }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

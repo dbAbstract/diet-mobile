@@ -223,11 +223,6 @@ private fun MacroColumn(
     }
 }
 
-private fun Double.format1dp(): String {
-    val scaled = (this * 10).toLong()
-    return "${scaled / 10}.${kotlin.math.abs(scaled % 10)}"
-}
-
 private val previewSummary = OnboardingSummary(
     tdee = 2200,
     dailyCalorieTarget = 1700,

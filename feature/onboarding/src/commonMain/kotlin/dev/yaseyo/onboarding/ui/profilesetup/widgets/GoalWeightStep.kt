@@ -156,11 +156,6 @@ private fun StatRow(
     }
 }
 
-private fun Double.format1dp(): String {
-    val scaled = (this * 10).toLong()
-    return "${scaled / 10}.${kotlin.math.abs(scaled % 10)}"
-}
-
 private val previewSuggestion = GoalSuggestion(
     currentBmi = 27.4,
     currentBodyFatPct = 22.1,
