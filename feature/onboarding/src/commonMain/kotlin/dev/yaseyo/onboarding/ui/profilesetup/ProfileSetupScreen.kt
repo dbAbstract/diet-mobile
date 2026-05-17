@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigationevent.NavigationEventInfo
 import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
+import dev.yaseyo.design.LocalSnackBarHostState
 import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.onboarding.model.OnboardingStep
@@ -48,6 +50,7 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun ProfileSetupScreen(viewModel: ProfileSetupViewModel = koinViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val navState = rememberNavigationEventState(NavigationEventInfo.None)
+    val snackBarHostState = LocalSnackBarHostState.current
 
     NavigationBackHandler(
         state = navState,
@@ -57,6 +60,10 @@ internal fun ProfileSetupScreen(viewModel: ProfileSetupViewModel = koinViewModel
     }
 
     ProfileSetupContent(state = state, eventHandler = viewModel)
+
+    LaunchedEffect(viewModel) {
+        viewModel.action.collect { snackBarHostState.showSnackbar(it) }
+    }
 }
 
 @Composable
@@ -180,13 +187,14 @@ private fun ProfileSetupContent(
                     containerColor = colors.accentDefault,
                     disabledContainerColor = colors.accentSubtle,
                 ),
-                enabled = when (state.currentStepIndex) {
-                    0 -> state.name.isNotBlank()
-                    1 -> state.sex != null
-                    4 -> state.selectedActivityLevel != null
-                    6 -> state.onboardingSummary != null
-                    else -> true
-                },
+                enabled = !state.isSubmitting &&
+                    when (state.currentStepIndex) {
+                        0 -> state.name.isNotBlank()
+                        1 -> state.sex != null
+                        4 -> state.selectedActivityLevel != null
+                        6 -> state.onboardingSummary != null
+                        else -> true
+                    },
             ) {
                 Text(
                     text = "CONTINUE →",

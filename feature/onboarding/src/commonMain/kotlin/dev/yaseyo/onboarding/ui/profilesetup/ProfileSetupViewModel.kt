@@ -9,22 +9,28 @@ import dev.yaseyo.onboarding.model.OnboardingDraft
 import dev.yaseyo.onboarding.repository.OnboardingRepository
 import dev.yaseyo.user.api.ActivityLevel
 import dev.yaseyo.user.api.Sex
+import dev.yaseyo.user.api.UserRepository
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 internal class ProfileSetupViewModel(
     private val repo: OnboardingRepository,
+    private val userRepository: UserRepository,
     private val dispatchers: DispatcherProvider,
     private val router: AppRouter,
 ) : ViewModel(),
     ProfileSetupEventHandler {
+    private val _action = Channel<String>(capacity = Channel.BUFFERED)
+    val action = _action.receiveAsFlow()
     private val draftState: StateFlow<OnboardingDraft> = repo.draft
         .stateIn(
             scope = viewModelScope,
@@ -115,7 +121,7 @@ internal class ProfileSetupViewModel(
     override fun onBack() {
         val currentIndex = draftState.value.currentStepIndex
         if (currentIndex == 0) {
-            // TODO: navigate back via UiAction (Chunk 4)
+            router.goBack()
         } else {
             save { it.copy(currentStepIndex = currentIndex - 1) }
         }
@@ -168,9 +174,35 @@ internal class ProfileSetupViewModel(
     }
 
     private fun submitProfile() {
+        val state = uiState.value
+        val sex = state.sex ?: return
+        val activityLevel = state.selectedActivityLevel ?: return
+        val summary = state.onboardingSummary ?: return
+
+        _uiState.update { it.copy(isSubmitting = true) }
         viewModelScope.launch(dispatchers.io) {
-            repo.clearDraft()
-            router.navigateAndClearBackStack(Home)
+            userRepository
+                .createUser(
+                    name = state.name,
+                    sex = sex,
+                    height = state.heightCm.toDouble(),
+                    dateOfBirth = state.dateOfBirth(),
+                    activityLevel = activityLevel,
+                    targetWeightKg = state.targetWeightKg.toDouble(),
+                    dailyDeficitKcal = state.dailyDeficitKcal.toDouble(),
+                    targetProtein = summary.proteinG.toDouble(),
+                    targetCarbs = summary.carbsG.toDouble(),
+                    targetFat = summary.fatG.toDouble(),
+                ).fold(
+                    onSuccess = {
+                        repo.clearDraft()
+                        router.navigateAndClearBackStack(Home)
+                    },
+                    onFailure = {
+                        _uiState.update { it.copy(isSubmitting = false) }
+                        _action.send("Something went wrong. Please try again.")
+                    },
+                )
         }
     }
 }

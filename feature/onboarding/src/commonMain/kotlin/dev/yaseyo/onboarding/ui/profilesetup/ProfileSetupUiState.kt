@@ -11,6 +11,7 @@ import kotlinx.datetime.LocalDate
 internal data class ProfileSetupUiState(
     val steps: List<OnboardingStep> = emptyList(),
     val isLoadingSteps: Boolean = true,
+    val isSubmitting: Boolean = false,
     val currentStepIndex: Int = 0,
     val name: String = "",
     val sex: Sex? = null,
