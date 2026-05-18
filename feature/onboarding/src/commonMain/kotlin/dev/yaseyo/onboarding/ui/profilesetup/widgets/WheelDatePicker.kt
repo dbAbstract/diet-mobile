@@ -1,8 +1,12 @@
 package dev.yaseyo.onboarding.ui.profilesetup.widgets
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -49,30 +53,43 @@ internal fun WheelDatePicker(
         (1..daysInMonth(month, year)).map { it.toString() }
     }
 
-    Row(
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
             .background(colors.backgroundSubtle),
     ) {
-        WheelPicker(
-            items = months,
-            selectedIndex = (month - 1).coerceIn(months.indices),
-            onIndexChanged = { onMonthChanged(it + 1) },
-            modifier = Modifier.weight(2f), // months are wider
+        // Continuous selection window spanning all three columns
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .offset(y = ItemHeight)
+                .height(ItemHeight)
+                .clip(RoundedCornerShape(8.dp))
+                .background(colors.backgroundBase)
+                .border(1.dp, colors.borderDefault, RoundedCornerShape(8.dp)),
         )
-        WheelPicker(
-            items = days,
-            selectedIndex = (day - 1).coerceIn(days.indices),
-            onIndexChanged = { onDayChanged(it + 1) },
-            modifier = Modifier.weight(1f),
-        )
-        WheelPicker(
-            items = years,
-            selectedIndex = (year - 1926).coerceIn(years.indices),
-            onIndexChanged = { onYearChanged(it + 1926) },
-            modifier = Modifier.weight(1f),
-        )
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            WheelPicker(
+                items = months,
+                selectedIndex = (month - 1).coerceIn(months.indices),
+                onIndexChanged = { onMonthChanged(it + 1) },
+                modifier = Modifier.weight(2f), // months are wider
+            )
+            WheelPicker(
+                items = days,
+                selectedIndex = (day - 1).coerceIn(days.indices),
+                onIndexChanged = { onDayChanged(it + 1) },
+                modifier = Modifier.weight(1f),
+            )
+            WheelPicker(
+                items = years,
+                selectedIndex = (year - 1926).coerceIn(years.indices),
+                onIndexChanged = { onYearChanged(it + 1926) },
+                modifier = Modifier.weight(1f),
+            )
+        }
     }
 }
 
