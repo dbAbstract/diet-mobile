@@ -75,7 +75,9 @@ internal class ProfileSetupViewModel(
                             isLoadingSteps = false,
                         )
                     }
-                }.onFailure { _uiState.update { it.copy(isLoadingSteps = false) } }
+                }.onFailure {
+                    _uiState.update { it.copy(isLoadingSteps = false) }
+                }
 
             levelsDeferred
                 .await()
