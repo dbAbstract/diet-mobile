@@ -35,9 +35,7 @@ private val deficitOptions = listOf(
 )
 
 @Composable
-internal fun SummaryStep(
-    summary: OnboardingSummary?,
-    isLoading: Boolean,
+internal fun DeficitStep(
     dailyDeficitKcal: Int,
     title: String,
     subtitle: String?,
@@ -45,26 +43,13 @@ internal fun SummaryStep(
     modifier: Modifier = Modifier,
 ) {
     val colors = YaseyoTheme.colors
-
     Column(modifier = modifier) {
-        Text(
-            text = title,
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            color = colors.contentPrimary,
-        )
-
+        Text(text = title, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = colors.contentPrimary)
         if (subtitle != null) {
             Spacer(Modifier.height(6.dp))
-            Text(
-                text = subtitle,
-                fontSize = 15.sp,
-                color = colors.contentSecondary,
-            )
+            Text(text = subtitle, fontSize = 15.sp, color = colors.contentSecondary)
         }
-
         Spacer(Modifier.height(24.dp))
-
         Text(
             text = "DAILY DEFICIT",
             fontSize = 11.sp,
@@ -72,9 +57,7 @@ internal fun SummaryStep(
             letterSpacing = 1.sp,
             color = colors.contentTertiary,
         )
-
         Spacer(Modifier.height(10.dp))
-
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             deficitOptions.forEach { (kcal, label) ->
                 DeficitChip(
@@ -86,9 +69,25 @@ internal fun SummaryStep(
                 )
             }
         }
+    }
+}
 
+@Composable
+internal fun SummaryStep(
+    summary: OnboardingSummary?,
+    isLoading: Boolean,
+    title: String,
+    subtitle: String?,
+    modifier: Modifier = Modifier,
+) {
+    val colors = YaseyoTheme.colors
+    Column(modifier = modifier) {
+        Text(text = title, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = colors.contentPrimary)
+        if (subtitle != null) {
+            Spacer(Modifier.height(6.dp))
+            Text(text = subtitle, fontSize = 15.sp, color = colors.contentSecondary)
+        }
         Spacer(Modifier.height(24.dp))
-
         if (isLoading) {
             Box(
                 modifier = Modifier
@@ -127,17 +126,8 @@ private fun DeficitChip(
             .padding(vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(
-            text = label,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = colors.contentPrimary,
-        )
-        Text(
-            text = "$kcal kcal",
-            fontSize = 11.sp,
-            color = colors.contentSecondary,
-        )
+        Text(text = label, fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = colors.contentPrimary)
+        Text(text = "$kcal kcal", fontSize = 11.sp, color = colors.contentSecondary)
     }
 }
 
@@ -166,10 +156,7 @@ private fun SummaryCard(
         SummaryRow(label = "Daily calories", value = "${summary.dailyCalorieTarget} kcal", highlight = true)
         SummaryRow(label = "Weekly loss", value = "${summary.weeklyLossKg.format1dp()} kg/week")
         SummaryRow(label = "TDEE", value = "${summary.tdee} kcal")
-        HorizontalDivider(
-            modifier = Modifier.padding(vertical = 10.dp),
-            color = colors.borderSubtle,
-        )
+        HorizontalDivider(modifier = Modifier.padding(vertical = 10.dp), color = colors.borderSubtle)
         Text(
             text = "SUGGESTED MACROS",
             fontSize = 11.sp,
@@ -195,9 +182,7 @@ private fun SummaryRow(
 ) {
     val colors = YaseyoTheme.colors
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
+        modifier = modifier.fillMaxWidth().padding(vertical = 4.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(text = label, fontSize = 14.sp, color = colors.contentSecondary)
@@ -234,16 +219,22 @@ private val previewSummary = OnboardingSummary(
 
 @Preview(showBackground = true)
 @Composable
-private fun SummaryStepLoadingPreview() {
+private fun DeficitStepPreview() {
     YaseyoPreview(darkTheme = false) {
-        SummaryStep(
-            summary = null,
-            isLoading = true,
+        DeficitStep(
             dailyDeficitKcal = 500,
-            title = "Here's your plan",
-            subtitle = "Based on your profile and goal.",
+            title = "How fast do you want to lose weight?",
+            subtitle = "You can change this any time",
             onDeficitChanged = {},
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SummaryStepLoadingPreview() {
+    YaseyoPreview(darkTheme = false) {
+        SummaryStep(summary = null, isLoading = true, title = "Your plan", subtitle = "Based on your profile")
     }
 }
 
@@ -251,27 +242,14 @@ private fun SummaryStepLoadingPreview() {
 @Composable
 private fun SummaryStepLoadedPreview() {
     YaseyoPreview(darkTheme = false) {
-        SummaryStep(
-            summary = previewSummary,
-            isLoading = false,
-            dailyDeficitKcal = 500,
-            title = "Here's your plan",
-            subtitle = "Based on your profile and goal.",
-            onDeficitChanged = {},
-        )
+        SummaryStep(summary = previewSummary, isLoading = false, title = "Your plan", subtitle = "Based on your profile")
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun SummaryStepDarkPreview() =
+private fun SummaryStepDarkPreview() {
     YaseyoPreview(darkTheme = true) {
-        SummaryStep(
-            summary = previewSummary,
-            isLoading = false,
-            dailyDeficitKcal = 750,
-            title = "Here's your plan",
-            subtitle = "Based on your profile and goal.",
-            onDeficitChanged = {},
-        )
+        SummaryStep(summary = previewSummary, isLoading = false, title = "Your plan", subtitle = "Based on your profile")
     }
+}

@@ -36,13 +36,15 @@ import dev.yaseyo.design.LocalSnackBarHostState
 import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.onboarding.model.OnboardingStep
-import dev.yaseyo.onboarding.ui.profilesetup.widgets.AboutYouStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.ActivityLevelStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.CurrentWeightStep
+import dev.yaseyo.onboarding.ui.profilesetup.widgets.DateOfBirthStep
+import dev.yaseyo.onboarding.ui.profilesetup.widgets.DeficitStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.GoalWeightStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.HeightStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.NameStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.OnboardingProgressBar
+import dev.yaseyo.onboarding.ui.profilesetup.widgets.SexStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.SummaryStep
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -103,7 +105,6 @@ private fun ProfileSetupContent(
                     fontWeight = FontWeight.SemiBold,
                     color = colors.accentDefault,
                 )
-                // Balance the row so title stays centered
                 Spacer(Modifier.size(48.dp))
             }
 
@@ -118,45 +119,49 @@ private fun ProfileSetupContent(
                     .weight(1f)
                     .padding(horizontal = 24.dp, vertical = 32.dp),
             ) {
-                when (state.currentStepIndex) {
-                    0 -> NameStep(
+                when (state.currentStep?.key) {
+                    "name" -> NameStep(
                         name = state.name,
                         title = state.currentStep?.title ?: "What should we call you?",
                         subtitle = state.currentStep?.subtitle,
                         onNameChanged = eventHandler::onNameChanged,
                     )
-                    1 -> AboutYouStep(
+                    "sex" -> SexStep(
                         sex = state.sex,
+                        title = state.currentStep?.title ?: "Biological sex",
+                        subtitle = state.currentStep?.subtitle,
+                        onSexChanged = eventHandler::onSexChanged,
+                    )
+                    "dateOfBirth" -> DateOfBirthStep(
                         dobMonth = state.dobMonth,
                         dobDay = state.dobDay,
                         dobYear = state.dobYear,
-                        title = state.currentStep?.title ?: "Tell us about yourself",
+                        title = state.currentStep?.title ?: "When were you born?",
                         subtitle = state.currentStep?.subtitle,
-                        onSexChanged = eventHandler::onSexChanged,
                         onMonthChanged = eventHandler::onDobMonthChanged,
                         onDayChanged = eventHandler::onDobDayChanged,
                         onYearChanged = eventHandler::onDobYearChanged,
                     )
-                    2 -> HeightStep(
+                    "height" -> HeightStep(
                         heightCm = state.heightCm,
                         title = state.currentStep?.title ?: "How tall are you?",
                         subtitle = state.currentStep?.subtitle,
                         onHeightChanged = eventHandler::onHeightChanged,
                     )
-                    3 -> CurrentWeightStep(
+                    "currentWeightKg" -> CurrentWeightStep(
                         weightKg = state.currentWeightKg,
                         title = state.currentStep?.title ?: "What's your current weight?",
                         subtitle = state.currentStep?.subtitle,
                         onWeightChanged = eventHandler::onCurrentWeightChanged,
                     )
-                    4 -> ActivityLevelStep(
+                    "activityLevel" -> ActivityLevelStep(
                         options = state.activityLevels,
                         selected = state.selectedActivityLevel,
                         title = state.currentStep?.title ?: "How active is your daily life?",
                         subtitle = state.currentStep?.subtitle,
                         onSelected = eventHandler::onActivityLevelSelected,
                     )
-                    5 -> GoalWeightStep(
+                    "targetWeightKg" -> GoalWeightStep(
                         targetWeightKg = state.targetWeightKg,
                         currentWeightKg = state.currentWeightKg,
                         suggestion = state.goalSuggestion,
@@ -165,13 +170,17 @@ private fun ProfileSetupContent(
                         subtitle = state.currentStep?.subtitle,
                         onTargetWeightChanged = eventHandler::onTargetWeightChanged,
                     )
-                    6 -> SummaryStep(
-                        summary = state.onboardingSummary,
-                        isLoading = state.isLoadingSummary,
+                    "dailyDeficitKcal" -> DeficitStep(
                         dailyDeficitKcal = state.dailyDeficitKcal,
-                        title = state.currentStep?.title ?: "Here's your plan",
+                        title = state.currentStep?.title ?: "How fast do you want to lose weight?",
                         subtitle = state.currentStep?.subtitle,
                         onDeficitChanged = eventHandler::onDeficitChanged,
+                    )
+                    "summary" -> SummaryStep(
+                        summary = state.onboardingSummary,
+                        isLoading = state.isLoadingSummary,
+                        title = state.currentStep?.title ?: "Your plan",
+                        subtitle = state.currentStep?.subtitle,
                     )
                 }
             }
@@ -188,11 +197,11 @@ private fun ProfileSetupContent(
                     disabledContainerColor = colors.accentSubtle,
                 ),
                 enabled = !state.isSubmitting &&
-                    when (state.currentStepIndex) {
-                        0 -> state.name.isNotBlank()
-                        1 -> state.sex != null
-                        4 -> state.selectedActivityLevel != null
-                        6 -> state.onboardingSummary != null
+                    when (state.currentStep?.key) {
+                        "name" -> state.name.isNotBlank()
+                        "sex" -> state.sex != null
+                        "activityLevel" -> state.selectedActivityLevel != null
+                        "summary" -> state.onboardingSummary != null
                         else -> true
                     },
             ) {
@@ -209,12 +218,8 @@ private fun ProfileSetupContent(
 }
 
 private val previewSteps = listOf(
-    OnboardingStep(key = "name", title = "What should we call you?", subtitle = "We'll use this to personalize your experience."),
-    OnboardingStep(
-        key = "about_you",
-        title = "Tell us about yourself",
-        subtitle = "This helps us calculate your calorie needs accurately.",
-    ),
+    OnboardingStep(key = "name", title = "What should we call you?", subtitle = "We'll use this to personalise your experience"),
+    OnboardingStep(key = "sex", title = "Biological sex", subtitle = "Used for accurate calorie calculations"),
 )
 
 private val previewState = ProfileSetupUiState(

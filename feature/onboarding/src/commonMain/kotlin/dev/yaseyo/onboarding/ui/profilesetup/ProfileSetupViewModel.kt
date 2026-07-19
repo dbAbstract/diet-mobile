@@ -111,10 +111,11 @@ internal class ProfileSetupViewModel(
     override fun onContinue() {
         val state = uiState.value
         val nextIndex = state.currentStepIndex + 1
-        if (state.currentStepIndex == 4) fetchGoalSuggestion()
+        if (state.currentStep?.key == "activityLevel") fetchGoalSuggestion()
         if (nextIndex < state.totalSteps) {
             save { it.copy(currentStepIndex = nextIndex) }
-            if (nextIndex == state.totalSteps - 1) fetchSummary()
+            val nextKey = state.steps.getOrNull(nextIndex)?.key
+            if (nextKey == "summary") fetchSummary()
         } else {
             submitProfile()
         }
