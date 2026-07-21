@@ -41,7 +41,14 @@ internal class FakeOnboardingApi(
     companion object {
         val DEFAULT_STEPS = listOf(
             OnboardingStep(key = "name", title = "Name", subtitle = null),
-            OnboardingStep(key = "about_you", title = "About you", subtitle = null),
+            OnboardingStep(key = "sex", title = "Biological sex", subtitle = null),
+            OnboardingStep(key = "dateOfBirth", title = "Date of birth", subtitle = null),
+            OnboardingStep(key = "height", title = "Height", subtitle = null),
+            OnboardingStep(key = "currentWeightKg", title = "Current weight", subtitle = null),
+            OnboardingStep(key = "activityLevel", title = "Activity level", subtitle = null),
+            OnboardingStep(key = "targetWeightKg", title = "Goal weight", subtitle = null),
+            OnboardingStep(key = "dailyDeficitKcal", title = "Deficit", subtitle = null),
+            OnboardingStep(key = "summary", title = "Your plan", subtitle = null),
         )
         val DEFAULT_ACTIVITY_LEVELS = listOf(
             ActivityLevelOption(level = ActivityLevel.Sedentary, label = "Sedentary", description = "Mostly sitting"),

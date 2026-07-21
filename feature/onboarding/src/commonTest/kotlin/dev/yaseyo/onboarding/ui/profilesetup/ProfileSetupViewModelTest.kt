@@ -7,6 +7,7 @@ import dev.yaseyo.coroutines.testing.TestDispatcherProvider
 import dev.yaseyo.navigation.AppRouter
 import dev.yaseyo.onboarding.fake.FakeOnboardingApi
 import dev.yaseyo.onboarding.fake.FakeOnboardingRepository
+import dev.yaseyo.onboarding.fake.FakeUserRepository
 import dev.yaseyo.onboarding.model.OnboardingDraft
 import dev.yaseyo.user.api.ActivityLevel
 import dev.yaseyo.user.api.Sex
@@ -40,8 +41,10 @@ class ProfileSetupViewModelTest {
         Dispatchers.resetMain()
     }
 
-    private fun viewModel(repo: FakeOnboardingRepository = FakeOnboardingRepository()) =
-        ProfileSetupViewModel(repo = repo, dispatchers = dispatchers, router = AppRouter())
+    private fun viewModel(
+        repo: FakeOnboardingRepository = FakeOnboardingRepository(),
+        userRepository: FakeUserRepository = FakeUserRepository(),
+    ) = ProfileSetupViewModel(repo = repo, dispatchers = dispatchers, router = AppRouter(), userRepository = userRepository)
 
     // --- draft restoration ---
 
@@ -203,7 +206,7 @@ class ProfileSetupViewModelTest {
         runTest {
             val repo = FakeOnboardingRepository(
                 initialDraft = OnboardingDraft(
-                    currentStepIndex = 4,
+                    currentStepIndex = 5,
                     sex = Sex.Male,
                     heightCm = 178,
                     currentWeightKg = 80,
@@ -227,7 +230,7 @@ class ProfileSetupViewModelTest {
     fun `fetchGoalSuggestion clears loading on failure`() =
         runTest {
             val repo = FakeOnboardingRepository(
-                initialDraft = OnboardingDraft(currentStepIndex = 4, sex = Sex.Male),
+                initialDraft = OnboardingDraft(currentStepIndex = 5, sex = Sex.Male),
                 goalSuggestionResult = Result.failure(RuntimeException("error")),
             )
             val vm = viewModel(repo = repo)
