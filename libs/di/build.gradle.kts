@@ -40,6 +40,7 @@ kotlin {
 
                 // Exported Libs
                 api(projects.libs.auth.api)
+                implementation(projects.libs.user.impl)
                 api(projects.libs.user)
                 api(projects.libs.navigation)
 
