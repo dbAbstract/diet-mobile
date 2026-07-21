@@ -2,6 +2,7 @@ package dev.yaseyo.di
 
 import dev.yaseyo.auth.impl.authImplModule
 import dev.yaseyo.coroutines.coroutinesModule
+import dev.yaseyo.dailylog.impl.dailyLogImplModule
 import dev.yaseyo.datastore.dataStoreModule
 import dev.yaseyo.navigation.navigationModule
 import dev.yaseyo.network.networkModule
@@ -18,4 +19,5 @@ internal val appModules = listOf(
     networkModule,
     onboardingModule,
     dataStoreModule,
+    dailyLogImplModule,
 )

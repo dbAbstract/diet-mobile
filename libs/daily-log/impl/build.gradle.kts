@@ -4,7 +4,7 @@ plugins {
 
 kotlin {
     android {
-        namespace = "dev.yaseyo.domain.models"
+        namespace = "dev.yaseyo.dailylog.impl"
 
         withHostTestBuilder {
             sourceSetTreeName = "test"
@@ -20,7 +20,14 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
+                api(libs.kotlinx.coroutines.core)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.koin.core)
+                implementation(libs.ktor.client.core)
                 implementation(libs.kotlinx.serialization.json)
+
+                implementation(projects.libs.dailyLog.api)
+                api(projects.libs.domainModels)
             }
         }
 
