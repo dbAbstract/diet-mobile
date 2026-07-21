@@ -1,6 +1,6 @@
 package dev.yaseyo.di
 
-import dev.yaseyo.auth.di.authModule
+import dev.yaseyo.auth.impl.authImplModule
 import dev.yaseyo.coroutines.coroutinesModule
 import dev.yaseyo.datastore.dataStoreModule
 import dev.yaseyo.navigation.navigationModule
@@ -12,7 +12,7 @@ import org.koin.dsl.module
 internal val appModules = listOf(
     navigationModule,
     coroutinesModule,
-    authModule,
+    authImplModule,
     userModule,
     module { single { networkConfig } },
     networkModule,

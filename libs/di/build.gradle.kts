@@ -34,7 +34,7 @@ kotlin {
 
                 // Libs
                 implementation(projects.libs.coroutines)
-                implementation(projects.libs.auth)
+                implementation(projects.libs.auth.impl)
                 implementation(projects.libs.network)
                 implementation(projects.libs.datastore)
 

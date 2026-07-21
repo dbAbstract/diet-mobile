@@ -22,7 +22,6 @@ kotlin {
                 implementation(libs.koin.core)
                 implementation(libs.kotlin.stdlib)
                 api(projects.libs.auth.api)
-                implementation(projects.libs.auth.impl)
             }
         }
 
