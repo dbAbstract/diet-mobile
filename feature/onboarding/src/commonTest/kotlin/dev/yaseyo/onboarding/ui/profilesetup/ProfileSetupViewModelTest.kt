@@ -282,10 +282,10 @@ class ProfileSetupViewModelTest {
             vm.uiState.test {
                 awaitItem()
                 advanceUntilIdle()
-                expectMostRecentItem()
+                assertNull(expectMostRecentItem().onboardingSummary)
                 vm.onDeficitChanged(500)
                 advanceUntilIdle()
-                assertNull(expectMostRecentItem().onboardingSummary)
+                expectNoEvents() // no summary fetch means no new emission
                 cancelAndIgnoreRemainingEvents()
             }
         }

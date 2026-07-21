@@ -7,10 +7,10 @@ kotlin {
         namespace = "dev.yaseyo.auth.impl"
 
         withHostTestBuilder {
+            sourceSetTreeName = "test"
         }
 
         withDeviceTestBuilder {
-            sourceSetTreeName = "test"
         }.configure {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
