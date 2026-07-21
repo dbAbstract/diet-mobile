@@ -86,7 +86,7 @@ class UserApiImplTest {
         runBlocking {
             api.createUser(
                 name = "Alex Smith",
-                sex = Sex.MALE,
+                sex = Sex.Male,
                 height = 178.0,
                 dateOfBirth = LocalDate(
                     year = 1990,
@@ -110,7 +110,7 @@ class UserApiImplTest {
         runBlocking {
             api.createUser(
                 name = "Alex Smith",
-                sex = Sex.MALE,
+                sex = Sex.Male,
                 height = 178.0,
                 dateOfBirth = LocalDate(
                     year = 1990,
@@ -136,7 +136,7 @@ class UserApiImplTest {
         runBlocking {
             val result = api.createUser(
                 name = "Alex Smith",
-                sex = Sex.MALE,
+                sex = Sex.Male,
                 height = 178.0,
                 dateOfBirth = LocalDate(
                     year = 1990,

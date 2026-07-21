@@ -50,7 +50,7 @@ internal class AuthViewModel(
 
             signInResult.fold(
                 onSuccess = {
-                    router.navigate(OnboardingRoutes.ProfileSetup)
+                    router.navigateAndClearBackStack(OnboardingRoutes.ProfileSetup)
                 },
                 onFailure = {
                     _action.send("Something went wrong")
@@ -79,7 +79,7 @@ internal class AuthViewModel(
 
             signInResult.fold(
                 onSuccess = {
-                    router.navigate(OnboardingRoutes.ProfileSetup)
+                    router.navigateAndClearBackStack(OnboardingRoutes.ProfileSetup)
                 },
                 onFailure = {
                     _action.send("Something went wrong")

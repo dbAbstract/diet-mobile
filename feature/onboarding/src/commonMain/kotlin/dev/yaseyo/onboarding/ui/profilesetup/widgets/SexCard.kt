@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.user.api.Sex
 
@@ -40,15 +41,15 @@ internal fun SexSelectionRow(
         SexCard(
             label = "Male",
             symbol = "♂",
-            selected = selected == Sex.MALE,
-            onClick = { onSelected(Sex.MALE) },
+            selected = selected == Sex.Male,
+            onClick = { onSelected(Sex.Male) },
             modifier = Modifier.weight(1f),
         )
         SexCard(
             label = "Female",
             symbol = "♀",
-            selected = selected == Sex.FEMALE,
-            onClick = { onSelected(Sex.FEMALE) },
+            selected = selected == Sex.Female,
+            onClick = { onSelected(Sex.Female) },
             modifier = Modifier.weight(1f),
         )
     }
@@ -65,7 +66,6 @@ private fun SexCard(
     val colors = YaseyoTheme.colors
     val iconBg = if (selected) colors.accentDefault else colors.backgroundSubtle
     val iconTint = if (selected) colors.contentOnAccent else colors.contentSecondary
-    val labelColor = if (selected) colors.accentDefault else colors.contentPrimary
     val borderColor = if (selected) colors.accentDefault else Color.Transparent
     val cardBg = if (selected) colors.accentSubtle else colors.backgroundElevated
 
@@ -92,7 +92,7 @@ private fun SexCard(
             text = label,
             fontWeight = FontWeight.SemiBold,
             fontSize = 15.sp,
-            color = labelColor,
+            color = colors.contentPrimary,
         )
     }
 }
@@ -100,7 +100,7 @@ private fun SexCard(
 @Preview(showBackground = true)
 @Composable
 private fun SexSelectionNonePreview() {
-    YaseyoTheme(darkTheme = false) {
+    YaseyoPreview(darkTheme = false) {
         SexSelectionRow(selected = null, onSelected = {})
     }
 }
@@ -108,15 +108,15 @@ private fun SexSelectionNonePreview() {
 @Preview(showBackground = true)
 @Composable
 private fun SexSelectionFemalePreview() {
-    YaseyoTheme(darkTheme = false) {
-        SexSelectionRow(selected = Sex.FEMALE, onSelected = {})
+    YaseyoPreview(darkTheme = false) {
+        SexSelectionRow(selected = Sex.Female, onSelected = {})
     }
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun SexSelectionDarkPreview() {
-    YaseyoTheme(darkTheme = true) {
-        SexSelectionRow(selected = Sex.MALE, onSelected = {})
+    YaseyoPreview(darkTheme = true) {
+        SexSelectionRow(selected = Sex.Male, onSelected = {})
     }
 }

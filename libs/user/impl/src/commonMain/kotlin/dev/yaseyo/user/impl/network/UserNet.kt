@@ -27,9 +27,9 @@ internal fun UserNet.toDomain() =
     User(
         id = id,
         name = name,
-        sex = Sex.valueOf(sex),
+        sex = Sex.valueOf(sex.lowercase().replaceFirstChar { it.uppercase() }),
         height = height,
-        dateOfBirth = LocalDate.parse(dateOfBirth),
+        dateOfBirth = LocalDate.parse(dateOfBirth.take(10)),
         activityLevel = activityLevel.toActivityLevel(),
         targetWeightKg = targetWeightKg,
         dailyDeficitKcal = dailyDeficitKcal,

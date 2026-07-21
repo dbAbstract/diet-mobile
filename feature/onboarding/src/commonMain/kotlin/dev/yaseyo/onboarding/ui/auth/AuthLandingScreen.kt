@@ -221,7 +221,9 @@ private fun AuthField(
             color = YaseyoTheme.colors.contentSecondary,
         )
         TextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.large),
             state = state,
             placeholder = { Text(text = placeholder, color = YaseyoTheme.colors.contentTertiary) },
             lineLimits = TextFieldLineLimits.SingleLine,

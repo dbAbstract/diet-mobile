@@ -24,7 +24,7 @@ class UserRepositoryImplTest {
             assertEquals("usr_abc123", user.id)
             assertEquals("Alex Smith", user.name)
             assertIs<Sex>(user.sex)
-            assertEquals(Sex.MALE, user.sex)
+            assertEquals(Sex.Male, user.sex)
             assertEquals(ActivityLevel.LightlyActive, user.activityLevel)
             assertEquals(LocalDate(1990, 6, 15), user.dateOfBirth)
             assertIs<kotlin.time.Instant>(user.createdAt)
@@ -48,7 +48,7 @@ class UserRepositoryImplTest {
         runBlocking {
             val result = repo().createUser(
                 name = "Alex Smith",
-                sex = Sex.MALE,
+                sex = Sex.Male,
                 height = 178.0,
                 dateOfBirth = LocalDate(1990, 6, 15),
                 activityLevel = ActivityLevel.LightlyActive,
@@ -68,7 +68,7 @@ class UserRepositoryImplTest {
             val error = RuntimeException("network error")
             val result = repo(FakeUserApi(error = error)).createUser(
                 name = "Alex Smith",
-                sex = Sex.MALE,
+                sex = Sex.Male,
                 height = 178.0,
                 dateOfBirth = LocalDate(1990, 6, 15),
                 activityLevel = ActivityLevel.LightlyActive,

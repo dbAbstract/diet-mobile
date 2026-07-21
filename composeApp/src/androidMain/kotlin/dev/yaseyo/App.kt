@@ -37,6 +37,7 @@ fun App(navigator: Navigator) =
             appRouter.events.collect { event ->
                 when (event) {
                     is NavigationEvent.GoTo -> navigator.goTo(event.route)
+                    is NavigationEvent.ClearBackStackAndGoTo -> navigator.clearAndGoTo(event.route)
                     is NavigationEvent.GoBack -> navigator.goBack()
                 }
             }

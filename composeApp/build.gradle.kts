@@ -82,6 +82,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+    sourceSets {
+        getByName("debug") {
+            manifest.srcFile("src/androidDebug/AndroidManifest.xml")
+            res.srcDirs("src/androidDebug/res")
+        }
+    }
 }
 
 dependencies {

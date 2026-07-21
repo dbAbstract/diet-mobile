@@ -4,11 +4,9 @@ import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -24,7 +21,7 @@ import dev.yaseyo.design.YaseyoTheme
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 
-private val ItemHeight: Dp = 44.dp
+internal val ItemHeight: Dp = 44.dp
 
 /**
  * Drum-style scroll picker that snaps to items.
@@ -67,8 +64,7 @@ internal fun WheelPicker(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            itemsIndexed(paddedItems) { index, item ->
-                val isSelected = index == listState.firstVisibleItemIndex + 1
+            itemsIndexed(paddedItems) { _, item ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -77,26 +73,11 @@ internal fun WheelPicker(
                 ) {
                     Text(
                         text = item,
-                        fontSize = if (isSelected) 18.sp else 14.sp,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
-                        color = if (isSelected) colors.accentDefault else colors.contentTertiary,
+                        fontSize = 16.sp,
+                        color = colors.contentPrimary,
                     )
                 }
             }
         }
-
-        // Thin lines framing the selected center slot
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .offset(y = ItemHeight),
-            color = colors.borderDefault,
-        )
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .offset(y = ItemHeight * 2),
-            color = colors.borderDefault,
-        )
     }
 }

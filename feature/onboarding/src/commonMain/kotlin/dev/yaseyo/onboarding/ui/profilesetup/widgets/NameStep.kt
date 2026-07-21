@@ -6,6 +6,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.byValue
+import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -17,6 +21,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoTheme
 
 @Composable
@@ -28,6 +33,7 @@ internal fun NameStep(
     modifier: Modifier = Modifier,
 ) {
     val colors = YaseyoTheme.colors
+    val localNameState = rememberTextFieldState(initialText = name)
 
     Column(modifier = modifier) {
         Text(
@@ -50,9 +56,12 @@ internal fun NameStep(
         Spacer(Modifier.height(32.dp))
 
         OutlinedTextField(
-            value = name,
-            onValueChange = onNameChanged,
+            state = localNameState,
             modifier = Modifier.fillMaxWidth(),
+            inputTransformation = InputTransformation.byValue { _, proposed ->
+                onNameChanged(proposed.toString())
+                proposed
+            },
             placeholder = {
                 Text(
                     text = "Your name",
@@ -71,7 +80,7 @@ internal fun NameStep(
                 unfocusedTextColor = colors.contentPrimary,
                 focusedTextColor = colors.contentPrimary,
             ),
-            singleLine = true,
+            lineLimits = TextFieldLineLimits.SingleLine,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         )
     }
@@ -80,7 +89,7 @@ internal fun NameStep(
 @Preview(showBackground = true)
 @Composable
 private fun NameStepEmptyLightPreview() {
-    YaseyoTheme(darkTheme = false) {
+    YaseyoPreview(darkTheme = false) {
         NameStep(
             name = "",
             title = "What should we call you?",
@@ -93,9 +102,9 @@ private fun NameStepEmptyLightPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun NameStepFilledPreview() {
-    YaseyoTheme(darkTheme = false) {
+    YaseyoPreview(darkTheme = false) {
         NameStep(
-            name = "Taki",
+            name = "Alex",
             title = "What should we call you?",
             subtitle = "We'll use this to personalize your experience.",
             onNameChanged = {},
@@ -106,7 +115,7 @@ private fun NameStepFilledPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun NameStepDarkPreview() {
-    YaseyoTheme(darkTheme = true) {
+    YaseyoPreview(darkTheme = true) {
         NameStep(
             name = "",
             title = "What should we call you?",

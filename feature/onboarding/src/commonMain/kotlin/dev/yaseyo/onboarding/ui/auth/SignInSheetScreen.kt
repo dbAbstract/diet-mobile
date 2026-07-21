@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -35,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -112,7 +114,9 @@ internal fun SignInSheetContent(
                 )
             },
             enabled = !state.isLoading,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
             shape = MaterialTheme.shapes.large,
             colors = ButtonDefaults.buttonColors(
                 containerColor = YaseyoTheme.colors.accentDefault,
@@ -157,7 +161,8 @@ private fun SheetEmailField(
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
-                .focusRequester(focusRequester),
+                .focusRequester(focusRequester)
+                .clip(MaterialTheme.shapes.large),
             state = state,
             placeholder = {
                 Text(text = "yamadataro@yaseyo.com", color = YaseyoTheme.colors.contentTertiary)
@@ -198,7 +203,9 @@ private fun SheetPasswordField(
             color = YaseyoTheme.colors.contentSecondary,
         )
         TextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(MaterialTheme.shapes.large),
             state = state,
             placeholder = {
                 Text(text = "••••••••", color = YaseyoTheme.colors.contentTertiary)

@@ -1,10 +1,6 @@
 package dev.yaseyo.navigation
 
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.exclude
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalBottomSheetProperties
@@ -40,20 +36,15 @@ internal data class BottomSheetScene<T : Any>(
     override val content: @Composable () -> Unit = {
         val lifecycleOwner = rememberLifecycleOwner()
 
-        YaseyoTheme {
-            ModalBottomSheet(
-                modifier = Modifier.statusBarsPadding(),
-                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-                onDismissRequest = onBack,
-                properties = modalBottomSheetProperties,
-                containerColor = YaseyoTheme.colors.backgroundElevated,
-                contentWindowInsets = {
-                    BottomSheetDefaults.windowInsets.exclude(WindowInsets.ime)
-                },
-            ) {
-                CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) {
-                    entry.Content()
-                }
+        ModalBottomSheet(
+            modifier = Modifier.statusBarsPadding(),
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            onDismissRequest = onBack,
+            properties = modalBottomSheetProperties,
+            containerColor = YaseyoTheme.colors.backgroundElevated,
+        ) {
+            CompositionLocalProvider(LocalLifecycleOwner provides lifecycleOwner) {
+                entry.Content()
             }
         }
     }

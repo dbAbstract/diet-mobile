@@ -12,7 +12,12 @@ class KoinInitializer : Initializer<KoinApplication> {
     override fun create(context: Context): KoinApplication =
         startKoin {
             androidContext(context)
-            modules(appModules + navigationAndroidModule + onboardingFeatureAndroidModule)
+
+            val modules = appModules + listOf(
+                navigationAndroidModule,
+                onboardingFeatureAndroidModule,
+            )
+            modules(modules)
         }
 
     override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()

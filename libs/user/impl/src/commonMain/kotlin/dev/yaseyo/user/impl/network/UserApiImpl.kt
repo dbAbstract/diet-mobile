@@ -41,7 +41,7 @@ internal class UserApiImpl(
                 setBody(
                     CreateUserRequestNet(
                         name = name,
-                        sex = sex.name,
+                        sex = sex.name.uppercase(),
                         height = height,
                         dateOfBirth = dateOfBirth.toString(),
                         activityLevel = activityLevel.toApiString(),
@@ -71,7 +71,7 @@ internal class UserApiImpl(
                 setBody(
                     buildJsonObject {
                         name?.let { put("name", it) }
-                        sex?.let { put("sex", it.name) }
+                        sex?.let { put("sex", it.name.uppercase()) }
                         height?.let { put("height", it) }
                         dateOfBirth?.let { put("dateOfBirth", it.toString()) }
                         activityLevel?.let { put("activityLevel", it.toApiString()) }

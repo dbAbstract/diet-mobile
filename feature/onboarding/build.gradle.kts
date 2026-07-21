@@ -9,10 +9,10 @@ kotlin {
         namespace = "dev.yaseyo.onboarding"
 
         withHostTestBuilder {
+            sourceSetTreeName = "test"
         }
 
         withDeviceTestBuilder {
-            sourceSetTreeName = "test"
         }.configure {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
@@ -31,8 +31,10 @@ kotlin {
 
                 implementation(projects.libs.auth)
                 implementation(projects.libs.user)
+                implementation(projects.libs.coroutines)
                 api(projects.libs.navigation)
                 implementation(projects.libs.design)
+                implementation(projects.libs.datastore)
 
                 implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.compose.runtime)
@@ -47,6 +49,8 @@ kotlin {
         commonTest {
             dependencies {
                 implementation(libs.kotlin.test)
+                implementation(libs.turbine)
+                implementation(projects.libs.coroutines.testing)
             }
         }
 

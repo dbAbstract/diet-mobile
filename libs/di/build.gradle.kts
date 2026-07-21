@@ -10,7 +10,7 @@ kmpLibrary {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "dev.yaseyo.di"
     }
 
@@ -34,9 +34,13 @@ kotlin {
 
                 // Libs
                 implementation(projects.libs.coroutines)
-                api(projects.libs.auth.api)
-                implementation(projects.libs.auth)
+                implementation(projects.libs.auth.impl)
                 implementation(projects.libs.network)
+                implementation(projects.libs.datastore)
+
+                // Exported Libs
+                api(projects.libs.auth.api)
+                implementation(projects.libs.user.impl)
                 api(projects.libs.user)
                 api(projects.libs.navigation)
 

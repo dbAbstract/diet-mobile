@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.yaseyo.navigation.FinishHandler
 import dev.yaseyo.navigation.Navigator
 import org.koin.android.scope.AndroidScopeComponent
 import org.koin.androidx.scope.activityRetainedScope
@@ -19,7 +20,8 @@ import org.koin.core.scope.Scope
 
 class MainActivity :
     ComponentActivity(),
-    AndroidScopeComponent {
+    AndroidScopeComponent,
+    FinishHandler {
     override val scope: Scope by activityRetainedScope()
 
     private val viewModel: MainViewModel by viewModel()
@@ -29,6 +31,8 @@ class MainActivity :
         val splashScreen = installSplashScreen()
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        scope.declare(this as FinishHandler, allowOverride = true)
 
         splashScreen.setKeepOnScreenCondition {
             viewModel.startDestination.value == null

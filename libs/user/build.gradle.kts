@@ -7,10 +7,10 @@ kotlin {
         namespace = "dev.yaseyo.user"
 
         withHostTestBuilder {
+            sourceSetTreeName = "test"
         }
 
         withDeviceTestBuilder {
-            sourceSetTreeName = "test"
         }.configure {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
@@ -20,9 +20,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.kotlin.stdlib)
-                implementation(libs.koin.core)
                 api(projects.libs.user.api)
-                implementation(projects.libs.user.impl)
             }
         }
 
