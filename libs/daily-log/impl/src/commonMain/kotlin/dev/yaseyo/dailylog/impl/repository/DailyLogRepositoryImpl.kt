@@ -18,9 +18,9 @@ internal class DailyLogRepositoryImpl(
     private val logApi: DailyLogApi,
     private val dispatcherProvider: DispatcherProvider,
 ) : DailyLogRepository {
-    val logForToday: MutableStateFlow<DailyLog?> = MutableStateFlow(null)
+    val logForToday: MutableStateFlow<Result<DailyLog>?> = MutableStateFlow(null)
 
-    override fun getLogForToday(): Flow<DailyLog?> =
+    override fun getLogForToday(): Flow<Result<DailyLog>?> =
         logForToday.onStart {
             if (logForToday.value == null) {
                 fetchAndUpdateLog()
@@ -51,7 +51,14 @@ internal class DailyLogRepositoryImpl(
             withContext(dispatcherProvider.io) {
                 logApi.getLog(today()).toDailyLog()
             }
-        }.onSuccess { logForToday.value = it }
+        }.fold(
+            onSuccess = {
+                logForToday.value = Result.success(it)
+            },
+            onFailure = {
+                logForToday.value = Result.failure(it)
+            },
+        )
     }
 
     private fun today() =
