@@ -47,6 +47,7 @@ kotlin {
 
                 // Features
                 api(projects.feature.onboarding)
+                api(projects.feature.home)
             }
         }
 
