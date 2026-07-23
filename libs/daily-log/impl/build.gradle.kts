@@ -27,6 +27,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
 
                 implementation(projects.libs.dailyLog.api)
+                implementation(projects.libs.coroutines)
                 api(projects.libs.domainModels)
             }
         }

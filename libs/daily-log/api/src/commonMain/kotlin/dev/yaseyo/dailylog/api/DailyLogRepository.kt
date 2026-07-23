@@ -1,5 +1,13 @@
 package dev.yaseyo.dailylog.api
 
+import kotlinx.coroutines.flow.Flow
+
 interface DailyLogRepository {
-    suspend fun getLogForToday(): Result<DailyLog>
+    fun getLogForToday(): Flow<DailyLog?>
+
+    suspend fun logFood(
+        foodItemId: String,
+        quantity: Double,
+        mealType: MealType,
+    ): Result<Unit>
 }
