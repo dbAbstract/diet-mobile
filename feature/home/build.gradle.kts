@@ -32,6 +32,7 @@ kotlin {
                 api(projects.libs.navigation)
                 implementation(projects.libs.design)
                 implementation(projects.libs.dailyLog)
+                implementation(libs.kotlinx.datetime)
 
                 implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.compose.runtime)

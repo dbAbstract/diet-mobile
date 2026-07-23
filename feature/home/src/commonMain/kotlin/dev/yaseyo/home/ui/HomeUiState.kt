@@ -1,20 +1,14 @@
 package dev.yaseyo.home.ui
 
-import dev.yaseyo.dailylog.api.DailyLog
-
 internal sealed interface HomeUiState {
-    val loading: Boolean
-
-    data object Initializing : HomeUiState {
-        override val loading: Boolean = true
-    }
+    data object Initializing : HomeUiState
 
     data class Content(
-        val dailyLog: DailyLog,
-        override val loading: Boolean = false,
+        val progress: Float,
+        val currentKcal: Long,
+        val activityKcal: Long,
+        val baseTargetKcal: Long,
     ) : HomeUiState
 
-    data object Error : HomeUiState {
-        override val loading: Boolean = false
-    }
+    data object Error : HomeUiState
 }

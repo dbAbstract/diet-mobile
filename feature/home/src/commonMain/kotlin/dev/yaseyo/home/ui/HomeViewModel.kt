@@ -17,7 +17,12 @@ internal class HomeViewModel(
         .map { dailyLogResult ->
             dailyLogResult?.fold(
                 onSuccess = {
-                    HomeUiState.Content(dailyLog = it)
+                    HomeUiState.Content(
+                        currentKcal = it.totals.kcal.toLong(),
+                        activityKcal = (it.targets.effectiveKcal - it.targets.kcal).toLong(),
+                        baseTargetKcal = it.targets.kcal.toLong(),
+                        progress = (it.totals.kcal / it.targets.effectiveKcal).toFloat(),
+                    )
                 },
                 onFailure = {
                     HomeUiState.Error
