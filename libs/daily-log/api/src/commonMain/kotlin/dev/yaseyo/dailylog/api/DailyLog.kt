@@ -9,4 +9,5 @@ data class DailyLog(
     val totals: Macros,
     val targets: MacroTarget,
     val activityKcal: Double,
+    val mealEntries: List<MealEntry>,
 )

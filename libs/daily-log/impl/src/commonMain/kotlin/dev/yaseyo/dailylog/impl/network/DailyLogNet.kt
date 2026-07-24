@@ -7,11 +7,12 @@ import kotlinx.datetime.LocalDate
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DailyLogNet(
+internal data class DailyLogNet(
     val date: String,
     val totals: Macros,
     val activityKcal: Double,
     val targets: MacroTarget,
+    val entries: List<FoodEntryNet>,
 ) {
     fun toDailyLog(): DailyLog =
         DailyLog(
@@ -19,5 +20,6 @@ data class DailyLogNet(
             totals = totals,
             activityKcal = activityKcal,
             targets = targets,
+            mealEntries = entries.map { it.toDomain() },
         )
 }
