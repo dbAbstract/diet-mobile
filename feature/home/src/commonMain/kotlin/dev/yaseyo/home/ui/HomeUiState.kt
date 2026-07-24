@@ -8,7 +8,20 @@ internal sealed interface HomeUiState {
         val currentKcal: Long,
         val activityKcal: Long,
         val baseTargetKcal: Long,
-    ) : HomeUiState
+        val macroStatus: MacroStatus,
+    ) : HomeUiState {
+        data class MacroStatus(
+            val currentProtein: Double,
+            val targetProtein: Double,
+            val proteinProgress: Float,
+            val currentCarbs: Double,
+            val targetCarbs: Double,
+            val carbsProgress: Float,
+            val currentFat: Double,
+            val targetFat: Double,
+            val fatProgress: Float,
+        )
+    }
 
     data object Error : HomeUiState
 }

@@ -4,6 +4,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -16,16 +17,18 @@ fun YaseyoPreview(
 ) {
     YaseyoTheme(darkTheme = darkTheme) {
         val colors = YaseyoTheme.colors
-        Scaffold(
-            containerColor = colors.backgroundBase,
-        ) {
-            Box(
-                modifier = Modifier
-                    .padding(it)
-                    .fillMaxSize(),
-                contentAlignment = Alignment.Center,
+        MaterialTheme {
+            Scaffold(
+                containerColor = colors.backgroundBase,
             ) {
-                composable()
+                Box(
+                    modifier = Modifier
+                        .padding(it)
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    composable()
+                }
             }
         }
     }

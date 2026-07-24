@@ -22,6 +22,17 @@ internal class HomeViewModel(
                         activityKcal = (it.targets.effectiveKcal - it.targets.kcal).toLong(),
                         baseTargetKcal = it.targets.kcal.toLong(),
                         progress = (it.totals.kcal / it.targets.effectiveKcal).toFloat(),
+                        macroStatus = HomeUiState.Content.MacroStatus(
+                            currentProtein = it.totals.protein,
+                            targetProtein = it.targets.protein,
+                            proteinProgress = (it.totals.protein / it.targets.protein).toFloat(),
+                            currentCarbs = it.totals.carbs,
+                            targetCarbs = it.targets.carbs,
+                            carbsProgress = (it.totals.carbs / it.targets.carbs).toFloat(),
+                            currentFat = it.totals.fat,
+                            targetFat = it.targets.fat,
+                            fatProgress = (it.totals.fat / it.targets.fat).toFloat(),
+                        ),
                     )
                 },
                 onFailure = {

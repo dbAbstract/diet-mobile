@@ -29,9 +29,7 @@ internal fun KcalProgressHero(
 
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         CircularProgressIndicator(
-            modifier = Modifier
-                .fillMaxSize()
-                .aspectRatio(1f),
+            modifier = Modifier.aspectRatio(1f),
             progress = progress,
             color = YaseyoTheme.colors.accentDefault,
             strokeWidth = 32.dp,
