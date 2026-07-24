@@ -34,6 +34,7 @@ import androidx.navigationevent.compose.NavigationBackHandler
 import androidx.navigationevent.compose.rememberNavigationEventState
 import dev.yaseyo.design.LocalSnackBarHostState
 import dev.yaseyo.design.YaseyoPreview
+import dev.yaseyo.design.YaseyoScaffold
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.onboarding.model.OnboardingStep
 import dev.yaseyo.onboarding.ui.profilesetup.widgets.ActivityLevelStep
@@ -61,7 +62,9 @@ internal fun ProfileSetupScreen(viewModel: ProfileSetupViewModel = koinViewModel
         viewModel.onBack()
     }
 
-    ProfileSetupContent(state = state, eventHandler = viewModel)
+    YaseyoScaffold { padding ->
+        ProfileSetupContent(state = state, eventHandler = viewModel, modifier = Modifier.padding(padding))
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.action.collect { snackBarHostState.showSnackbar(it) }
@@ -72,11 +75,12 @@ internal fun ProfileSetupScreen(viewModel: ProfileSetupViewModel = koinViewModel
 private fun ProfileSetupContent(
     state: ProfileSetupUiState,
     eventHandler: ProfileSetupEventHandler,
+    modifier: Modifier = Modifier,
 ) {
     val colors = YaseyoTheme.colors
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(colors.backgroundBase),
     ) {

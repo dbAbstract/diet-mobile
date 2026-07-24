@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.yaseyo.design.LocalSnackBarHostState
 import dev.yaseyo.design.YaseyoPreview
+import dev.yaseyo.design.YaseyoScaffold
 import dev.yaseyo.design.YaseyoTheme
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -40,7 +41,9 @@ import org.koin.compose.viewmodel.koinViewModel
 internal fun AuthLandingScreen(viewModel: AuthViewModel = koinViewModel()) {
     val snackBarHostState = LocalSnackBarHostState.current
 
-    AuthContent(eventHandler = viewModel)
+    YaseyoScaffold { padding ->
+        AuthContent(eventHandler = viewModel, modifier = Modifier.padding(padding))
+    }
 
     LaunchedEffect(viewModel) {
         viewModel.action.collect { snackBarHostState.showSnackbar(it) }

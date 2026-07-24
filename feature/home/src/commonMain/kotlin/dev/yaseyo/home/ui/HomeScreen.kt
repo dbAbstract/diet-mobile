@@ -25,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.yaseyo.dailylog.api.MealEntry
 import dev.yaseyo.dailylog.api.MealType
 import dev.yaseyo.design.YaseyoPreview
+import dev.yaseyo.design.YaseyoScaffold
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.home.ui.widget.KcalProgressHero
 import dev.yaseyo.home.ui.widget.MacroProgressRowData
@@ -39,13 +40,18 @@ import kotlin.time.Instant
 internal fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    HomeScreen(state = state)
+    YaseyoScaffold { padding ->
+        HomeScreen(state = state, modifier = Modifier.padding(padding))
+    }
 }
 
 @Composable
-private fun HomeScreen(state: HomeUiState) {
+private fun HomeScreen(
+    state: HomeUiState,
+    modifier: Modifier = Modifier,
+) {
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize(),
     ) {
         Text(
             modifier = Modifier.padding(16.dp),

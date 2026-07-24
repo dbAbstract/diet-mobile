@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,14 +15,11 @@ fun YaseyoPreview(
     composable: @Composable () -> Unit,
 ) {
     YaseyoTheme(darkTheme = darkTheme) {
-        val colors = YaseyoTheme.colors
         MaterialTheme {
-            Scaffold(
-                containerColor = colors.backgroundBase,
-            ) {
+            YaseyoScaffold { padding ->
                 Box(
                     modifier = Modifier
-                        .padding(it)
+                        .padding(padding)
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center,
                 ) {
