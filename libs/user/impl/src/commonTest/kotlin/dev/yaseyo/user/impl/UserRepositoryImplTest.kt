@@ -1,5 +1,6 @@
 package dev.yaseyo.user.impl
 
+import dev.yaseyo.datastore.testing.FakePreferencesDataStore
 import dev.yaseyo.user.api.ActivityLevel
 import dev.yaseyo.user.api.Sex
 import dev.yaseyo.user.impl.network.FakeUserApi

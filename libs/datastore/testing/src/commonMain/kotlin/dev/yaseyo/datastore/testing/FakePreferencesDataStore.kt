@@ -1,4 +1,4 @@
-package dev.yaseyo.user.impl
+package dev.yaseyo.datastore.testing
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-internal class FakePreferencesDataStore(
+class FakePreferencesDataStore(
     initial: Preferences = emptyPreferences(),
 ) : DataStore<Preferences> {
     private val state = MutableStateFlow(initial)

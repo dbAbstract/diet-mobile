@@ -38,6 +38,7 @@ kotlin {
                 implementation(libs.ktor.testing)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(projects.libs.datastore.testing)
             }
         }
 
