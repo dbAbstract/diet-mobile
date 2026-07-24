@@ -9,7 +9,12 @@ import kotlin.time.Instant
 
 internal class FakeUserRepository(
     private val createUserResult: Result<User> = Result.success(DEFAULT_USER),
+    private val isUserSessionActiveResult: Result<Unit> = Result.success(Unit),
 ) : UserRepository {
+    override suspend fun isUserSessionActive(): Result<Unit> = isUserSessionActiveResult
+
+    override suspend fun clearUserSession(): Result<Unit> = Result.success(Unit)
+
     override suspend fun getCurrentUser(): Result<User> = Result.success(DEFAULT_USER)
 
     override suspend fun createUser(

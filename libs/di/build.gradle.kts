@@ -37,6 +37,7 @@ kotlin {
                 implementation(projects.libs.auth.impl)
                 implementation(projects.libs.network)
                 implementation(projects.libs.datastore)
+                implementation(projects.libs.dailyLog.impl)
 
                 // Exported Libs
                 api(projects.libs.auth.api)
@@ -46,6 +47,7 @@ kotlin {
 
                 // Features
                 api(projects.feature.onboarding)
+                api(projects.feature.home)
             }
         }
 

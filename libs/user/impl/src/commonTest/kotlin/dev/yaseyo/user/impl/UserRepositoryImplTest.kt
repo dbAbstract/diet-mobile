@@ -1,5 +1,6 @@
 package dev.yaseyo.user.impl
 
+import dev.yaseyo.datastore.testing.FakePreferencesDataStore
 import dev.yaseyo.user.api.ActivityLevel
 import dev.yaseyo.user.api.Sex
 import dev.yaseyo.user.impl.network.FakeUserApi
@@ -11,7 +12,10 @@ import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
 class UserRepositoryImplTest {
-    private fun repo(fakeApi: FakeUserApi = FakeUserApi()) = UserRepositoryImpl(fakeApi)
+    private fun repo(
+        fakeApi: FakeUserApi = FakeUserApi(),
+        dataStore: FakePreferencesDataStore = FakePreferencesDataStore(),
+    ) = UserRepositoryImpl(fakeApi, dataStore)
 
     // --- getCurrentUser ---
 
@@ -99,5 +103,46 @@ class UserRepositoryImplTest {
             val result = repo(FakeUserApi(error = error)).updateUser(name = "New Name")
             assertTrue(result.isFailure)
             assertEquals(error, result.exceptionOrNull())
+        }
+
+    // --- isUserSessionActive ---
+
+    @Test
+    fun `isUserSessionActive returns failure when nothing cached`() =
+        runBlocking {
+            val result = repo().isUserSessionActive()
+            assertTrue(result.isFailure)
+        }
+
+    @Test
+    fun `isUserSessionActive returns success after getCurrentUser caches session`() =
+        runBlocking {
+            val dataStore = FakePreferencesDataStore()
+            val repo = repo(dataStore = dataStore)
+            repo.getCurrentUser()
+
+            val result = repo.isUserSessionActive()
+            assertTrue(result.isSuccess)
+        }
+
+    @Test
+    fun `isUserSessionActive returns failure after clearUserSession`() =
+        runBlocking {
+            val dataStore = FakePreferencesDataStore()
+            val repo = repo(dataStore = dataStore)
+            repo.getCurrentUser()
+            repo.clearUserSession()
+
+            val result = repo.isUserSessionActive()
+            assertTrue(result.isFailure)
+        }
+
+    // --- clearUserSession ---
+
+    @Test
+    fun `clearUserSession returns success`() =
+        runBlocking {
+            val result = repo().clearUserSession()
+            assertTrue(result.isSuccess)
         }
 }

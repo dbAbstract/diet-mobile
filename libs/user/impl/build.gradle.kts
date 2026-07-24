@@ -27,6 +27,8 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.koin.core)
+
+                implementation(projects.libs.datastore)
             }
         }
 
@@ -36,6 +38,7 @@ kotlin {
                 implementation(libs.ktor.testing)
                 implementation(libs.ktor.client.content.negotiation)
                 implementation(libs.ktor.serialization.kotlinx.json)
+                implementation(projects.libs.datastore.testing)
             }
         }
 
