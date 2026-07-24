@@ -3,12 +3,15 @@ package dev.yaseyo.home.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.yaseyo.dailylog.api.DailyLogRepository
+import dev.yaseyo.home.navigation.HomeRoutes
+import dev.yaseyo.navigation.AppRouter
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
 internal class HomeViewModel(
+    private val appRouter: AppRouter,
     dailyLogRepository: DailyLogRepository,
 ) : ViewModel(),
     HomeEventHandler {
@@ -45,4 +48,8 @@ internal class HomeViewModel(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = HomeUiState.Initializing,
         )
+
+    override fun onLogMeal() {
+        appRouter.navigate(HomeRoutes.LogMeal)
+    }
 }

@@ -11,7 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,8 +28,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.yaseyo.dailylog.api.MealEntry
 import dev.yaseyo.dailylog.api.MealType
-import dev.yaseyo.design.YaseyoPreview
 import dev.yaseyo.design.YaseyoScaffold
+import dev.yaseyo.design.YaseyoScreenPreview
 import dev.yaseyo.design.YaseyoTheme
 import dev.yaseyo.home.ui.widget.KcalProgressHero
 import dev.yaseyo.home.ui.widget.MacroProgressRowData
@@ -40,141 +44,163 @@ import kotlin.time.Instant
 internal fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    YaseyoScaffold { padding ->
-        HomeScreen(state = state, modifier = Modifier.padding(padding))
-    }
+    HomeScreen(
+        state = state,
+        onLogMealClick = viewModel::onLogMeal,
+    )
 }
 
 @Composable
 private fun HomeScreen(
     state: HomeUiState,
-    modifier: Modifier = Modifier,
+    onLogMealClick: () -> Unit,
 ) {
-    Column(
-        modifier = modifier.fillMaxSize(),
+    YaseyoScaffold(
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = onLogMealClick,
+                containerColor = YaseyoTheme.colors.accentDefault,
+                contentColor = YaseyoTheme.colors.contentOnAccent,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Log a meal item",
+                    )
+                },
+                text = {
+                    Text("Log Meal")
+                },
+            )
+        },
     ) {
-        Text(
-            modifier = Modifier.padding(16.dp),
-            text = "${currentDayOfWeek()} – ${now().date}",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Medium,
-            color = YaseyoTheme.colors.contentPrimary,
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
+        ) {
+            Text(
+                modifier = Modifier.padding(16.dp),
+                text = "${currentDayOfWeek()} – ${now().date}",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Medium,
+                color = YaseyoTheme.colors.contentPrimary,
+            )
 
-        HorizontalDivider()
+            HorizontalDivider()
 
-        AnimatedContent(
-            modifier = Modifier.weight(1f),
-            targetState = state,
-            contentKey = {
-                it::class.simpleName
-            },
-        ) { state ->
-            when (state) {
-                is HomeUiState.Content -> {
-                    LazyColumn(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        contentPadding = PaddingValues(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(16.dp),
-                    ) {
-                        item {
-                            Text(
-                                text = "Today's Progress",
-                                color = YaseyoTheme.colors.contentPrimary,
-                                fontSize = 24.sp,
-                            )
-                        }
-                        item {
-                            KcalProgressHero(
-                                modifier = Modifier.padding(16.dp),
-                                progress = {
-                                    state.progress
-                                },
-                                currentKcal = state.currentKcal,
-                                baseTargetKcal = state.baseTargetKcal,
-                                activityKcal = state.activityKcal,
-                            )
-                        }
-                        item {
-                            Text(
-                                text = "Macro Progress",
-                                color = YaseyoTheme.colors.contentPrimary,
-                                fontSize = 24.sp,
-                            )
-                        }
-                        item {
-                            MacroProgressRows(
-                                rows = listOf(
-                                    MacroProgressRowData(
-                                        label = "Protein",
-                                        progress = { state.macroStatus.proteinProgress },
-                                        currentGrams = state.macroStatus.currentProtein,
-                                        targetGrams = state.macroStatus.targetProtein,
+            AnimatedContent(
+                modifier = Modifier.weight(1f),
+                targetState = state,
+                contentKey = {
+                    it::class.simpleName
+                },
+            ) { state ->
+                when (state) {
+                    is HomeUiState.Content -> {
+                        LazyColumn(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            contentPadding = PaddingValues(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp),
+                        ) {
+                            item {
+                                Text(
+                                    text = "Today's Progress",
+                                    color = YaseyoTheme.colors.contentPrimary,
+                                    fontSize = 24.sp,
+                                )
+                            }
+                            item {
+                                KcalProgressHero(
+                                    modifier = Modifier.padding(16.dp),
+                                    progress = {
+                                        state.progress
+                                    },
+                                    currentKcal = state.currentKcal,
+                                    baseTargetKcal = state.baseTargetKcal,
+                                    activityKcal = state.activityKcal,
+                                )
+                            }
+                            item {
+                                Text(
+                                    text = "Macro Progress",
+                                    color = YaseyoTheme.colors.contentPrimary,
+                                    fontSize = 24.sp,
+                                )
+                            }
+                            item {
+                                MacroProgressRows(
+                                    rows = listOf(
+                                        MacroProgressRowData(
+                                            label = "Protein",
+                                            progress = { state.macroStatus.proteinProgress },
+                                            currentGrams = state.macroStatus.currentProtein,
+                                            targetGrams = state.macroStatus.targetProtein,
+                                        ),
+                                        MacroProgressRowData(
+                                            label = "Carbs",
+                                            progress = { state.macroStatus.carbsProgress },
+                                            currentGrams = state.macroStatus.currentCarbs,
+                                            targetGrams = state.macroStatus.targetCarbs,
+                                        ),
+                                        MacroProgressRowData(
+                                            label = "Fat",
+                                            progress = { state.macroStatus.fatProgress },
+                                            currentGrams = state.macroStatus.currentFat,
+                                            targetGrams = state.macroStatus.targetFat,
+                                        ),
                                     ),
-                                    MacroProgressRowData(
-                                        label = "Carbs",
-                                        progress = { state.macroStatus.carbsProgress },
-                                        currentGrams = state.macroStatus.currentCarbs,
-                                        targetGrams = state.macroStatus.targetCarbs,
-                                    ),
-                                    MacroProgressRowData(
-                                        label = "Fat",
-                                        progress = { state.macroStatus.fatProgress },
-                                        currentGrams = state.macroStatus.currentFat,
-                                        targetGrams = state.macroStatus.targetFat,
-                                    ),
-                                ),
-                            )
-                        }
+                                )
+                            }
 
-                        item {
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
+                            item {
+                                Spacer(modifier = Modifier.height(16.dp))
+                            }
 
-                        item {
-                            Text(
-                                text = "Meal Entries",
-                                color = YaseyoTheme.colors.contentPrimary,
-                                fontSize = 24.sp,
-                            )
-                        }
+                            item {
+                                Text(
+                                    text = "Meal Entries",
+                                    color = YaseyoTheme.colors.contentPrimary,
+                                    fontSize = 24.sp,
+                                )
+                            }
 
-                        items(
-                            items = state.mealEntries,
-                            key = { it.id },
-                        ) { mealEntry ->
-                            MealEntryCard(mealEntry = mealEntry)
+                            items(
+                                items = state.mealEntries,
+                                key = { it.id },
+                            ) { mealEntry ->
+                                MealEntryCard(mealEntry = mealEntry)
+                            }
                         }
                     }
-                }
 
-                HomeUiState.Error -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = "Something went wrong. Please try again.",
-                            color = YaseyoTheme.colors.contentSecondary,
-                            fontSize = 16.sp,
-                        )
+                    HomeUiState.Error -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = "Something went wrong. Please try again.",
+                                color = YaseyoTheme.colors.contentSecondary,
+                                fontSize = 16.sp,
+                            )
+                        }
                     }
-                }
 
-                HomeUiState.Initializing -> {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = "Loading...",
-                            color = YaseyoTheme.colors.contentSecondary,
-                            fontSize = 16.sp,
-                        )
+                    HomeUiState.Initializing -> {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = "Loading...",
+                                color = YaseyoTheme.colors.contentSecondary,
+                                fontSize = 16.sp,
+                            )
+                        }
                     }
                 }
             }
@@ -185,7 +211,7 @@ private fun HomeScreen(
 @PreviewLightDark
 @Composable
 private fun HomeScreenContentPreview() =
-    YaseyoPreview {
+    YaseyoScreenPreview {
         HomeScreen(
             state = HomeUiState.Content(
                 currentKcal = 1200,
@@ -236,6 +262,7 @@ private fun HomeScreenContentPreview() =
                     ),
                 ),
             ),
+            onLogMealClick = {},
         )
     }
 
@@ -269,13 +296,19 @@ private fun previewMealEntry(
 @PreviewLightDark
 @Composable
 private fun HomeScreenErrorPreview() =
-    YaseyoPreview {
-        HomeScreen(state = HomeUiState.Error)
+    YaseyoScreenPreview {
+        HomeScreen(
+            state = HomeUiState.Error,
+            onLogMealClick = {},
+        )
     }
 
 @PreviewLightDark
 @Composable
 private fun HomeScreenLoadingPreview() =
-    YaseyoPreview {
-        HomeScreen(state = HomeUiState.Initializing)
+    YaseyoScreenPreview {
+        HomeScreen(
+            state = HomeUiState.Initializing,
+            onLogMealClick = {},
+        )
     }

@@ -28,6 +28,7 @@ kotlin {
                 implementation(libs.koin.compose.viewmodel)
                 api(libs.kotlinx.coroutines.core)
 
+                // Lib Modules
                 implementation(projects.libs.coroutines)
                 api(projects.libs.navigation)
                 implementation(projects.libs.design)
