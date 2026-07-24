@@ -27,6 +27,8 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.koin.core)
+
+                implementation(projects.libs.datastore)
             }
         }
 

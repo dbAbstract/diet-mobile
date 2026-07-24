@@ -3,6 +3,10 @@ package dev.yaseyo.user.api
 import kotlinx.datetime.LocalDate
 
 interface UserRepository {
+    suspend fun isUserSessionActive(): Result<Unit>
+
+    suspend fun clearUserSession(): Result<Unit>
+
     suspend fun getCurrentUser(): Result<User>
 
     suspend fun createUser(
