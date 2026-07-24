@@ -3,6 +3,7 @@ package dev.yaseyo.di
 import android.content.Context
 import androidx.startup.Initializer
 import dev.yaseyo.home.homeFeatureAndroidModule
+import dev.yaseyo.logmeal.logMealFeatureAndroidModule
 import dev.yaseyo.navigation.navigationAndroidModule
 import dev.yaseyo.onboarding.onboardingFeatureAndroidModule
 import org.koin.android.ext.koin.androidContext
@@ -18,6 +19,7 @@ class KoinInitializer : Initializer<KoinApplication> {
                 navigationAndroidModule,
                 onboardingFeatureAndroidModule,
                 homeFeatureAndroidModule,
+                logMealFeatureAndroidModule,
             )
             modules(modules)
         }

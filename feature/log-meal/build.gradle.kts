@@ -6,7 +6,7 @@ plugins {
 
 kotlin {
     android {
-        namespace = "dev.yaseyo.home"
+        namespace = "dev.yaseyo.logmeal"
 
         withHostTestBuilder {
             sourceSetTreeName = "test"
@@ -32,11 +32,6 @@ kotlin {
                 implementation(projects.libs.coroutines)
                 api(projects.libs.navigation)
                 implementation(projects.libs.design)
-                implementation(projects.libs.dailyLog)
-                implementation(libs.kotlinx.datetime)
-
-                // Features
-                implementation(projects.feature.logMeal)
 
                 implementation(libs.androidx.lifecycle.viewmodel)
                 implementation(libs.compose.runtime)

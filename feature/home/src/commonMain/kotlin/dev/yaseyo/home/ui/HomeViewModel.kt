@@ -3,6 +3,7 @@ package dev.yaseyo.home.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.yaseyo.dailylog.api.DailyLogRepository
+import dev.yaseyo.logmeal.navigation.LogMealRoute
 import dev.yaseyo.navigation.AppRouter
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -12,8 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 internal class HomeViewModel(
     private val appRouter: AppRouter,
     dailyLogRepository: DailyLogRepository,
-) : ViewModel(),
-    HomeEventHandler {
+) : ViewModel() {
     val uiState: StateFlow<HomeUiState> = dailyLogRepository
         .getLogForToday()
         .map { dailyLogResult ->
@@ -48,7 +48,7 @@ internal class HomeViewModel(
             initialValue = HomeUiState.Initializing,
         )
 
-    override fun onLogMeal() {
-//        appRouter.navigate(HomeRoutes.LogMeal)
+    fun onLogMeal() {
+        appRouter.navigate(LogMealRoute)
     }
 }
