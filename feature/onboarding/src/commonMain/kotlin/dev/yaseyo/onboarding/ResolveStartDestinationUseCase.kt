@@ -2,8 +2,8 @@ package dev.yaseyo.onboarding
 
 import dev.yaseyo.auth.api.AuthRepository
 import dev.yaseyo.auth.api.AuthState
+import dev.yaseyo.home.navigation.HomeRoutes
 import dev.yaseyo.navigation.AppRoute
-import dev.yaseyo.navigation.Home
 import dev.yaseyo.onboarding.model.AppState
 import dev.yaseyo.onboarding.navigation.OnboardingRoutes
 import dev.yaseyo.user.api.UserRepository
@@ -31,7 +31,7 @@ class ResolveStartDestinationUseCase(
         }
 
         return when (appState) {
-            AppState.FullySetup -> Home
+            AppState.FullySetup -> HomeRoutes.Home
 
             AppState.RequiresLogin -> OnboardingRoutes.Auth.Landing
 

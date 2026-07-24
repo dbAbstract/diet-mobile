@@ -3,7 +3,6 @@ package dev.yaseyo.home.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.yaseyo.dailylog.api.DailyLogRepository
-import dev.yaseyo.home.navigation.HomeRoutes
 import dev.yaseyo.navigation.AppRouter
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -50,6 +49,6 @@ internal class HomeViewModel(
         )
 
     override fun onLogMeal() {
-        appRouter.navigate(HomeRoutes.LogMeal)
+//        appRouter.navigate(HomeRoutes.LogMeal)
     }
 }

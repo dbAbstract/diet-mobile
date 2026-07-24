@@ -3,8 +3,8 @@ package dev.yaseyo.onboarding.ui.profilesetup
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.yaseyo.coroutines.DispatcherProvider
+import dev.yaseyo.home.navigation.HomeRoutes
 import dev.yaseyo.navigation.AppRouter
-import dev.yaseyo.navigation.Home
 import dev.yaseyo.onboarding.model.OnboardingDraft
 import dev.yaseyo.onboarding.repository.OnboardingRepository
 import dev.yaseyo.user.api.ActivityLevel
@@ -199,7 +199,7 @@ internal class ProfileSetupViewModel(
                 ).fold(
                     onSuccess = {
                         repo.clearDraft()
-                        router.navigateAndClearBackStack(Home)
+                        router.navigateAndClearBackStack(HomeRoutes.Home)
                     },
                     onFailure = {
                         _uiState.update { it.copy(isSubmitting = false) }

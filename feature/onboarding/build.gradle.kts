@@ -29,6 +29,10 @@ kotlin {
                 api(libs.kotlinx.coroutines.core)
                 implementation(libs.ktor.client.core)
 
+                // Feature
+                implementation(projects.feature.home)
+
+                // Libs
                 implementation(projects.libs.auth)
                 implementation(projects.libs.user)
                 implementation(projects.libs.coroutines)
