@@ -9,6 +9,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
+/**
+ * For previewing widgets/components that don't provide their own [YaseyoScaffold] —
+ * wraps [composable] in a scaffold so it has a themed background/container to sit in.
+ */
 @Composable
 fun YaseyoPreview(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -26,6 +30,23 @@ fun YaseyoPreview(
                     composable()
                 }
             }
+        }
+    }
+}
+
+/**
+ * For previewing full screens that already wrap themselves in [YaseyoScaffold] —
+ * only provides the theme, so nesting a second scaffold doesn't hide things like the
+ * screen's own floating action button behind [YaseyoPreview]'s outer scaffold.
+ */
+@Composable
+fun YaseyoScreenPreview(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    composable: @Composable () -> Unit,
+) {
+    YaseyoTheme(darkTheme = darkTheme) {
+        MaterialTheme {
+            composable()
         }
     }
 }
