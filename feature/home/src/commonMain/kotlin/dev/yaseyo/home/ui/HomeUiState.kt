@@ -1,5 +1,7 @@
 package dev.yaseyo.home.ui
 
+import dev.yaseyo.dailylog.api.MealEntry
+
 internal sealed interface HomeUiState {
     data object Initializing : HomeUiState
 
@@ -9,6 +11,7 @@ internal sealed interface HomeUiState {
         val activityKcal: Long,
         val baseTargetKcal: Long,
         val macroStatus: MacroStatus,
+        val mealEntries: List<MealEntry>,
     ) : HomeUiState {
         data class MacroStatus(
             val currentProtein: Double,

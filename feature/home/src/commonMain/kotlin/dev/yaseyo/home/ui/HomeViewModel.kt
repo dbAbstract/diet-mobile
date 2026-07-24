@@ -33,6 +33,7 @@ internal class HomeViewModel(
                             targetFat = it.targets.fat,
                             fatProgress = (it.totals.fat / it.targets.fat).toFloat(),
                         ),
+                        mealEntries = it.mealEntries,
                     )
                 },
                 onFailure = {
