@@ -18,11 +18,10 @@ internal class UserRepositoryImpl(
     private val api: UserApi,
     private val dataStore: DataStore<Preferences>,
 ) : UserRepository {
-    override suspend fun isUserSessionActive(): Result<Unit> =
+    override suspend fun isUserSessionActive(): Boolean =
         runCatching {
-            val userId = dataStore.data.map { it[Keys.USER_ID_KEY] }.first()
-            check(userId == true) { "No cached user session" }
-        }
+            dataStore.data.map { it[Keys.USER_ID_KEY] }.first() == true
+        }.getOrDefault(false)
 
     override suspend fun clearUserSession(): Result<Unit> =
         runCatching {

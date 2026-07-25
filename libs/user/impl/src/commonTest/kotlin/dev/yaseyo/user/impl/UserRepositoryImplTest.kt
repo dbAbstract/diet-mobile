@@ -8,6 +8,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.LocalDate
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 
@@ -108,25 +109,25 @@ class UserRepositoryImplTest {
     // --- isUserSessionActive ---
 
     @Test
-    fun `isUserSessionActive returns failure when nothing cached`() =
+    fun `isUserSessionActive returns false when nothing cached`() =
         runBlocking {
             val result = repo().isUserSessionActive()
-            assertTrue(result.isFailure)
+            assertFalse(result)
         }
 
     @Test
-    fun `isUserSessionActive returns success after getCurrentUser caches session`() =
+    fun `isUserSessionActive returns true after getCurrentUser caches session`() =
         runBlocking {
             val dataStore = FakePreferencesDataStore()
             val repo = repo(dataStore = dataStore)
             repo.getCurrentUser()
 
             val result = repo.isUserSessionActive()
-            assertTrue(result.isSuccess)
+            assertTrue(result)
         }
 
     @Test
-    fun `isUserSessionActive returns failure after clearUserSession`() =
+    fun `isUserSessionActive returns false after clearUserSession`() =
         runBlocking {
             val dataStore = FakePreferencesDataStore()
             val repo = repo(dataStore = dataStore)
@@ -134,7 +135,7 @@ class UserRepositoryImplTest {
             repo.clearUserSession()
 
             val result = repo.isUserSessionActive()
-            assertTrue(result.isFailure)
+            assertFalse(result)
         }
 
     // --- clearUserSession ---

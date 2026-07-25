@@ -16,7 +16,7 @@ class ResolveStartDestinationUseCase(
         val appState = when (authRepository.authState.value) {
             is AuthState.SignedOut -> AppState.RequiresLogin
 
-            is AuthState.SignedIn if userRepository.isUserSessionActive().isSuccess -> {
+            is AuthState.SignedIn if userRepository.isUserSessionActive() -> {
                 AppState.FullySetup
             }
 

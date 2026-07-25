@@ -54,7 +54,7 @@ internal class AuthViewModel(
             signInResult.fold(
                 onSuccess = {
                     when {
-                        userRepository.isUserSessionActive().isSuccess -> {
+                        userRepository.isUserSessionActive() -> {
                             router.navigateAndClearBackStack(HomeRoutes.Home)
                         }
 

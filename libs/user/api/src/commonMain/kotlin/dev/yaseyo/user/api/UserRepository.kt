@@ -3,7 +3,7 @@ package dev.yaseyo.user.api
 import kotlinx.datetime.LocalDate
 
 interface UserRepository {
-    suspend fun isUserSessionActive(): Result<Unit>
+    suspend fun isUserSessionActive(): Boolean
 
     suspend fun clearUserSession(): Result<Unit>
 
