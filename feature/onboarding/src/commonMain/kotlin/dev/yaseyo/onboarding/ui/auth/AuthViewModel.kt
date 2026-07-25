@@ -3,8 +3,10 @@ package dev.yaseyo.onboarding.ui.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.yaseyo.auth.api.AuthRepository
+import dev.yaseyo.home.navigation.HomeRoutes
 import dev.yaseyo.navigation.AppRouter
 import dev.yaseyo.onboarding.navigation.OnboardingRoutes
+import dev.yaseyo.user.api.UserRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +18,7 @@ import kotlinx.coroutines.launch
 internal class AuthViewModel(
     private val router: AppRouter,
     private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
 ) : ViewModel(),
     AuthEventHandler {
     private val _uiState = MutableStateFlow(AuthUiState())
@@ -50,7 +53,19 @@ internal class AuthViewModel(
 
             signInResult.fold(
                 onSuccess = {
-                    router.navigateAndClearBackStack(OnboardingRoutes.ProfileSetup)
+                    when {
+                        userRepository.isUserSessionActive().isSuccess -> {
+                            router.navigateAndClearBackStack(HomeRoutes.Home)
+                        }
+
+                        userRepository.getCurrentUser().isSuccess -> {
+                            router.navigateAndClearBackStack(HomeRoutes.Home)
+                        }
+
+                        else -> {
+                            router.navigateAndClearBackStack(OnboardingRoutes.ProfileSetup)
+                        }
+                    }
                 },
                 onFailure = {
                     _action.send("Something went wrong")
