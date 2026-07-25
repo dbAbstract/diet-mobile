@@ -13,10 +13,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -50,12 +52,29 @@ internal fun HomeScreen(viewModel: HomeViewModel = koinViewModel()) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HomeScreen(
     state: HomeUiState,
     onLogMealClick: () -> Unit,
 ) {
     YaseyoScaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        modifier = Modifier.padding(16.dp),
+                        text = "${currentDayOfWeek()} – ${now().date}",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = YaseyoTheme.colors.contentPrimary,
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = YaseyoTheme.colors.backgroundElevated,
+                ),
+            )
+        },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = onLogMealClick,
@@ -78,16 +97,6 @@ private fun HomeScreen(
                 .fillMaxSize()
                 .padding(it),
         ) {
-            Text(
-                modifier = Modifier.padding(16.dp),
-                text = "${currentDayOfWeek()} – ${now().date}",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Medium,
-                color = YaseyoTheme.colors.contentPrimary,
-            )
-
-            HorizontalDivider()
-
             AnimatedContent(
                 modifier = Modifier.weight(1f),
                 targetState = state,
