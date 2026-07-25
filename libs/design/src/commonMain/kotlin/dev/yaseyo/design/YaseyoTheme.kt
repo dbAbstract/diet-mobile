@@ -46,11 +46,15 @@ object YaseyoTheme {
 fun YaseyoScaffold(
     modifier: Modifier = Modifier,
     floatingActionButton: @Composable () -> Unit = {},
+    topBar: @Composable () -> Unit = {},
+    bottomBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
         containerColor = YaseyoTheme.colors.backgroundBase,
+        topBar = topBar,
+        bottomBar = bottomBar,
         floatingActionButton = floatingActionButton,
         snackbarHost = { SnackbarHost(hostState = LocalSnackBarHostState.current) },
         content = content,
